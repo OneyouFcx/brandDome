@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>店铺管理</title>
+    <link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+    <link href=" ../../layuiadmin/style/table.css" rel="stylesheet" media="all" />
+    <link href="../../layuiadmin/style/admin.css" rel="stylesheet" media="all">
+    <link href="//at.alicdn.com/t/font_400842_q6tk84n9ywvu0udi.css" rel="stylesheet" />
+    <link href="../../layuiadmin/style/iframe-child.css" rel="stylesheet" />
+
+</head>
+<style>
+    #popups{
+        display: none;
+        height: 100%;
+        overflow-x: hidden;
+    }
+    .div_popups{
+        width:562px;
+        text-align: center;
+        margin:42px 0px;
+    }
+    #insertinto_add{
+        position: absolute;
+        left: 216px;
+        top: 205px;
+        width:150px;
+    }
+</style>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md15 main-container">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    商品管理
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-form-item" style="border-bottom: 1px solid #f6f6f6;">
+
+                        <div class="layui-input-block">
+
+                            <div class="layui-inline" style="float: right;margin-right: 69px;">
+                                <a id="insertinto" class="layui-btn">新增</a>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="table" lay-filter="Audit" lay-data="{id: 'awardTypeId'}">
+
+                    </table>
+                    <div id="popups">
+                        <div class="div_popups"><span>活动名称：</span>
+                            <div class="layui-inline">
+                                <input id="selectByid_input" name="keyword" style="width: 240px;display: inline;" lay-verify="required" placeholder="请输入奖励名称" autocomplete="off" class="layui-input" type="text">
+                            </div>
+
+                        </div>
+                        <div class="div_popups1"><span style="margin-left: 151px;">奖励：</span>
+
+                            <div class="layui-inline" style="width: 239px;">
+                                <form class="layui-form" >
+                                    <select name="name" class="type_detail_id" id="goodsid1">
+                                        <option value="0">请选择商品</option>
+
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                        <a id="insertinto_add"  update="" class="layui-btn">新增</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="2" >修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="3" >删除</a>
+</script>
+<script>
+    var table;
+    var tableinsr;
+    $(function(){
+        selectMsg();//下拉框
+    })
+    $(document).ready(function() {
+
+        layui.use(['table','form'], function() {
+            table = layui.table,
+                form=layui.form;
+            tableinsr=table.render({
+                elem: '#table',
+                url: "/activity/getNameAll",
+                where:{
+                    limit:5
+                },
+                cellMinWidth: 80,
+                limit:5,
+                cols: [
+                    [{
+                        type: 'checkbox'
+                    },{
+                        title: "标识列",
+                        field:"awardTypeId",
+                    }, {
+                        title: "活动奖励名称",
+                        templet: '<div>{{d.awardName}}</div>',
+                    }, {
+                        title: "奖励优惠卷名称",
+                        templet: '<div>门槛：{{d.template.bigMoney	}}--抵用金额：{{d.template.smallMoney}}</div>',
+                    }, {
+                        templet: "#barDemo",
+                        title: "操作",
+                        width:191,
+                    }
+                    ]
+                ],
+                page: true,
+                done: function() {
+                    $(".table-shop-name").click(function() {
+                        iframeWindow(this);
+                    });
+                }
+            });
+
+            //监听点击的按钮
+            table.on('tool(Audit)', function(obj){
+                var layEvent = obj.event;
+                var data = obj.data;
+                var tr = obj.tr;
+                if(obj.event === '2'){
+                    update(data);
+                }
+                if(obj.event === '3'){
+                    layer.confirm('确认删除吗？',function(){
+                        delByid(data.awardTypeId,obj);
+                    });
+                }
+            });
+        });
+    });
+    $("#search").click(function(){
+        var id=$("#input_id").val();
+        if(id==''){
+            id=0;
+        }
+        tableinsr.reload({
+            where: {//参数
+                hotid:id,
+                limit:5
+            }
+            ,page: {
+                curr: 1 //重新从第 1 页开始
+            }
+        });
+    })
+    //查询下拉框-----平台
+    function selectMsg(){
+        $.get("/activity/selectAlldiscounts",{"discountsScope":0},function(d){
+            if(d.data!=''){
+                $.each(d.data,function(i,val){
+                    var tr='<option value="'+val.discountTemplateId+'">门槛：'+val.bigMoney+'-抵用金额：'+val.smallMoney+'</option>';
+                    $("#goodsid1").append(tr);
+                })
+                layui.form.render('select');
+            }
+        });
+    }
+    //删除数据
+    function delByid(awardTypeId,obj){
+        $.post("/activity/deleteByawardTypeId",{"awardTypeId":awardTypeId},function(d){
+            console.log(d)
+            if(d.data==1){
+                obj.del();//删除当前点击行
+                layer.msg('删除成功！');
+            }else{
+                layer.msg('删除失败！');
+            }
+        })
+    }
+    //添加/修改 数据
+    $("#insertinto_add").click(function(){
+        var awardName=$("#selectByid_input").val();
+        var templateId=$("#goodsid1").val();
+        var insertinto_add=$("#insertinto_add").text();
+        if(templateId==0){
+            layer.msg("请选择商品");
+        }else{
+        	if(insertinto_add=="修改"){
+        		var awardTypeId=$("#insertinto_add").attr("update")
+        		$.post("/activity/updateByKey",{"awardName":awardName,"templateId":templateId,"awardTypeId":awardTypeId},function(d){
+                    if(d.data==1){
+                        layer.msg("修改成功")
+                        window.location.reload();
+                    }else{
+                    	layer.msg("修改失败")
+                    }
+                })
+        	}else{
+        		$.get("/activity/insert",{"awardName":awardName,"templateId":templateId},function(d){
+                    if(d.data==1){
+                        layer.msg("添加成功")
+                        window.location.reload();
+                    }else{
+                    	layer.msg("添加失败")
+                    }
+                })
+        	}
+            
+        }
+    })
+    //修改
+    function update(data){
+    	$("#insertinto_add").text("修改");
+    	 $("#selectByid_input").val(data.awardName);
+    	 $("#selectByid_input").val(data.awardName);
+    	 $("#goodsid1").val(data.template.discountTemplateId);
+    	 $("#insertinto_add").attr("update",data.awardTypeId)
+    	 layui.form.render('select');
+    	layer.open({
+            type: 1,
+            title :'修改',
+            skin: 'layui-layer-demo', //样式类名
+            closeBtn: 0, //不显示关闭按钮
+            anim: 2,
+            scrollbr:true,
+            area: ['566px', '341px'],
+            scrollbar: false,
+            shadeClose: false,
+            closeBtn :1, //开启遮罩关闭
+            content:$("#popups")
+        });
+    }
+    $("#insertinto").click(function(){
+        //自定页
+        $("#insertinto_add").text("新增");
+        $("#selectByid_input").val();
+   		 $("#goodsid1").val(0);
+        layer.open({
+            type: 1,
+            title :'新增',
+            skin: 'layui-layer-demo', //样式类名
+            closeBtn: 0, //不显示关闭按钮
+            anim: 2,
+            scrollbr:true,
+            area: ['566px', '341px'],
+            scrollbar: false,
+            shadeClose: false,
+            closeBtn :1, //开启遮罩关闭
+            content:$("#popups")
+        });
+    })
+</script>
+
+</html>

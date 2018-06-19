@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>店铺管理</title>
+		<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+		<link href=" ../../layuiadmin/style/table.css" rel="stylesheet" media="all" />
+		<link href="../../layuiadmin/style/admin.css" rel="stylesheet" media="all">
+		<link href="//at.alicdn.com/t/font_400842_q6tk84n9ywvu0udi.css" rel="stylesheet" />
+		<link href="../../layuiadmin/style/iframe-child.css" rel="stylesheet" />
+		<link href="//at.alicdn.com/t/font_612383_q419vof4ondpwrk9.css" rel="stylesheet">
+	</head>
+		<style>
+body{
+overflow: hidden;}
+#jiaid{
+	display: none;
+}
+ #popups{
+	width:100%;
+	height:889px;
+	overflow: hidden;
+}
+#popups ul {
+	width:100%;
+	float:left;
+	margin-top:30px;
+}
+#popups ul li{
+width: 477px;
+height: 65px;
+line-height: 45px;
+float: left;
+margin-left: 181px;
+font-size: 19px;
+}
+#popups ul li span{
+	display: block;
+	width:120px;
+	float:left;
+	text-align: center;
+	margin-left:20px;
+	
+}
+#popups ul li input{
+width:300px;}
+.li_center{
+	width:200px;
+	height:100%;
+	margin:0 auto;
+	text-align: center;
+}
+.layui-input{
+	width:186px;
+}
+.left_inline{
+margin-left: -3px;}
+.popright{
+width:380px;
+float:right;
+}
+#disc_ul {
+margin-top:10px;}
+#disc_ul p{
+	width:320px;
+	height:35px;
+	line-height: 35px;
+	text-align: center;
+	padding-left:60px;
+}
+#disc_ul p ems{
+	width:100px;
+	height:35px;
+	display: block;
+	text-align: center;
+	float:left;
+}
+#search_bth{
+	width:140px;
+	text-align: center;
+	font-size:17px;
+	margin-top:50px;
+	margin-left:40px;
+}
+.postion_abst{
+	position: absolute;
+	bottom: 16px;
+	left: 297px;
+	width: 250px;
+}
+#disc_msg{
+	width: 700px;
+	height: 52px;
+	position: absolute;
+	left: 46px;
+	bottom: 57px;
+}
+#disc_qued{
+	width: 100px;
+	height: 52px;
+	position: absolute;
+	left: 350px;
+	bottom: 5px;
+}
+
+.disp_none{
+display: none;
+width:300px;
+height:300px;
+text-align: center;
+margin-left:310px;
+float:left;
+}
+#imghead_1{
+}
+.img_brck1{
+width:300px;
+height:300px;
+text-align: center;
+margin-left:150px;
+float:left;}
+.abs_postion{
+width: 200px;
+height: 79px;
+position: absolute;
+bottom: 10px;
+left: 683px;}
+#btn_sumbit{
+width: 150px;
+height: 60px;
+font-size: 20px;}
+.img_ul{
+width:100%;
+}
+.img_ul li{
+	width:293px;
+	height:293px;
+	position: relative;
+	float:left;
+	margin-left:20px;
+	margin-top:20px;
+}
+.img_ul li img{
+	width:293px;
+	height:293px;
+}
+.img_ul li video{
+width:293px;
+	height:293px;
+}
+.img_ul_li_div{
+	width: 293px;
+	height: 47px;
+	text-align: center;
+	background-color: #21060666;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	line-height: 47px;
+	color: #fefefe;
+	font-size: 16px;
+}
+.img_ul li span{
+	color:#fff;
+	font-size:20px;
+}
+#del{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	background-color: #0000004d;
+	width: 45px;
+height: 41px;
+}
+.layui-input-block{
+width:500px;
+margin:0px auto;
+}
+.uploading{
+display:none;
+width: 800px;
+height: 700px;
+background: rgba(99, 99, 99, 0.4);
+text-align: center;
+line-height: 200px;
+overflow: hidden;
+}
+
+.startLop{
+height:50px;
+width:100px;
+position: absolute;
+bottom: -1px;
+left: 353px;
+}
+blockquote{
+overflow: auto;
+width:750px;
+height:400px;
+}
+#demo2 img{
+width:300px;
+height:300px;
+}
+#startupload{
+position: absolute;
+bottom:35px;
+left: 360px;
+}
+#delimg_div{
+width: 300px;
+height: 300px;
+margin: 10px 30px;
+position:relative;
+float:left;}
+#delimg{
+	width: 48px;
+	height: 42px;
+	position:absolute ;
+	right: 0px;
+	top: 0px;
+	background-color:#0000004d;	
+}
+</style>
+	<body>
+		<div class="layui-fluid">
+			<div class="layui-row layui-col-space15">
+				<div class="layui-col-md15 main-container">
+					<div class="layui-card">
+						<div class="layui-card-header">
+							商品管理
+						</div>
+						<div class="layui-card-body">
+								<div class="layui-input-block">
+									<!-- input_id -->
+									<div class="layui-inline">
+										<form class="layui-form" style="width: 200px;display: inline;">
+											<select name="name" class="type_detail_id" id="xuan">
+												<option value="0">请选择商品</option>
+												
+											</select>
+										</form>
+									</div>
+									
+									<div class="layui-inline">
+										<a id="search" class="layui-btn">搜索</a>
+									</div>
+								</div>
+						</div>
+						
+						<ul class="img_ul">
+							
+							
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="uploading">
+			<button id="startupload" class="layui-btn">开始上传</button>
+			<button type="button" class="layui-btn" id="test2">多图片上传</button> 
+			<button type="button" class="layui-btn" id="test5"><i class="layui-icon"></i>上传视频</button>
+			<div class="layui-upload" style=" overflow-x:null;">
+			
+					 <blockquote class="layui-elem-quote layui-quote-nm" style="border:1px solid #fff;margin-top: -29px;margin-left: 10px;">
+					 预览图：
+					 	<div class="layui-upload-list"  id="demo2">
+					 	</div>
+					 </blockquote>
+			</div>
+		</div>
+	</body>
+	<script src="../../layuiadmin/layui/layui.js"></script>
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+	<script src="/ImgYunTop.js"></script>
+	<script>
+	var table;
+	var tableinsr;
+	var form;
+	var tfile=new Array();
+	var goodsid_pop;
+	var tfile_index=0;
+	$(function(){
+		selectMsg();//下拉框
+	})
+		$(document).ready(function() {
+			layui.use(['table','form','upload'], function() {
+				table = layui.table,
+				form=layui.form,
+				upload = layui.upload;
+				//图片上传
+				 upload.render({
+					    elem:'#test2'
+					    ,multiple: true
+					    ,auto:false
+					    ,choose: function(obj){
+					      //预读本地文件示例，不支持ie8
+					      obj.preview(function(index, file, result){
+						          $('#demo2').append('<div id="delimg_div"><img src="'+ result +'"  alt="'+ file.name +'" class="layui-upload-img"><button id="delimg" onclick="delimg('+tfile_index+',this)" class="layui-btn layui-btn-primary layui-btn-sm"><i class="layui-icon"></i></button></div>')
+						    	  tfile.push(file);
+						          tfile_index++;
+					      });
+					    }
+				 });
+				//视频上传
+				upload.render({
+				    elem: '#test5'
+				    ,accept: 'video' //视频
+				    ,auto:false
+					,choose: function(obj){
+				      //预读本地文件示例，不支持ie8
+					      obj.preview(function(index, file, result){
+					          $('#demo2').append(' <video  class="back-video" width="100%" autoplay loop src="'+result+'"></video><button id="delimg" onclick="delimg('+tfile_index+',this)" class="layui-btn layui-btn-primary layui-btn-sm"><i class="layui-icon"></i></button>')
+					    	  tfile.push(file);
+					          tfile_index++;
+					      });
+					 }
+				  });	
+			});
+		});
+	
+		//删除指定上传图片时存储的file
+		function delimg(o,th){
+			delete tfile[o];
+			$(th).parent().remove();
+			console.log(tfile)
+		}
+		function selectMsg(){
+			$.post("/brand/selectAlls",function(d){
+				if(d!=''){
+					$.each(d,function(i,val){
+						var tr='<option value="'+val.brandGoods.goodsId+'">'+val.brandGoods.goodsName+'</option>';
+						$("#xuan").append(tr);
+						
+					})
+					layui.form.render('select');
+				}
+			});
+		}
+		$("#startupload").click(function(){
+			console.log(tfile)
+			var	formData = new FormData();
+			formData.append("goodsId",goodsid_pop);
+			var num=0;
+			for (var i=0;i<tfile.length;i++)
+			{
+				if(tfile[i]==null){
+					console.log(1)
+				}else{
+					num++;
+				}
+				
+				formData.append("file",tfile[i]);
+				
+			}
+			if(num==0){
+				layer.msg('请选择至少一张图片或视频');
+			}else{
+				console.log(tfile)
+				$(this).yunimg(formData,'/brand/insertMediaimg');
+			}
+		});
+		
+		function del(id,thise){
+			 $.post("/brand/deleteByintroid",{"introid":id},function(d){
+				if(d.data==1){
+					$(thise).parent().remove();
+					layer.msg("删除成功");
+				}
+			}) 
+		}
+		$("#search").click(function(){
+			var id=$("#xuan").val();
+			if(id==0){
+				layer.msg('请选择商品');
+				return;
+			}
+			goodsid_pop=id;
+			var lasttr='<li><div  onclick="uploadingadd()" style="width:100px;height:100px;"><span style="font-size: 277px;" class="iconfont icon-tianjia "></span></div></li>';
+			$.post("/brand/selectbygoodsid",{"goodsid":id},function(d){
+				if(d.data!=null){
+					$(".img_ul").find(' li').remove();
+					$.each(d.data,function(v,i){
+						var trimg='<li>'+
+						'<img src="http://spoons.test.upcdn.net'+i.introPath+'"/>'+
+							'<button id="del" onclick="del('+i.introId+',this)" class="layui-btn layui-btn-primary layui-btn-sm"><i  class="layui-icon"></i></button>'+
+							'<div class="img_ul_li_div">'+
+							'	类型：<span>'+i.introType+'</span>'+
+							'</div>'+		
+						'</li>';
+						var trviv='<li>'+
+						'<video muted="muted"  class="back-video" width="100%" autoplay loop src="http://spoons.test.upcdn.net'+i.introPath+'">123123</video>'+
+							'<button id="del" onclick="del('+i.introId+',this)" class="layui-btn layui-btn-primary layui-btn-sm"><i  class="layui-icon"></i></button>'+
+							'<div class="img_ul_li_div">'+
+							'	类型：<span>'+i.introType+'</span>'+
+							'</div>'+		
+						'</li>';
+						if(i.introType=="video"){
+							$(".img_ul").append(trviv);
+						}else{
+							$(".img_ul").append(trimg);
+						}
+					
+					})
+					$(".img_ul").append(lasttr);
+				}
+			});
+		});
+		
+		function uploadingadd(){
+			layer.open({
+				  type: 1,
+				  title:'',
+				  skin: 'layui-layer-demo', //样式类名
+				  closeBtn: 1, //不显示关闭按钮
+				  scrollbar: false,
+				  anim: 2,
+				  shadeClose: true, //开启遮罩关闭
+				  area: ['800px', '700px'],
+				  content:$(".uploading")
+			});
+		}
+	</script>
+</html>

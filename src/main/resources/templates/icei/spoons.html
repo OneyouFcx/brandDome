@@ -1,0 +1,345 @@
+<!doctype html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8">
+	<title>SPOONS</title>
+	<meta name="keywords" content="SPOONS|个性定制">
+	<meta name="description" content="个性化产品定制(私人定制)，比如 定制手 机壳， 礼品， 抱枕 等">
+	<link rel="stylesheet" href="/icei/css/Public.css">
+	<link rel="stylesheet" href="/icei/css/main/spoons.css">
+	<link rel="stylesheet" href="/icei/css/top.css">
+	<link rel="stylesheet" href="/icei/css/swiper-4.2.0.min.css">
+	<link rel="stylesheet" href="/icei/css/animate.min.css">
+	<link rel="stylesheet" href="https://at.alicdn.com/t/font_612454_q018a1y69rx80k9.css">
+
+	<script src="/icei/js/jquery-3.2.1.min.js"></script>
+	<!--<script src="js/jquery.nicescroll.min.js"></script>-->
+	<script src="/icei/js/jquery.mousewheel.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+	<script src="/icei/js/rellax.min.js"></script>
+	<script src="/icei/js/wow.min.js"></script>
+	<script src="/icei/js/TweenMax.min.js"></script>
+	<script src="/icei/js/swiper-4.2.0.min.js"></script>
+	<script src="/icei/js/swiper.animate1.0.3.min.js"></script>
+	<!--<script src="js/main/roll.js">//滚轮</script>-->
+	<script src="/icei/js/main/carousel.js">//轮播</script>
+	<script src="/icei/js/main/shopInfo.js">//店铺</script>
+	<script src="/icei/js/main/rellax.js">//滚动特效+视觉差</script>
+	<style>
+		.swiper-container-fade .swiper-slide{
+			opacity:0!important;
+		}
+		.swiper-container-fade .swiper-slide-active{
+			opacity:1!important;
+		}
+	</style>
+	<script src="/icei/js/jquery.nicescroll.min.js"></script>
+	<script>
+        $(function(){
+            $("body").niceScroll({
+                cursorcolor: "#000",
+                cursoropacitymax: 0.2,
+            });
+        });
+	</script>
+</head>
+
+<body>
+	<!--header-->
+	<header class="c-header">
+		<div class="wow fadeInLeft c-logo"><a href="/icei/"><img src="/icei/img/logo/logo.png"></a></div>
+		<nav>
+			<div class="wow fadeInRight c-main-nav">
+				<ul>
+					<li><a href="/icei/login" class="o-link">登录</a></li>
+					<li><a href="/icei/login" class="o-link">注册</a></li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+	<!--headerEnd-->
+	
+	<main class="main">
+		
+		<!--轮播-->
+		<section class="pages c-hero">
+			<!--back-->
+			<div data-rellax-speed="-9" class="swiper-container rellax c-hero-back">
+				<div class="swiper-wrapper backtm" style="background-image: url(/icei/img/main/back/backTM.png)">
+					<div th:each= "t,i :${slide}" class="swiper-slide swiper-container-fade">
+						<div class="ani c-back" swiper-animate-effect="fadeIn" th:attr="data-color=${t.backColor}">
+							<video th:if="t.goodsVideo!=null" class="back-video" width="100%" loop muted th:src="'http://spoons.test.upcdn.net'+${t.goodsVideo}"></video>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--backEnd-->
+
+			<section style="position: absolute;top: 0;height:100%;width: 100%;">
+				<div class="container" style="height: 100%;">
+					<!--商品信息-->
+					<div data-rellax-speed="-9" class="swiper-container rellax c-hero_text">
+						<div class="swiper-wrapper">
+							<div th:each="t,i :${slide}" class="swiper-slide swiper-container-fade">
+								<div class="ani saying" swiper-animate-effect="fadeInDown">
+									<img data-depth="0.2" style="width: 400px" src="/icei/img/main/Record.png">
+								</div>
+								<div class="c-hero-content">
+									<h2 class="ani c-hero-title" swiper-animate-effect="fadeInRight">
+										<p data-depth="0.3" th:text="${t.title}">衣橱里那么多T恤,就少一件自己设计的</p>
+									</h2>
+									<div  th:utext="${t.content}" class="ani c-hero-referral" swiper-animate-effect="fadeInUp">
+										<p>80S丝光双面布 如丝般顺滑触感 进口高清数码打印机的精彩呈现.</p>
+										<p>100%紧密纺长绒棉 80S丝光双面布.</p>
+										<p>进口高清数码印花机完美呈现，百变图案精准不易脱落.</p>
+									</div>
+								</div>
+								<div class="c-hero-but">
+									<a class="ani o-link c-once" swiper-animate-effect="pulse" th:href="${t.goodsUrl}"><img src="/icei/img/main/once.png"></a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--商品信息End-->
+					<!--商品图片-->
+					<div data-rellax-speed="-6" class="swiper-container rellax c-hero-img">
+						<div class="swiper-wrapper">
+							<div  th:each="t,i :${slide}" class="swiper-slide swiper-container-fade">
+								<div class="ani c-hero-imgs" swiper-animate-effect="fadeIn">
+									<img data-depth="0.1" th:src="'http://spoons.test.upcdn.net'+${t.goodsImg}">
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--商品图片End-->
+				</div>
+			</section>
+			<div class="swiper-button-prev swiper-button-white"></div>
+			<div class="swiper-button-next swiper-button-white"></div>
+			<div class="c-hero-foot"></div>
+		</section>
+		<!--轮播End-->
+		
+		<!--classify-->
+		<section class="pages classify">
+			<div class="container">
+				<div class="headline">
+					<p class="wow fadeInLeft headline-back" data-wow-offset="550">Goods</p>
+					<p class="wow fadeInUp headline-title"  data-wow-offset="550"><span>——</span>精品专题</p>
+				</div>
+				<div class="class-box">
+					<ul class="bricks">
+						<li class="wow pulse brick-item" data-wow-offset="450" data-wow-delay="0.1s" onclick="LoginAllGoodsInfo()">
+							<i class="iconfont icon-xingxing"></i>
+							<span class="tielt-f">全部</span>
+						</li>
+						<li class="wow fadeInUp brick-item" data-wow-offset="450" data-wow-delay="0.2s" onclick="search(this)">
+							<i class="iconfont icon-shouji"></i>
+							<span class="tielt-f">手机壳</span>
+							<!-- 手机壳ID -->
+							<input type="hidden" value="36"> 
+						</li>
+						<li class="wow fadeInUp brick-item" data-wow-offset="450" data-wow-delay="0.3s" onclick="search(this)">
+							<i class="iconfont icon-cup"></i>
+							<span class="tielt-f">杯子</span>
+							<!-- 杯子ID -->
+							<input type="hidden" value="37">
+						</li>
+						<li class="wow fadeInUp brick-item" data-wow-offset="450" data-wow-delay="0.4s" onclick="search(this)">
+							<i class="iconfont icon-xiangji"></i>
+							<span class="tielt-f">时光</span>
+							<!-- 时光胶卷ID -->
+							<input type="hidden" value="40">
+						</li>
+						<li class="wow fadeInUp brick-item" data-wow-offset="450" data-wow-delay="0.5s" onclick="search(this)">
+							<i class="iconfont icon-jiaqi"></i>
+							<!-- 行李箱ID -->
+							<input type="hidden"  value="41">
+							<span class="tielt-f">行李箱</span>
+						</li>
+						<li class="wow fadeInUp brick-item" data-wow-offset="450" data-wow-delay="0.6s" onclick="search(this)">
+							<i class="iconfont icon-t-shirt"></i>
+							<!-- T恤ID -->
+							<input type="hidden"  value="38">
+							<span class="tielt-f">T恤</span>
+						</li>
+						<li class="wow fadeInRight brick-item" data-wow-offset="450" data-wow-delay="0.7s">
+							<a href="usually.html">...More</a>
+						</li>
+					</ul>
+				</div>
+				<div class="goods-box">
+					<!-- 展示商品 -->
+					<ul class="goods"></ul>
+					<ul class="goods"></ul>
+				</div>
+				<div class="goods-more"><a href="usually.html">More</a></div>
+			</div>
+		</section>
+		<!--classifyEnd-->
+		
+		<!--shop-->
+		<section class="pages shop">
+			<div class="container">
+				<div class="headline">
+					<p class="wow fadeInLeft headline-back" data-wow-offset="800">S h o p</p>
+					<p class="wow fadeInUp headline-title" data-wow-offset="800"><span>——</span>精品店铺</p>
+				</div>
+			</div>
+			<!--icons-->
+			<section class="IconsContainer"></section>
+			<!--iconsEnd-->
+		</section>
+		<!--shopEnd-->
+		
+		<!--flow-->
+		<section class="pages flow">
+			<div class="container">
+				<div class="headline">
+					<p class="headline-back">Process</p>
+					<p class="headline-title"><span>——</span>定制过程</p>
+				</div>
+				<!--定制流程-->
+				<div class="customization-flow">
+					<div class="customization-course">
+						<div>
+							<span><i class="iconfont icon-dianpu"></i></span>
+							<p>华为P20lite手机壳nova3e保护套畅享8软硅胶个性潮流创意口红少女 环保TPU材料哦，手机壳是软的，孔位准确，使用方便，彩绘壳图案清晰
+								<i class="iconfont icon-sanjiao_xia"></i>
+							</p>
+						</div>
+						<div>
+							<span><i class="iconfont icon-liwu"></i></span>
+							<p>SPOON出品必属精品！
+								<i class="iconfont icon-sanjiao_xia"></i>
+							</p>
+						</div>
+						<div>
+							<span><i class="iconfont icon-dingzhijiaju"></i></span>
+							<p>花钱少少，美丽多多，心情好好,而且每个DIY作品都含有自己丰富多彩的一面自己！记住它的口号：做回我自己！
+								<i class="iconfont icon-sanjiao_xia"></i>
+							</p>
+						</div>
+						<div>
+							<span><i class="iconfont icon-24xiaoshifahuo"></i></span>
+							<p>24小时发货服务是卖家向买家提供的服务。所有24小时发货的卖家承诺：在买家完成付款或通过货到付款下单成功后，卖家将在24小时内（不可抗力因素除外）发送买家所购实物商品的服务。
+								<i class="iconfont icon-sanjiao_xia"></i>
+							</p>
+						</div>
+						<div>
+							<span><i class="iconfont icon-shouye4"></i></span>
+							<p>收到宝贝后,确认宝贝完好无损，请给工作人员好评哦亲！
+								<i class="iconfont icon-sanjiao_xia"></i>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--flowEnd-->
+	</main>
+</body>
+<script>
+//窗体加载显示商品
+$(function(){
+	LoginAllGoodsInfo();//窗体加载时加载全部商品
+})
+function LoginAllGoodsInfo(){//窗体加载时加载全部商品
+	$.ajax({
+		url:'/icei/byTypeIdGetGoodsInfos',
+		success:function(data){
+			eachs(data);
+		}
+	})
+}
+//拆分结构
+var eachs=function(data){
+	$(".goods-box>ul>li").remove();
+	$.each(data,function(v,val){
+		var $li=$("<li class='wow pulse goods-item' data-wow-offset='450'></li>");
+		var $div=$("<div class='goods-img'>"+
+				"<div style='background-image: url(http://spoons.test.upcdn.net"+val.goodsImg+")'></div>"+
+				"</div>"+
+				"<div class='goods-info'>"+
+					"<div class='shop-name'><a>"+val.brand.brandName+"</a></div>"+
+					"<div class='goods-name'>"+val.goodsName+"</div>"+
+					"<div class='goods-referral'>"+val.goodsDec+"</div>"+
+					"<div class='goods-price'>￥"+val.goodsPrice+"</div>"+
+					"<div class='goods-buy'><a href='/icei/goodsinfo.html?goodsId="+val.goodsId+"'>立即购买</a></div>"+
+				"</div>");
+        $li.append($div);
+		if(v<=3){
+			if(v==2){
+				$li.addClass("goods-itemB");
+			}else {
+                $li.children().eq(1).children().eq(2).remove();
+			}
+			$(".goods").eq(0).append($li);
+		}else {
+			if(v==5){
+				$li.addClass("goods-itemB");
+			}else {
+                $li.children().eq(1).children().eq(2).remove();
+            }
+			$li.attr("data-wow-offset","300");
+			$(".goods").eq(1).append($li);
+		}					
+	})
+}
+//点击切换商品展示
+function search(dom){
+	var typeId=$(dom).find("input").val();
+	$.ajax({
+		url:'/icei/byTypeIdGetGoodsInfo',
+		data:{typeId:typeId},
+		success:function(data){
+			console.log(data)
+			eachs(data);
+		}
+	})
+}
+</script>
+<script>
+	$(document).ready(function() {
+        ParallaxImg();//视觉差
+        swiperMain();//轮播生成
+        $.ajax({
+            url:'/icei/getBrandAll',
+            success:function(data){
+                var	logos = [], imgs=[],shopid=[];
+                $.each(data.data,function (k,v) {
+					logos.push(v.brandName);
+					imgs.push("http://spoons.test.upcdn.net"+v.iconPath);
+					shopid.push(v.brandId);
+                })
+                LogoShop(logos,imgs,shopid);//店铺气泡
+                $('.Icon').click(function () {
+                    window.location.href = 'shop.html?id='+$(this).attr('id');
+                })
+            }
+        })
+	})
+	//店铺气泡
+	var LogoShop=function(logos,imgs,shopid){
+		Gee.ready(function () {
+			window.logoBubbles = new LogoBubbles({
+				bubbles: bubbles,
+				logos: logos,
+				imgs:imgs,
+				shopid:shopid,
+				classPrefix: "Icon Icon-img",
+				containerSelector: ".IconsContainer",
+				containerWidth: 3e3,
+				containerHeight: 460,
+				maxShrink: .2,
+				noiseSpeed: 55e-6,
+				noiseScale: 80,
+				scrollSpeed: .0175,
+				introDelay: 1500,
+				introDuration: 1500
+			})
+		}), "use strict";
+	}
+	
+</script>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0">
+    <title>Title</title>
+    <script src="/icei/js/jquery-3.2.1.min.js"></script>
+    <script src="/icei/js/diydz/hammer.min.js"></script>
+    <style>
+        #test{
+            width: 100px;
+            height: 100px;
+            background-color: aquamarine;
+        }
+    </style>
+</head>
+<body>
+    <div id="test"></div>
+
+    <script>
+        var transform = {
+            translate: {x: 0, y: 0},
+            scale: 1,
+            angle: 0,
+            rx: 0,
+            ry: 0,
+            rz: 0
+        };
+        var ticking = false;
+        var deltaX=0,deltaY=0;
+        var el=$('#test');
+        var hammertime=new Hammer(el.get(0))
+
+        hammertime.add(new Hammer.Pinch({threshold: 0})).recognizeWith([hammertime.get('pan'), hammertime.get('rotate')]);
+
+        hammertime.on("panstart panmove", onPan);//拖动开始+拖动过程
+        hammertime.on("pinchstart pinchmove", onPinch);//多点触控开始+多点触控过程
+        hammertime.on("panend",function f(ev) {
+            //拖动结束
+            console.log("结束了")
+            deltaX=deltaX+ev.deltaX;
+            deltaY=deltaY+ev.deltaY;
+            console.log(deltaX+" "+deltaY)
+            console.log(ev.deltaX+" "+ev.deltaY)
+        })
+
+        /*拖动*/
+        function onPan(ev) {
+            el.className = '';
+            transform.translate = {
+                x: ev.deltaX+deltaX,
+                y: ev.deltaY+deltaY
+            };
+            requestElementUpdate();
+        }
+        /*多点触控*/
+        var initScale = 1;
+        function onPinch(ev) {
+            if (ev.type == 'pinchstart') {
+                initScale = transform.scale || 1;
+            }
+            el.className = '';
+            transform.scale = initScale * ev.scale;
+            requestElementUpdate();
+        }
+
+        function requestElementUpdate() {
+            if (!ticking) {
+                reqAnimationFrame(updateElementTransform);
+                ticking = true;
+            }
+        }
+
+        var reqAnimationFrame = (function () {
+            return window[Hammer.prefixed(window, 'requestAnimationFrame')] || function (callback) {
+                window.setTimeout(callback, 1000 / 60);//延迟执行
+            };
+        })();
+
+        /*dom赋值*/
+        function updateElementTransform() {
+            var value = [
+                'translate3d(' + transform.translate.x + 'px, ' + transform.translate.y + 'px, 0)',
+                'scale(' + transform.scale + ', ' + transform.scale + ')',
+                'rotate3d(' + transform.rx + ',' + transform.ry + ',' + transform.rz + ',' + transform.angle + 'deg)'
+            ];
+            value = value.join(" ");
+            el.get(0).textContent = value;
+            el.get(0).style.webkitTransform = value;
+            el.get(0).style.mozTransform = value;
+            el.get(0).style.transform = value;
+            ticking = false;
+        }
+
+    </script>
+
+</body>
+</html>

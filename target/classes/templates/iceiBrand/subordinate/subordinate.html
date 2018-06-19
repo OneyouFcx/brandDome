@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>店铺管理</title>
+		<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+		<link href=" ../../layuiadmin/style/table.css" rel="stylesheet" media="all" />
+		<link href="../../layuiadmin/style/admin.css" rel="stylesheet" media="all">
+		<link href="//at.alicdn.com/t/font_400842_q6tk84n9ywvu0udi.css" rel="stylesheet" />
+		<link href="../../layuiadmin/style/iframe-child.css" rel="stylesheet" />
+		<style>
+#jiaid{
+	display: none;
+}
+ #popups{
+	width:800px;
+	height:100%;
+	display:none;
+	overflow: hidden;
+}
+#popups ul {
+	width:400px;
+	float:left;
+	margin-top:30px;
+}
+#popups ul li{
+	width:400px;
+	height:60px;
+	line-height: 60px;
+}
+#popups ul li span{
+	display: block;
+	width:120px;
+	float:left;
+	text-align: center;
+	margin-left:20px;
+	
+}
+.li_center{
+	width:200px;
+	height:100%;
+	margin:0 auto;
+	text-align: center;
+}
+.layui-input{
+	width:186px;
+}
+.left_inline{
+margin-left: -3px;}
+.popright{
+width:380px;
+float:right;
+}
+#disc_ul {
+margin-top:10px;}
+#disc_ul p{
+	width:320px;
+	height:35px;
+	line-height: 35px;
+	text-align: center;
+	padding-left:60px;
+}
+#disc_ul p ems{
+	width:100px;
+	height:35px;
+	display: block;
+	text-align: center;
+	float:left;
+}
+#search_bth{
+	width:140px;
+	text-align: center;
+	font-size:17px;
+	margin-top:50px;
+	margin-left:40px;
+}
+.postion_abst{
+	position: absolute;
+	bottom: 16px;
+	left: 297px;
+	width: 250px;
+}
+#disc_msg{
+	width: 700px;
+	height: 52px;
+	position: absolute;
+	left: 46px;
+	bottom: 5px;
+}
+#goods_dec{
+	width: 589px;
+	margin-left: 19px;
+}
+		</style>
+	</head>
+
+	<body>
+		<div class="layui-fluid">
+			<div class="layui-row layui-col-space15">
+				<div class="layui-col-md15 main-container">
+					<div class="layui-card">
+						<div class="layui-card-header">
+							商品管理
+						</div>
+						<div class="layui-card-body">
+							<div class="layui-form-item" style="border-bottom: 1px solid #f6f6f6;">
+								<label class="layui-form-label">请选择</label>
+								<div class="layui-input-block">
+									<div class="layui-inline">
+										<input id="input_id"  type="text" name="keyword" style="width: 240px;display: inline;" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" />
+									</div>
+								</div>
+							</div>
+							<table id="table" lay-filter="Audit" lay-data="{id: 'goodsId'}">
+
+							</table>
+				
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../../layuiadmin/layui/layui.js"></script>
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+	<script type="text/html" id="barDemo">
+		<a class="layui-btn layui-btn-xs" onclick="tabshow(this)"  lay-event="2">查看</a>
+		<a class="layui-btn layui-btn-xs" onclick="tabshow(this)"  lay-event="2">编辑</a>
+		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="3" >下架</a>
+	</script>
+	<script>
+	var table;
+	var tableinsr;
+	
+		$(document).ready(function() {
+			layui.use(['table','form'], function() {
+				table = layui.table,
+				form=layui.form;
+				tableinsr=table.render({
+					elem: '#table',
+					url: "/subordinate/selectByid",
+					where:{
+							limit:5,
+							id:2,
+					},	
+					cellMinWidth: 80,
+					limit:5,
+					cols: [
+						[{
+								type: 'checkbox'
+							},{
+								title: "商品编号",
+								field:"subCode",
+							}, {
+								title: "名称",
+								field:"subPwd",
+								width:200,
+							}, {
+								title: "具体类型",
+								field:"subName",
+								width:150,
+							}, {
+								templet: '<div>{{d.brandPowerRole.roleName}}</div>',
+								title: "基础价格",
+							}, {
+								templet: '<div>{{d.brandPowerRole.roleDescribe}}</div>',
+								title: "是否定制",
+							}, {
+								field: "creationData",
+								title: "商品折扣"
+							}, {
+								field: "lastUpdateData",
+								title: "商品材质"
+							}, {
+								templet: "#barDemo",
+								title: "操作",
+								width:191,
+							}
+						]
+					],
+					page: true,
+					done: function() {
+						$(".table-shop-name").click(function() {
+							iframeWindow(this);
+						});
+					}
+				});
+			  
+				//监听点击的按钮
+				table.on('tool(Audit)', function(obj){
+					var layEvent = obj.event;
+					var data = obj.data;
+					var tr = obj.tr;
+					if(obj.event === '2'){
+					}
+					if(obj.event === '1'){
+					}
+					if(obj.event === '3'){
+						layer.confirm('确认删除吗？',function(){
+							delByid(data.goodsId,obj);
+						});
+					}
+				});
+				form.on('select(test)', function(data){
+					  console.log(data.value); //得到被选中的值
+					  $("#select_twos").find(" option:eq(0)").nextAll().remove();
+					  selectTwoMsg(data.value,2);
+				});
+				form.on('select(test1)', function(data){
+					  console.log(data.value); //得到被选中的值
+					  $("#select_two").find(" option:eq(0)").nextAll().remove();
+					  selectTwoMsg(data.value,1);
+				});
+			});
+		});
+		
+	</script>
+</html>

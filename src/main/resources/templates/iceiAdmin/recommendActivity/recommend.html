@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>主页设置</title>
+		<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" />
+		<link href="../../layuiadmin/style/table.css" rel="stylesheet" />
+		<link href="../../layuiadmin/style/iframe-child.css" rel="stylesheet" />
+	</head>
+	<style>
+		#jiaid{
+		display: none;}
+		 #popups{
+			width:100%;
+			display:none;
+			overflow: hidden;
+		}
+		#popups ul {
+		margin-top:45px;}
+		#popups ul li{
+			width:500px;
+			height:60px;
+			line-height: 60px;
+		}
+		#popups ul li span{
+			display: block;
+			width:200px;
+			float:left;
+			text-align: right;
+			margin-right:20px;
+		}
+		.li_center{
+			width:200px;
+			height:100%;
+			margin:0 auto;
+			text-align: center;
+		}
+		.layui-input{
+			width:186px;
+		}
+		.popups{
+			display: none;
+		}
+		.left_inline{
+			margin-left: -3px;
+		}
+		.tables{
+			overflow: visible;
+		}
+	</style>
+	<body>
+		<div class="layui-fluid">
+			<div class="layui-row layui-col-space15">
+				<div class="layui-col-md12 main-container">
+					<div class="layui-card">
+						<div class="layui-card-header">
+							推荐有礼
+						</div>
+						<div class="layui-form-item" style="border-bottom: 1px solid #f6f6f6;">
+								<label class="layui-form-label">请选择</label>
+								<div class="layui-input-block">
+									<div class="layui-inline">
+										<input id="selectByid_input"  name="keyword" style="width: 240px;display: inline;" lay-verify="required" placeholder="根据id查询" autocomplete="off" class="layui-input" type="text">
+									</div>
+									
+									<div class="layui-inline">
+										<a onclick="seleByassessid()" class="layui-btn">搜索</a>
+									</div>
+									<div class="layui-inline">
+										<a onclick="Rewardset()" class="layui-btn">奖励设置</a>
+									</div>
+								</div>
+							</div>
+							<div id="tables" lay-filter="Audit" lay-data="{id: 'ecommendId'}" >
+								
+							</div>
+							<div id="popups" style="display: none">
+								<div id="popups_d"></div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+	<script src="../../layuiadmin/layui/layui.js"></script>
+		
+	<script type="text/html" id="barDemo">
+		<a class="layui-btn layui-btn-xs"  lay-event="2">查看</a>
+	</script>
+	
+	<script>
+	var tableinsr;
+	var form;
+		$(document).ready(function() {
+			layui.use(['table', 'layer', 'upload','form'], function() {
+				var table = layui.table;
+				var form=layui.form;
+				/*商品列表*/
+				tableinsr=table.render({
+					elem: '#tables',
+					url: "/activity/getAll",
+					limit:5,
+					where:{
+						discountsid:0
+					},
+					cols: [
+						[{
+								type: 'checkbox'
+							},
+							{
+								field: "ecommendId",
+								title: "标识列",
+								sort: true
+							}, {
+								templet:"<div>{{d.userDetail.userName}}</div>",
+								title: "推荐人姓名",
+							} ,{
+								field: "count",
+								title: "推荐人总数",
+							},  {
+								title: "被推荐信息",
+								width:150,
+								toolbar: "#barDemo"
+							}
+						]
+					],
+					page: true
+				});
+				//监听点击的按钮
+				table.on('tool(Audit)', function(obj){
+					var layEvent = obj.event;
+					var data = obj.data;
+					var tr = obj.tr;
+					if(obj.event === '2'){
+					    tabshow(data.ecommendId);
+					}
+					if(obj.event === '1'){
+					    obj.update({
+					    	generalizeMoney: '33333333333333',
+					    });
+					}
+					if(obj.event === '3'){
+						layer.confirm('确认删除吗？',function(){
+							delByid(data.generalizeId,obj,data)
+						});
+					}
+				});
+				
+			});
+		});
+		//设置打开奖励页面
+		function Rewardset(){
+			
+		}
+		//重载数据表格
+		function seleByassessid(){
+			var assid=$("#selectByid_input").val();
+			var id=assid.trim();
+			if(id==''){
+				id=0;
+			}
+			tableinsr.reload({
+				  where: {//参数
+					  discountsid:id
+				  }
+				  ,page: {
+				    curr: 1 //重新从第 1 页开始
+				  }
+			});
+		}
+		var showd;
+		/*商品弹出窗*/
+		function tabshow(o) {
+			if(o=='1'){
+				$(".addsetting").text("新增");
+			}else{
+				$(".addsetting").text("修改");
+			}
+				//自定页
+				layer.open({
+				  type: 1,
+				  title :'成功邀请人信息',
+				  skin: 'layui-layer-demo', //样式类名
+				  closeBtn: 1, //不显示关闭按钮
+				  anim: 2,
+				  area: ['852px', '600px'],
+				  shadeClose: true, //开启遮罩关闭
+				  content:$("#popups"),
+				  end:function(){
+					  
+				  },
+				  success: function(layero, index){
+					 showd= layui.table.render({
+							elem: '#popups_d',
+							url: "/activity/getByid",
+							limit:5,
+							where:{
+								id:o
+							},
+							cols: [
+								[{
+										type: 'checkbox'
+									},
+									{
+										templet:"<div>{{d.userDetail.userId}}</div>",
+										title: "用户id",
+										sort: true
+									},
+									{
+										templet:"<div>{{d.userDetail.userName}}</div>",
+										title: "用户名称",
+									},
+									{
+										templet:"<div>{{d.userDetail.userCode}}</div>",
+										title: "姓名",
+									},
+									{
+										templet:"<div>{{d.userDetail.userGender==0?'男':'女'}}</div>",
+										title: "性别",
+									},
+									{
+										templet:"<div>{{d.userDetail.phoneNum}}</div>",
+										title: "手机号",
+										width:185,
+									},
+									{
+										templet:"<div>{{d.userDetail.creationDate}}</div>",
+										title: "创建时间",
+										width:197.95,
+									}
+								]
+							],
+							page: true
+						});
+				  }
+				
+				});	
+			 
+				
+		}
+		
+		</script>
+	</body>
+
+</html>

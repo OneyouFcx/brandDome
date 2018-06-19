@@ -1,0 +1,50 @@
+﻿/* CSS Document */
+.pro-bar {
+	position: absolute;
+    bottom: 20px;
+    left: 436px;
+    width: 400px;
+	height: 8px;
+	border-radius: 5px;
+	background: #ccc;
+	color: #239982;
+}
+.pro-bar .drag {
+	position: absolute;
+	left: 0;
+	margin-left: -8px;
+	top: -5px;
+	cursor: pointer;
+}
+.pro-bar .percent {
+	position: absolute;
+	top: -20px;
+	height: 10px;
+	width: 100%;
+	text-align: center;
+}
+.pro-bar .drag {
+	border: 1px solid #ccc;
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	background: #00A3FF;
+}
+.pro-bar .percent:before {
+	content: '缩小';
+	position: absolute;
+	left: 0;
+}
+.pro-bar .percent:after {
+	content: '放大';
+	position: absolute;
+	right: 0;
+}
+.pro-bar .rate-bar {
+	position: absolute;
+	left: 0;
+	background: #239982;
+	width: 0;
+	height: 8px;
+	border-radius: 10px;
+}

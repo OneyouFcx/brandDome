@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icei.mapper.GoodsAuditMapper">
+	<resultMap id="BaseResultMap" type="com.icei.domain.GoodsAudit">
+		<result property="startTime" column="start_time" />
+		<result property="endTime" column="end_time" />
+		<result property="auditDetail" column="audit_detail" />
+		<result property="recordId" column="record_id" />
+		<association property="brandGoods" javaType="com.icei.domain.BrandGoods">
+			<result column="brand_id" jdbcType="INTEGER" property="brandId" />
+			<result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+			<result column="type_detail_id" jdbcType="INTEGER" property="typeDetailId" />
+			<result column="goods_price" jdbcType="REAL" property="goodsPrice" />
+			<result column="goods_discount" jdbcType="REAL" property="goodsDiscount" />
+			<result column="diy_price" jdbcType="REAL" property="diyPrice" />
+			<result column="is_diy" jdbcType="INTEGER" property="isDiy" />
+			<result column="production_cycle" jdbcType="INTEGER" property="productionCycle" />
+			<result column="goods_dec" jdbcType="VARCHAR" property="goodsDec" />
+			<result column="materials" jdbcType="VARCHAR" property="materials" />
+			<result column="sales_volume" jdbcType="INTEGER" property="salesVolume" />
+			<result column="goods_quality" jdbcType="REAL" property="goodsQuality" />
+			<result column="server_attitude" jdbcType="REAL" property="serverAttitude" />
+			<result column="assess_count_love" jdbcType="INTEGER"
+				property="assessCountLove" />
+			<result column="assess_count" jdbcType="INTEGER" property="assessCount" />
+			<result column="like_count" jdbcType="INTEGER" property="likeCount" />
+		</association>
+		<association property="systemGeneralize" javaType="com.icei.domain.SystemGeneralize">
+			<id column="generalize_id" jdbcType="INTEGER" property="generalizeId" />
+			<result column="address_id" jdbcType="INTEGER" property="addressId" />
+			<result column="generalize_money" jdbcType="REAL" property="generalizeMoney" />
+			<result column="generalize_commission" jdbcType="REAL"
+				property="generalizeCommission" />
+			<result column="generalize_start_time" jdbcType="TIMESTAMP"
+				property="generalizeStartTime" />
+			<result column="generalize_end_time" jdbcType="TIMESTAMP"
+				property="generalizeEndTime" />
+			<result column="brand_id" jdbcType="INTEGER" property="brandId" />
+			<result column="address_type" property="addressName" />
+		</association>
+		<association property="auditStatus" javaType="com.icei.domain.AuditStatus">
+			<result property="statusId" column="status_id" />
+			<result property="statusName" column="status_name" />
+		</association>
+		<association property="generalizeAddress" javaType="com.icei.domain.GeneralizeAddress">
+            <id column="address_id" jdbcType="INTEGER" property="addressId" />
+            <result column="generalize_address" jdbcType="VARCHAR" property="generalizeAddress" />
+		</association>
+	</resultMap>
+	<select id="findGoodsAuditCountByParams" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM goods_audit as ga
+		INNER JOIN brand_goods as bd
+		INNER JOIN system_generalize as sg
+		INNER JOIN audit_status as ass
+        INNER JOIN generalize_address as gadd
+		WHERE bd.goods_id=ga.goods_id
+		and sg.generalize_id=ga.generalize_id
+		and ass.status_id=ga.`status`
+        and gadd.address_id=sg.address_id
+		<if test="keyword !=null and keyword!=''">
+		    and bd.brand_id=#{keyword}
+		</if>
+		<if test="searchType !=null">
+		    and ga.status=#{searchType}
+		</if>
+	</select>
+	<select id="findGoodsAuditByParams" resultMap="BaseResultMap">
+		SELECT * FROM goods_audit as ga
+		INNER JOIN brand_goods as bd
+		INNER JOIN system_generalize as sg
+		INNER JOIN audit_status as ass
+        INNER JOIN generalize_address as gadd
+		WHERE bd.goods_id=ga.goods_id
+		and sg.generalize_id=ga.generalize_id
+		and ass.status_id=ga.`status`
+        and gadd.address_id=sg.address_id
+		<if test="keyword !=null">
+		    and bd.brand_id=#{keyword}
+		</if>
+		<if test="searchType !=null">
+		    and ga.status=#{searchType}
+		</if>
+	</select>
+	<update id="updateStatus">
+	UPDATE goods_audit SET status=#{option} WHERE record_id=#{id}
+	</update>
+</mapper>

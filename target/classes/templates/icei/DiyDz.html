@@ -1,0 +1,269 @@
+<!doctype html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8">
+	<title th:text="'独一无二-'+${goods.goodsName}"></title>
+	<link rel="stylesheet" href="http://spoons.test.upcdn.net/layui/css/layui.css"><!--layui-->
+	<link rel="stylesheet" href="css/Public.css"><!--Public-->
+	<link rel="stylesheet" href="css/animate.min.css">
+	<link rel="stylesheet" href="css/diydz/diydz.css"><!--diydz-->
+	<link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_612454_f9ua7om4mvnxko6r.css"><!--侧栏导航字体-->
+	<link rel="stylesheet" type="text/css" href="js/diydz/sizeBar.css"><!--大小进度-->
+	<link rel="stylesheet" href="css/diydz/loading.css">
+
+	<script src="js/diydz/loading.js"></script>
+	<script type="text/javascript">
+		var siteUrl="http://39.104.166.58/";//图片接口地址
+		var zhiqu="http://zhiqutuku.test.upcdn.net/zhiqu/";
+	</script>
+	<script src="js/jquery-3.2.1.min.js"></script>
+	<script src="http://spoons.test.upcdn.net/layui/layui.all.js"></script><!--layui-->
+	<script src="js/TweenMax.min.js"></script>
+	<script src="js/wow.min.js"></script>
+	<script src="js/masonry/masonry.pkgd.min.js"></script><!--masonry-->
+	<script src="js/masonry/imagesloaded.pkgd.min.js"></script><!--masonry-->
+	<!-- html2canvas将Dom节点在Canvas里边画出来 -->
+	<script src="js/diydz/createImg/html2canvas.min.js"></script>
+	<!-- 将canvas图片保存成图片 -->
+	<script src="js/diydz/createImg/base64.js"></script>
+	<script src="js/diydz/createImg/canvas2image.js"></script>
+	<script src="js/diydz/createImg/createimg.js"></script>
+	<script src="js/diydz/wrapper-nav.js"></script><!--侧栏导航-->
+	<script src="js/diydz/drag.js"></script><!--拖动插件-->
+	<script src="js/jquery.mousewheel.min.js"></script><!--滚动插件-->
+	<style type="text/css">
+		/*底部*/
+		.dbom{
+			text-align:center;
+			height:20px;
+			display: none;
+		}
+	</style>
+	<script>
+        document.onreadystatechange = function () {
+            var progress = document.getElementById('progress');
+            console.log(document.readyState)
+            if (document.readyState == 'complete'){
+                console.log("页面加载成功");
+            }
+        }
+        //加载等待
+        var loadingS=function(){
+            var t = new TimelineMax();
+            t.to('.loading',0.8,{opacity:0,onComplete: function () {
+                    $('.loading').hide();
+                }
+            });
+            t.play();
+            new WOW().init();
+		}
+	</script>
+</head>
+
+<body>
+	<header class="navigation">
+		<a id="btnSave">
+			<i class="iconfont icon-baocun1"></i>
+			<nav-title>保存</nav-title>
+		</a>
+		<a href="SPOONS.html">
+			<i class="iconfont icon-shouye"></i>
+			<nav-title>首页</nav-title>
+		</a>
+	</header>
+	<main>
+		<nav id="nav" class="wow fadeInLeftBig">
+			<div class="nav-wrapper">
+				<ul class="nav-top">
+					<li class="clearfix active" like="2" url="SysPicServlet">
+						<i class="iconfont icon-dianpu1"></i>
+						<nav-title>推荐</nav-title>
+					</li>
+					<li class="clearfix" like="1" url="FavoriteServlet">
+						<i class="iconfont icon-biaoqing"></i>
+						<nav-title>我的</nav-title>
+					</li>
+					<li class="clearfix" like="2" url="FavoriteServlet">
+						<i class="iconfont icon-zan"></i>
+						<nav-title>采集</nav-title>
+					</li>
+					<li class="clearfix" like="3" url="FavoriteServlet">
+						<i class="iconfont icon-shoucang"></i>
+						<nav-title>喜欢</nav-title>
+					</li>
+					<li class="bendi">
+						<i class="iconfont icon-shangchuan"></i>
+						<nav-title>本机</nav-title>
+					</li>
+					<input id="bendi" type="file" style="display: none">
+				</ul>
+			</div>
+			<section id="toolbar">
+				<div class="toolbar">
+					<h1 class="toolbar-title">推荐模板</h1>
+					<form id="diy-class" class="layui-form"  style="margin: 0 27px;">
+						<select lay-filter="class" name="class">
+						</select>
+					</form>
+					<div class="toolbar-list">
+						<div class="scrollarea">
+							<section class="sec"></section>
+							<section class="dbom"><span>没有咯</span></section>
+						</div>
+					</div>
+				</div>
+			</section>
+		</nav>
+		<section id="diy-canvas" th:attr="goodsId=${goods.goodsId},sizeId=${sizeId}">
+			<div class="wow fadeIn dz-box" style="">
+				<!--定制模板图片-->
+				<img id="dz-img" th:src="'http://spoons.test.upcdn.net'+${goods.diyBack}">
+				<!--定制模板图片End-->
+				<div id="dz-back">
+					<img src="img/diydz/20180404102820.jpg" alt="img/diydz/20180404102820.jpg" id="topimg"><!--图片背景-->
+				</div>
+			</div>
+			<div class="wow fadeInRightBig diy-right"><img src="img/diydz/diy-r-yang.png"></div>
+		</section>
+	</main>
+	<!--大小调整-->
+	<section class="wow fadeInUpBig pro-bar">
+		<div class="percent">0</div>
+		<div class="rate-bar"></div>
+		<span class="iconfont drag"></span>
+	</section>
+	<!--大小调整end-->
+	<!--加载层-->
+	<div class='loading' style="z-index: 99999">
+		<div class='logo'></div>
+		<div class='dots animate'>
+			<div class='dot'></div>
+			<div class='dot'></div>
+			<div class='dot'></div>
+			<div class='dot'></div>
+			<div class='dot'></div>
+		</div>
+	</div>
+	<!--加载层End-->
+</body>
+<script>
+    $(function(){
+        $('img').on('mousedown',function (e) {
+            e.preventDefault();//禁止图片脱出
+        });
+        $('.sec').masonry({
+            itemSelector: '.template-item',
+            columnWidth: 0
+        });
+        $.Move($(".dz-box"),$("#dz-back"));//图片拖动
+        mousewheel();//滚动大小
+        selectTopImg();//本地图片上传
+        tuijian(serUrl,ajdata);
+    });
+    /*本地选择图片*/
+    var selectTopImg=function(){
+        $(".bendi").click(function(){
+            $("#bendi").trigger('click');
+        });
+        $("#bendi").click(function(){
+            $(this).change(function(){
+                var ofile = $(this).get(0).files[0];//获取文件
+                var reader = new FileReader();
+                if(!/image\/\w+/.test(ofile.type)){
+                    layer.msg("请选择图片类型");
+                }else{
+                    reader.readAsDataURL(ofile);//调用自带方法进行转换
+                    reader.onload = function(e) {
+                        $("#dz-back").find("img").attr("src",this.result);
+                        $("#dz-back").find("img").attr("alt","topimg");
+                        recoverSize();//恢复默认设置
+                    };
+                }
+            });
+        });
+    }
+</script>
+<script>
+    $(function(){
+        getBase64($("#dz-img").attr("src")).then(function(img64){
+            $("#dz-img").attr("src",img64);//转64位
+        })
+        /*确认定制*/
+        $("#btnSave").click(function(){
+            layer.open({
+                type: 1
+                ,title: false
+                ,closeBtn: false
+                ,area: ['700px', '700px']
+                ,shade: 0.5
+                ,shadeClose: true
+                ,anim: 0
+                ,scrollbar:false
+                ,id: 'LAY_layuipro'
+                ,resize: false
+                ,moveType: 1
+                ,content: $("#images")
+                ,skin: 'll-class'
+                ,success: function(layero){
+                    layer.load();
+                }
+                ,end:function(){
+                    layui.element.progress('demo', 0+'%');//设置页面进度条
+                    $("#images").css("display","none");
+                    $("#canvas").empty();
+                }
+            });
+            //img转换base64
+            getBase64($("#dz-back").find("img").attr("src")).then(function(base64){
+                $("#dz-back").find("img").attr("src",base64);
+                canvasV($(".dz-box"));//生成canvas
+                layer.msg("样品展示成功！");
+                layer.closeAll('loading');
+            },function(err){
+                layer.closeAll('loading');
+            });
+        });
+        /*图片上传*/
+        $("#affirm").click(function(){
+            var imgalt=$("#topimg").attr("alt");//获取标识
+            if(imgalt!="topimg"){//云图片执行
+                getBase64(imgalt).then(function(img64){//转base64位
+                    var blob=convertBase64UrlToBlob(img64);
+                    topdom(blob);
+                })
+            }else{//上传本机图片执行
+                var oFile = $("#bendi").get(0).files[0]; //input file标签
+                //云图片接- 图片上传url,数据
+                topdom(oFile);
+            };
+        });
+    });
+    /*云图片上传*/
+    function topdom(topimg){
+        //topimg原图
+        var blob=convertBase64UrlToBlob(boacun());//blob格式样品图片
+        var	formData = new FormData();
+        formData.append("file",blob);
+        formData.append("file",topimg);
+		yunimg(formData,"/icei/addDiyMoule");//接口图片上传
+    }
+</script>
+<script src="js/diydz/zhiquApi.js"></script><!--知趣图库api-->
+<script src="js/diydz/sizeBar.js"></script><!--拖拽大小进度插件-->
+<script type="text/javascript" src="js/diydz/topimg/topimg.js"></script><!--原图片上传-->
+<script type="text/javascript" src="/icei/js/diydz/ImgYunTop.js"></script><!--图片上传-->
+<!--弹出层-->
+<section id="images" style="display:none">
+	<div id="canvas"></div>
+	<div id="select">
+		<div class="layui-progress" lay-filter="demo" lay-showPercent="true">
+			<div class="layui-progress-bar" lay-percent="0%"></div>
+		</div>
+		<div class="select-btn">
+			<div class="layui-btn layui-btn-radius" id="affirm">就这样子啦</div>
+			<div class="layui-btn layui-btn-radius layui-btn-primary" onclick="layer.closeAll('page')">再修改下吧</div>
+		</div>
+	</div>
+</section>
+<!--弹出层End-->
+</html>

@@ -1,0 +1,118 @@
+{
+	"code": 0,
+	"msg": "",
+	"count": 10,
+	"data": [
+		{
+			"brandId": "1",
+			"brandName": "测试店铺",
+			"brandAdmin": "admin",
+			"iconPath": "K.jpg",
+			"brandDesc":"这是一条测试数据",
+			"goodsNum": "9999",
+			"goodsQuality": 5,
+			"server_attitude": 0,
+			"likeCount":999,
+			"brandStatus":0
+		}, {
+			"brandId": "1",
+			"brandName": "测试店铺",
+			"brandAdmin": "admin",
+			"iconPath": "K.jpg",
+			"brandDesc":"这是一条测试数据",
+			"goodsNum": "9999",
+			"goodsQuality": 5,
+			"server_attitude": 0,
+			"likeCount":999,
+			"brandStatus":0
+		}, {
+			"brandId": "1",
+			"brandName": "测试店铺",
+			"brandAdmin": "admin",
+			"iconPath": "K.jpg",
+			"brandDesc":"这是一条测试数据",
+			"goodsNum": "9999",
+			"goodsQuality": 5,
+			"server_attitude": 0,
+			"likeCount":999,
+			"brandStatus":0
+		}, {
+			"brandId": "1",
+			"brandName": "测试店铺",
+			"brandAdmin": "admin",
+			"iconPath": "K.jpg",
+			"brandDesc":"这是一条测试数据",
+			"goodsNum": "9999",
+			"goodsQuality": 5,
+			"server_attitude": 0,
+			"likeCount":999,
+			"brandStatus":0
+		}, {
+			"brandId": "1",
+			"brandName": "测试店铺",
+			"brandAdmin": "admin",
+			"iconPath": "K.jpg",
+			"brandDesc":"这是一条测试数据",
+			"goodsNum": "9999",
+			"goodsQuality": 5,
+			"server_attitude": 0,
+			"likeCount":999,
+			"brandStatus":0
+		}, {
+			"brandId": "1",
+			"brandName": "测试店铺",
+			"brandAdmin": "admin",
+			"iconPath": "K.jpg",
+			"brandDesc":"这是一条测试数据",
+			"goodsNum": "9999",
+			"goodsQuality": 5,
+			"server_attitude": 0,
+			"likeCount":999,
+			"brandStatus":0
+		}, {
+			"brandId": "1",
+			"brandName": "测试店铺",
+			"brandAdmin": "admin",
+			"iconPath": "K.jpg",
+			"brandDesc":"这是一条测试数据",
+			"goodsNum": "9999",
+			"goodsQuality": 5,
+			"server_attitude": 0,
+			"likeCount":999,
+			"brandStatus":0
+		}, {
+			"brandId": "1",
+			"brandName": "测试店铺",
+			"brandAdmin": "admin",
+			"iconPath": "K.jpg",
+			"brandDesc":"这是一条测试数据",
+			"goodsNum": "9999",
+			"goodsQuality": 5,
+			"server_attitude": 0,
+			"likeCount":999,
+			"brandStatus":0
+		}, {
+			"brandId": "1",
+			"brandName": "测试店铺",
+			"brandAdmin": "admin",
+			"iconPath": "K.jpg",
+			"brandDesc":"这是一条测试数据",
+			"goodsNum": "9999",
+			"goodsQuality": 5,
+			"server_attitude": 0,
+			"likeCount":999,
+			"brandStatus":0
+		}, {
+			"brandId": "1",
+			"brandName": "测试店铺",
+			"brandAdmin": "admin",
+			"iconPath": "K.jpg",
+			"brandDesc":"这是一条测试数据",
+			"goodsNum": "9999",
+			"goodsQuality": 5,
+			"server_attitude": 0,
+			"likeCount":999,
+			"brandStatus":0
+		}
+	]
+}

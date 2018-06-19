@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>主页设置</title>
+		<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" />
+		<link href="../../layuiadmin/style/table.css" rel="stylesheet" />
+		<link href="../../layuiadmin/style/iframe-child.css" rel="stylesheet" />
+	</head>
+	<style>
+		#jiaid{
+		display: none;}
+		 #popups{
+			width:500px;
+			height:100%;
+			display:none;
+			overflow: hidden;
+		}
+		#popups ul {
+		margin-top:45px;}
+		#popups ul li{
+			width:500px;
+			height:60px;
+			line-height: 60px;
+			
+			
+		}
+		#popups ul li span{
+			display: block;
+			width:200px;
+			float:left;
+			text-align: right;
+			margin-right:20px;
+		}
+		.li_center{
+			width:200px;
+			height:100%;
+			margin:0 auto;
+			text-align: center;
+		}
+		.layui-input{
+			width:186px;
+			
+		}
+		.left_inline{
+		margin-left: -3px;}
+	</style>
+	<body>
+		<div class="layui-fluid">
+			<div class="layui-row layui-col-space15">
+				<div class="layui-col-md12 main-container">
+					<div class="layui-card">
+						<div class="layui-card-header">
+							首页设置
+						</div>
+						<div class="layui-form-item" style="border-bottom: 1px solid #f6f6f6;">
+								<label class="layui-form-label">请选择</label>
+								<div class="layui-input-block">
+									<div class="layui-inline">
+										<input  name="keyword" style="width: 240px;display: inline;" required="" lay-verify="required" placeholder="请输入关键字" autocomplete="off" class="layui-input" type="text">
+									</div>
+									
+									
+									
+									<div class="layui-inline">
+										<form class="layui-form" style="width: 200px;display: inline;">
+											<select id="typename" name="type">
+												<option value="0">请选择</option>
+												<option value="1">首页</option>
+												<option value="2">直通车</option>
+											</select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input placeholder="选择店铺" value="" readonly="" class="layui-input layui-unselect" type="text"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit" style=""><dd lay-value="" class="layui-select-tips">选择店铺</dd><dd lay-value="ID" class="">全部</dd><dd lay-value="ID" class="">什么玩意</dd><dd lay-value="NAME" class="">什么玩意</dd></dl></div>
+										</form>
+									</div>
+									<div class="layui-inline">
+										<a onclick="seleByassessid()" class="layui-btn">搜索</a>
+									</div>
+									<div class="layui-inline">
+										<a   onclick="tabshow(1)" class="layui-btn">新增</a>
+									</div>
+								</div>
+							</div>
+							<div id="tables" lay-filter="Audit" lay-data="{id: 'generalizeId'}" >
+								
+							</div>
+							<div id="popups">
+								<ul>
+									<li><span>推广位置</span><div class="layui-inline">
+										
+									</div>
+									<div class="layui-inline  left_inline">
+										<form class="layui-form" id="selectes" style="width: 190;display: inline;">
+											<select name="type" id="select_one">
+												<option value="0">选择</option>
+												<option value="1">首页轮播</option>
+												<option value="2">分类直通车</option>
+											</select>
+										</form>
+									</div>
+									<li>
+										<span>推广加位：</span>
+										<div class="layui-input-inline">
+	       									 <input name="phone" class="generalize_money layui-input" lay-verify="required|phone" autocomplete="off"  type="tel">
+	      								</div>
+      								</li>
+									<li><span>推广抽成：</span>
+									<div class="layui-input-inline">
+	       									 <input name="phone" class="generalize_commission layui-input" lay-verify="required|phone" autocomplete="off"  type="tel">
+	      								</div>
+      								</li>
+									<li><span>推广开始时间：</span>
+										<div class="layui-input-inline">
+	       									 <input type="text" class="layui-input" id="start">
+	      								</div>
+      								</li>
+									<li><span>推广结束时间：</span>
+										<div class="layui-input-inline">
+	       									 <input type="text" class="layui-input" id="end">
+	       								 </div>
+      								</li>
+      								<li><span>推广的店铺名称：</span>
+										<div class="layui-input-inline">
+	       									 <input name="phone" class="brand_name layui-input" lay-verify="required|phone" autocomplete="off"  type="tel">
+	      								</div>
+      								</li>
+									<li><div class="li_center"><button  class="layui-btn addsetting">新增</button><input id="jiaid" type="text" value="1" /><button class="layui-btn">重置</button></div></li>
+								</ul>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+	<script src="../../layuiadmin/layui/layui.js"></script>
+		
+	<script type="text/html" id="barDemo">
+		<a class="layui-btn layui-btn-xs"  lay-event="2">编辑</a>
+		<a class="layui-btn layui-btn-xs" id="dongtai" style="display: none;"  lay-event="1">123</a>
+		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="3" >删除</a>
+	</script>
+	
+	<script>
+	var tableinsr;
+	var form;
+		$(document).ready(function() {
+			layui.use(['table', 'layer', 'upload','form','laydate'], function() {
+				var table = layui.table,
+					form=layui.form,
+					laydate = layui.laydate;
+			    //执行一个laydate实例
+			    laydate.render({
+			   		 elem:'#start', //指定元素
+			   		 format:'yyyy-MM-dd HH:mm:ss' 
+			    });
+			    laydate.render({
+			   		 elem:'#end', //指定元素
+			   		 format:'yyyy-MM-dd HH:mm:ss' 
+			    });
+				/*商品列表*/
+				tableinsr=table.render({
+					elem: '#tables',
+					url: "/setting/echodata",
+					limit:5,
+					where:{
+						assessid:0
+					},
+					cols: [
+						[{
+								type: 'checkbox'
+							},
+							{
+								field: "generalizeId",
+								title: "推广位置id",
+								sort: true
+							}, {
+								field: "addressName",
+								title: "推广位置",
+							} ,{
+								field: "generalizeMoney",
+								title: "推广价位",
+							}, {
+								field: "generalizeCommission",
+								title: "具体类型"
+							}, {
+								field: "generalizeStartTime",
+								title: "推广开始事件",
+							}, {
+								field: "generalizeEndTime",
+								title: "推广结束事件"
+							}, {
+								field: "brandId",
+								title: "推广人店铺"
+							}, {
+								title: "推广详细信息",
+								width:202,
+								toolbar: "#barDemo"
+							}
+						]
+					],
+					page: true
+				});
+				//监听点击的按钮
+				table.on('tool(Audit)', function(obj){
+					var layEvent = obj.event;
+					var data = obj.data;
+					var tr = obj.tr;
+					if(obj.event === '2'){
+					    tabshow(2);
+					    echosetting(data.generalizeId);
+					    addselect();
+					}
+					if(obj.event === '1'){
+					    obj.update({
+					    	generalizeMoney: '33333333333333',
+					    });
+					}
+					if(obj.event === '3'){
+						layer.confirm('确认删除吗？',function(){
+							delByid(data.generalizeId,obj,data)
+						});
+					}
+				});
+				
+			});
+		});
+		//添加select的值
+		function addselect(){
+			
+		}
+		//重载数据表格
+		function seleByassessid(){
+			var assid=$("#typename")[0].value;
+			console.log(assid);
+			tableinsr.reload({
+				  where: {//参数
+					  assessid:assid
+				  }
+				  ,page: {
+				    curr: 1 //重新从第 1 页开始
+				  }
+			});
+		}
+		//根据推广位置名称查询
+		
+		//根据id删除数据
+		var delByid=function(id,obj,d){
+			$.post("/setting/del",{"id":d.generalizeId},function(data){
+				if(data==1){
+					obj.del();//删除当前点击行
+					layer.msg('删除成功！');
+				}
+			})
+		}
+		//添加推广位置信息
+		$(".addsetting").click(function(){
+			if(address_id==0){
+				layer.msg('有信息为空！');
+			}else if(generalize_money==''){
+				layer.msg('有信息为空！');
+			}else if(generalize_commission==''){
+				layer.msg('有信息为空！');
+			}else if(generalize_commission==''){
+				layer.msg('有信息为空！');
+			}else if(generalize_commission==''){
+				layer.msg('有信息为空！');
+			}else if(generalize_start_time==''){
+				layer.msg('有信息为空！');
+			}else if(generalize_end_time==''){
+				layer.msg('有信息为空！');
+			}else if(brand_name==''){
+				layer.msg('有信息为空！');
+			}else{
+				if($(".addsetting").text()=="新增"){
+					var address_id=$("#select_one")[0].value;
+					var generalize_money=$(".generalize_money").val();
+					var generalize_commission=$(".generalize_commission").val();
+					var generalize_start_time=$("#start").val();
+					var generalize_end_time=$("#end").val();
+					var brand_name=$(".brand_name").val();
+					addsetting(address_id,generalize_money,generalize_commission,generalize_start_time,generalize_end_time,brand_name);
+				}else{
+					var address_id=$("#select_one")[0].value;
+					var generalize_money=$(".generalize_money").val();
+					var generalize_commission=$(".generalize_commission").val();
+					var generalize_start_time=$("#start").val();
+					var generalize_end_time=$("#end").val();
+					var brand_name=$(".brand_name").val();
+					updatesetting(address_id,generalize_money,generalize_commission,generalize_start_time,generalize_end_time,brand_name);
+				}
+				clearmes();//清楚数据
+			}
+		})
+		//清楚数据
+		function clearmes(){
+			$("#select_one").index(0);
+			$(".generalize_money").val('');
+			$(".generalize_commission").val('');
+			$("#start").val('');
+			$("#end").val('');
+			$(".brand_name").val('');
+		}
+		//添加一条推广位置信息
+		function addsetting(address_id,generalize_money,generalize_commission,generalize_start_time,generalize_end_time,brand_name){
+			$.post("/setting/add",{
+				"addressId":address_id,
+				"generalizeMoney":generalize_money,
+				"generalizeCommission":generalize_commission,
+				"generalizeStartTime":generalize_start_time,
+				"generalizeEndTime":generalize_end_time,
+				"brandId":brand_name},
+				function(d){
+					if(d.data==1){
+						seleByassessid();
+						layer.msg("修改成功")
+					}
+				})
+		}
+		//修改一条推广位置信息
+		function updatesetting(address_id,generalize_money,generalize_commission,generalize_start_time,generalize_end_time,brand_name){
+			
+			$.post("/setting/update",{
+				
+				"generalizeId":$("#jiaid").val(),
+				"addressId":address_id,
+				"generalizeMoney":generalize_money,
+				"generalizeCommission":generalize_commission,
+				"generalizeStartTime":generalize_start_time,
+				"generalizeEndTime":generalize_end_time,
+				"brandId":brand_name},
+				function(d){
+					//$("#dongtai").click();
+					if(d.data==1){
+						seleByassessid();
+						layer.msg("修改成功")
+					}else{
+						layer.msg("添加失败")
+					}
+					
+				})
+		}
+		//查询店铺是否存在返回id
+		function selectByidbrand(name){
+			
+		}
+		//根据id拆线呢
+		function echosetting(generalizeId){
+			$.post("/setting/selectByid",{"generalizeId":generalizeId},function(d){
+				//   d.data.addressName
+				$("#select_one").find(" option[value=1]").attr("checked","checked");
+				$("#select_one").val(d.data.brandId);
+				layui.form.render('select');
+				$(".generalize_money").val(d.data.generalizeMoney);
+				$(".generalize_commission").val(d.data.generalizeCommission);
+				$("#start").val(d.data.generalizeStartTime);
+				$("#end").val(d.data.generalizeEndTime);
+				$(".brand_name").val(d.data.brandId);
+				$("#jiaid").val(generalizeId);
+			})
+		}
+		/*商品弹出窗*/
+		function tabshow(o) {
+			if(o=='1'){
+				$(".addsetting").text("新增");
+			}else{
+				$(".addsetting").text("修改");
+			}
+				//自定页
+				layer.open({
+				  type: 1,
+				  title :'推广详细信息',
+				  skin: 'layui-layer-demo', //样式类名
+				  closeBtn: 0, //不显示关闭按钮
+				  anim: 2,
+				  area: ['500px', '600px'],
+				  shadeClose: false,
+				  closeBtn :1, //开启遮罩关闭
+				  content:$("#popups")
+				});
+		}
+		
+		</script>
+	</body>
+
+</html>

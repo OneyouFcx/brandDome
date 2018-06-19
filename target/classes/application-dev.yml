@@ -1,0 +1,129 @@
+server:
+  port: 80
+  servlet.context-path: /
+spring:
+  datasource:
+    name: test
+    url: jdbc:mysql://39.104.171.134:3306/icei
+    username: diy
+    password: diy123
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+  thymeleaf:
+    cache: false #模板缓存关闭
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT-5
+  # Redis 配置
+  redis:
+    # Redis数据库索引（默认为0）
+    database: 0
+    host: 39.104.171.134
+    port: 6379
+    password: icei123
+    # 连接超时时间
+    jedis:
+      pool:
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 8
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池中的最小空闲连接
+        min-idle: 0
+    timeout: 0
+  servlet:
+    multipart:
+      max-file-size: 50Mb #上传文件大小
+  #邮件发送设置
+  mail:
+    host: smtp.qq.com #邮箱服务器地址
+    username: 2339778367@qq.com #用户名
+    password: jcguvocslisldhhe #密码
+    default-encoding: UTF-8
+    properties:
+         mail:
+           smtp:
+               auth: true #是否需要验证权限登录
+               starttls:
+                 enable: true
+                 required: true
+mail:
+  fromMail:
+    addr: 2339778367@qq.com #以谁来发送邮件
+# mybatis配置
+mybatis:
+  mapper-locations: classpath:/mapping/*.xml
+  type-aliases-package: com.icei.domain
+  configuration:
+    log-impl: org.apache.ibatis.logging.log4j.Log4jImpl
+# 又拍云配置
+ypyun:
+  bucket_name: spoons
+  operator_name: only
+  operator_pwd: zhaoyao123/
+  url: http://spoons.test.upcdn.net/
+  temporary_url: spoons/static/temporary
+# 支付宝配置
+alipay:
+  # 应用ID
+  app_id: 2016082100304749
+  # 商户私钥
+  merchant_private_key: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCL3XpLj0FzWNRm6J3jarog7nj67LUl+mn9rVtHvf7au6ADKLyEswk1FGjjEkobipGLgsbv6ProDExTQeDsYPPr/ss6a5aSiLb+3FwGatrx4jKmpnCM6ZRdMX4Yd4jHpAqRRc4mfAgcTfzGEqt9VL+uGrOHGerVWxXhnw/jQ+hiK5mhTTGFGeRc9xkhXKyochVixY07qxLgHlF65sjNYs1Cb0aDHpd3IKTf+eQKlJbSDcOEQUAVIHLG6+HSl9pw07yF4V5322VZ1mKNnRHdYVp05jHHhI3+gn2OXwTfERgoN4iYUp3Y/iB4M/2PaaWRH+POScLq2nK6DJwpNKfXdbJDAgMBAAECggEAFEA4IdKXJm1ZK6FIoxHj6zq8F5DIVbxhNlKwYb3XtbHu5CY0zX3iumW/Hgma40v38Nw5k6kHEywcrP1f5LnQ932HzWigf4z9+f7L8D3uf5FBxjFZIH39dlThLge4rTdKNGiIBbh1sCt2ivNPEzF/I2VIUypkfwnWLDnMohpF/lict+5yAwA0ub8+fcCrSrBaCC3eXauzh6lCwlkyRN84HGpAN8Q1DEpIS/FmhRAF9gX7xj01vb81KQ0cJgT0KRAxfSZzn/rG9rEdi/NEekSOX+5U+fMBD/tVuQA+Qss1gAyFm9B28GXLJVQ3CIshy5MyFGngJDYmOI9VYjygXqxVgQKBgQDPwu7Cs3Ty2nzLlL1zoXy+Gv1ZTy2p1PM94rc+/WOfK0n2HdlPOZuJ5hKYo+A/nkUr8Xff1pRP2aqzWNAzUr0XNrvS8QS5+uNMDhCcl4UR3lKQRSGLweodw3Wed2tDhzaON+W7sRiVeKBvGFK8QBQD2AEssnh/lrR57cwdEc6+wQKBgQCsVuC9uCTGgc3ZaA/GvHP8bdn+dvE5XNaRddDvRvWTfGL/PlQ7vF1LzSd20wJH/C6hcQlsd4ApEidwReWzvjlTSPF0lVCx987nM/WpwkIHjn2zJU+jRbrxFyCQb8Fy4ON5AVLh+ICg2QOkkTNIo9Em2GtfzVLbZ5y3APIJIbz2AwKBgHALoNhAEAIo8sSYItQJc0zTIW7Y1LeSsNvfORQvc1qT7f9deaTQXKGyArVvK7Ejmgpo301IXBP0P6sZaq9DH9c1HXZVpUbnl02dCDhrPsi0LbLAlabZnXkPwI8FuENi2Hk6jBr9F1UFCQDhDT2ZETJBe+CvH20vyYU4SawjvmwBAoGAa5bpQ0e8nbjXnAxdHQL1nfeuijATNG6C/diBkX/JPEQBQbvVtl1IGVSAeKwO1oXXTq5U5cRM3FcbC/p3BpmRDC+TnebBs/ky0CAeE9bUhgcs7jQy3YlgxbZcfA9ow6EmIZrz9WLAWqpgndKQI58xqYCet/Zk7dhne9A5Sf4oC6UCgYEAzZuzyKwpcBxemqFD/tBoVcmZmaQUCsKIBrJRqEqZip24cCwDgxtCPgBX1MzNaUskFInUA3TV6YCRAkhhcv+3HJDdw4CcbSKwplYNkgccGy97E56MVfSLu5Ho+LrQ3Jd2CPtmWHhtpV5tjQMSx9mUqN1vz8CO0+woZxDIfGSR/+E=
+  # 支付宝公钥
+  alipay_public_key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx4ZjuweQGwQ7+Q9WMOmKTyywXq/lctAv/h1wpQR+jb1c4nDAEhRrR+79r80ZX7eS2NyEJzJ+RoyVgHcenRGumviNDc3IhJu6F6YOG3cCPbhupiliviyGR5W9OAKRrLwd97xOvVW/ZPEaiB3mVlmyd8iZ4TWB6f5W6dG8ojU9vWzhDu8huEzsZ1+XdXSj89sclfGx2p9q3Wq9sm+l2Xu0rGA7xC/JzB2DJkq2llIoqWs5snwC3fyq9MxndQnGVpGaZ/n9cU9JG5wDZuuWzrtBIEPPycW3qUgapdYDniGsUHf7pfgZoCCjGwmn20yc4c5jKNERlTzqIFSYPwF7LVKghQIDAQAB
+  # 异步通知页面路径
+  notify_url: http://127.0.0.1/alipay/notify_url
+  # 同步通知页面路径
+  return_url: http://127.0.0.1/alipay/return_url
+  # 字符编码格式
+  sign_type: RSA2
+  # 字符编码格式
+  charset: utf-8
+  # 支付宝网关
+  gatewayUrl: https://openapi.alipaydev.com/gateway.do
+
+
+
+
+
+
+
+
+
+#支付宝
+#sdk:
+#  alipay:
+#    dev: true #默认false,为true表示使用沙箱环境
+#    sign-type: RSA2 #签名算法
+#    #应用ID
+#    app-id: 2016082100304749
+#    #应用私钥
+#    private-key: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCL3XpLj0FzWNRm6J3jarog7nj67LUl+mn9rVtHvf7au6ADKLyEswk1FGjjEkobipGLgsbv6ProDExTQeDsYPPr/ss6a5aSiLb+3FwGatrx4jKmpnCM6ZRdMX4Yd4jHpAqRRc4mfAgcTfzGEqt9VL+uGrOHGerVWxXhnw/jQ+hiK5mhTTGFGeRc9xkhXKyochVixY07qxLgHlF65sjNYs1Cb0aDHpd3IKTf+eQKlJbSDcOEQUAVIHLG6+HSl9pw07yF4V5322VZ1mKNnRHdYVp05jHHhI3+gn2OXwTfERgoN4iYUp3Y/iB4M/2PaaWRH+POScLq2nK6DJwpNKfXdbJDAgMBAAECggEAFEA4IdKXJm1ZK6FIoxHj6zq8F5DIVbxhNlKwYb3XtbHu5CY0zX3iumW/Hgma40v38Nw5k6kHEywcrP1f5LnQ932HzWigf4z9+f7L8D3uf5FBxjFZIH39dlThLge4rTdKNGiIBbh1sCt2ivNPEzF/I2VIUypkfwnWLDnMohpF/lict+5yAwA0ub8+fcCrSrBaCC3eXauzh6lCwlkyRN84HGpAN8Q1DEpIS/FmhRAF9gX7xj01vb81KQ0cJgT0KRAxfSZzn/rG9rEdi/NEekSOX+5U+fMBD/tVuQA+Qss1gAyFm9B28GXLJVQ3CIshy5MyFGngJDYmOI9VYjygXqxVgQKBgQDPwu7Cs3Ty2nzLlL1zoXy+Gv1ZTy2p1PM94rc+/WOfK0n2HdlPOZuJ5hKYo+A/nkUr8Xff1pRP2aqzWNAzUr0XNrvS8QS5+uNMDhCcl4UR3lKQRSGLweodw3Wed2tDhzaON+W7sRiVeKBvGFK8QBQD2AEssnh/lrR57cwdEc6+wQKBgQCsVuC9uCTGgc3ZaA/GvHP8bdn+dvE5XNaRddDvRvWTfGL/PlQ7vF1LzSd20wJH/C6hcQlsd4ApEidwReWzvjlTSPF0lVCx987nM/WpwkIHjn2zJU+jRbrxFyCQb8Fy4ON5AVLh+ICg2QOkkTNIo9Em2GtfzVLbZ5y3APIJIbz2AwKBgHALoNhAEAIo8sSYItQJc0zTIW7Y1LeSsNvfORQvc1qT7f9deaTQXKGyArVvK7Ejmgpo301IXBP0P6sZaq9DH9c1HXZVpUbnl02dCDhrPsi0LbLAlabZnXkPwI8FuENi2Hk6jBr9F1UFCQDhDT2ZETJBe+CvH20vyYU4SawjvmwBAoGAa5bpQ0e8nbjXnAxdHQL1nfeuijATNG6C/diBkX/JPEQBQbvVtl1IGVSAeKwO1oXXTq5U5cRM3FcbC/p3BpmRDC+TnebBs/ky0CAeE9bUhgcs7jQy3YlgxbZcfA9ow6EmIZrz9WLAWqpgndKQI58xqYCet/Zk7dhne9A5Sf4oC6UCgYEAzZuzyKwpcBxemqFD/tBoVcmZmaQUCsKIBrJRqEqZip24cCwDgxtCPgBX1MzNaUskFInUA3TV6YCRAkhhcv+3HJDdw4CcbSKwplYNkgccGy97E56MVfSLu5Ho+LrQ3Jd2CPtmWHhtpV5tjQMSx9mUqN1vz8CO0+woZxDIfGSR/+E=
+#    #支付宝公钥
+#    alipay-public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx4ZjuweQGwQ7+Q9WMOmKTyywXq/lctAv/h1wpQR+jb1c4nDAEhRrR+79r80ZX7eS2NyEJzJ+RoyVgHcenRGumviNDc3IhJu6F6YOG3cCPbhupiliviyGR5W9OAKRrLwd97xOvVW/ZPEaiB3mVlmyd8iZ4TWB6f5W6dG8ojU9vWzhDu8huEzsZ1+XdXSj89sclfGx2p9q3Wq9sm+l2Xu0rGA7xC/JzB2DJkq2llIoqWs5snwC3fyq9MxndQnGVpGaZ/n9cU9JG5wDZuuWzrtBIEPPycW3qUgapdYDniGsUHf7pfgZoCCjGwmn20yc4c5jKNERlTzqIFSYPwF7LVKghQIDAQAB
+
+#debug: true
+#logging:
+#  level:
+#    com:
+#      ibatis: debug
+#pagehelper:
+#  helperDialect: mysql
+#  offsetAsPageNum: true
+#  rowBoundsWithCount: true
+#  reasonable: false

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+<script src="../../layuiadmin/layui/layui.all.js"></script>
+<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+<style>
+	.add{
+		margin:2% 0px;
+		width:100%;
+		padding-left:50px;
+	}
+	.add>input{
+		width:15%;
+		display:inline-block
+	}
+</style>
+<body>
+ <div class="layui-inline add"> <!-- 注意：这一层元素并不是必须的 -->				 	
+		<label class="layui-form-label">店铺账号ID</label>
+		<input type="text" name="brandAdminId"  lay-verify="required"   class="layui-input"/>
+		<label style="float:none;display:inline-block;" class="layui-form-label">店铺ID</label>
+	    <input type="text" name="brandId"  lay-verify="required" class="layui-input"/>
+		<input type="button" class="layui-btn" id="sure" value="确定">
+	</div>				
+	<table id="demo" lay-data="{id: 'idTest'}" lay-filter="test" class="layui-table"></table>
+</body>
+<script>
+$(document).ready(function() {
+	layui.use('table', function() {
+		var table = layui.table;
+		 //监听单元格编辑
+	    table.on('edit(test)', function(obj){
+	      var data = obj.data ;
+	      layer.confirm('是否修改:[ID: '+ data.brandAdminId +'] ' + obj.field + ' 字段更改为：'+ obj.value, {icon: 3, title:'提示'}, function(index){
+	    	  console.log(data);
+	    	  $.ajax({
+					url:'/admin/user/updatebrandAdmin',
+					data:data,
+					type:'Put',
+					success:function(v){
+						if(v.code==0){
+							layer.msg('修改成功');
+						}else{
+							layer.msg('修改失败');
+						}
+					}
+				})
+	    	  layer.close(index);
+	    	});
+	    });
+		//结束
+		table.render({
+			elem: '#demo',
+			url: "/admin/user/getAllbrandAdmin",
+			cellMinWidth: 80,
+			limit:5,
+			id:'idTest',
+			cols: [
+				[{
+						type: 'checkbox'
+					},
+					{
+						field: "brandAdmId",
+						title: "店铺账号ID",
+					}, {
+						title: "店铺账号",
+						field: 'adminCode',
+						edit: 'text'
+					}, {
+						field: "pwd",
+						title: "店铺密码",
+						edit: 'text'
+					}, {
+						field: "principalId",
+						title: "店铺负责人Id",
+						edit: 'text'
+					}, {
+						field: "brandId",
+						title: "店铺ID",
+					}, {
+						field: "roleId",
+						title: "角色",
+						edit: 'text'
+					}
+				]
+			],
+			page: true
+		});
+		//查询
+		$("#sure").click(function(){
+			var brandAdminId=$("input[name='brandAdminId']").val();
+			var brandId=$("input[name='brandId']").val();
+			table.reload('idTest', {
+				where:{"brandAdmId":brandAdminId,"brandId":brandId}
+				 ,page: {
+				    curr: 1 //重新从第 1 页开始
+				  }
+			});
+		})
+	});
+})
+</script>
+</html>

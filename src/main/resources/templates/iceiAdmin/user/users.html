@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>网站用户</title>
+		<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+		<link href="../../layuiadmin/style/table.css" rel="stylesheet" media="all" />
+		<style type="text/css">
+			.layui-table tr{
+				height: 52px;
+			}
+			#sure{
+				width:75px;
+				margin-left:10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="layui-fluid">
+			<div class="layui-row layui-col-space15">
+				<div class="layui-col-md-12">
+					<div class="layui-card">				
+						 <div class="layui-inline add"> <!-- 注意：这一层元素并不是必须的 -->					 	
+					         <label class="layui-form-label">用户名</label>
+					         <input type="text" name="userName" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+					          <label class="layui-form-label">用户ID</label>
+         					<input type="text" name="userId" required  lay-verify="required" placeholder="请输入用户ID" autocomplete="off" class="layui-input">
+					         <label class="layui-form-label">创建日期</label>
+					         <input type="text" class="layui-input" name="creationDate" id="test2" placeholder="YYYY-MM-DD">
+					    -------
+					    	 <input type="text" class="layui-input" name="creationDate1" id="test3" placeholder="YYYY-MM-DD">
+					         <input type="button" class="layui-btn" id="sure" value="确定">
+					    </div>
+					    <table id="demo" lay-data="{id: 'idTest'}" lay-filter="test" class="layui-table"></table>				    
+					</div>
+				</div>
+			</div>
+		</div>
+	<script src="../../layuiadmin/layui/layui.all.js"></script>
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {			
+			  layui.use('laydate', function(){
+                var laydate = layui.laydate;
+                  //执行一个laydate实例
+                  laydate.render({
+                    elem: '#test2' //指定元素
+                  });
+                  laydate.render({
+                    elem: '#test3' //指定元素
+                  });
+                });
+			var userId=$("input[name='userId']").val();
+			var userName=$("input[name='userName']").val();
+			var creationDate=$("input[name='creationDate']").val();
+			var creationDate1=$("input[name='creationDate1']").val();
+			layui.use('table', function() {
+				var table = layui.table;
+				table.render({
+					elem: '#demo',
+					url: "/admin/user/getPage",
+					cellMinWidth: 80,
+					limit:5,
+					id:'idTest',
+					where: {userId: userId, userName: userName,creationDate:creationDate,creationDate1:creationDate1},
+					cols: [
+						[{
+								type: 'checkbox'
+							},
+							{
+								field: "userId",
+								title: "编号",
+								sort: true
+							}, {
+								title: "用户头像",
+								templet:  function(d){
+							        return '<img src="http://spoons.test.upcdn.net'+d.imgPath+'" style="height:50xp;width:50px">'
+							    }
+							}, {
+								field: "userName",
+								title: "用户姓名",
+							}, {
+								field: "userCode",
+								title: "用户昵称"
+							}, { 
+								field: "phoneNum",
+								title: "手机号码"
+							},{
+								field: "gender",
+								title: "性别",
+								templet: "<div>{{d.gender==0?'男':'女'}}</div>"
+							}, {
+								field: "userIntegral",
+								title: "积分"
+							}, {
+								field: "creationDate",
+								title: "注册时间"
+							}, 
+							{
+								title:'状态',
+								templet:"#sta"
+							}
+						]
+					],
+					page: true
+				});
+			//模糊查询
+			$("#sure").click(function(){
+				var userId=$("input[name='userId']").val();
+				var userName=$("input[name='userName']").val();
+				var creationDate=$("input[name='creationDate']").val();
+				var creationDate1=$("input[name='creationDate1']").val();
+				table.reload('idTest', {
+					where: {userId: userId, userName: userName,creationDate:creationDate,creationDate1:creationDate1}
+					  ,page: {
+					    curr: 1 //重新从第 1 页开始
+					  }
+					});
+			})
+			//修改用户状态
+			layui.use('form', function() {
+			var form = layui.form;
+			form.on('switch(status)', function(data){
+			var num=data.elem;
+			var id=$(this).attr("userid");
+			console.log(id)
+			form.render();
+			var num=null;
+				if(data.elem.checked){
+					num=0
+				}else{
+					num=1
+				}
+				console.log(num)	
+				$.ajax({
+					url:'/admin/user/updateUser',
+					data:{"userId":id,"userStatus":num},
+					type:'Put',
+					success:function(data){
+						if(data==1){
+							layer.msg("用户状态修改成功");
+						}
+					}
+				})									
+			});  
+		});	
+	});
+});
+	</script>
+	<script type="text/html" id="sta">
+		<input userid='{{d.userId}}' type='checkbox' name='status' lay-skin='switch' lay-text='正常|封禁' lay-filter='status' {{d.userStatus==0?'checked':''}}/>
+	</script>
+	</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>订单统计报表</title>
+		<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" />
+		<link href="../../layuiadmin/style/table.css" rel="stylesheet" />
+		<style>
+			.main-data-container {
+				height: 110px;
+				background-color: #f8f9fd;
+				margin-top: 10px;
+			}
+			
+			.main-data-container>div {
+				height: 100%;
+			}
+			
+			.item-tag {
+				margin-top: 25px;
+				color: #96a6b6;
+				font-size: 13px;
+				text-align: center;
+			}
+			
+			.item-count {
+				margin-top: 6px;
+				color: #415161;
+				font-size: 22px;
+				text-align: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="layui-fluid">
+			<div class="layui-row layui-col-space15">
+				<div class="layui-col-md12 main-container">
+					<div class="layui-card">
+						<div class="layui-card-header">订单统计报表</div>
+						<div class="layui-card-body">
+							<div class="layui-form-item">
+								<label class="layui-form-label">请输入</label>
+								<div class="layui-input-block">
+									<div class="layui-inline">
+										<input class="layui-input" id="brand-id" placeholder="请输入店铺编号" />
+									</div>
+									<div class="layui-inline">
+										<input style="width: 300px;" readonly="true" type="text" class="layui-input" id="date" placeholder="请选择日期" />
+									</div>
+									<div class="layui-inline">
+										<a id="search" class="layui-btn">检索</a>
+									</div>
+								</div>
+							</div>
+							<div class="main-data-container">
+								<div class="layui-col-md2">
+									<div class="item-tag">订单总数</div>
+									<div class="item-count" id="allcount">0</div>
+								</div>
+								<div class="layui-col-md2">
+									<div class="item-tag">成功交易数</div>
+									<div class="item-count" id="success">0</div>
+								</div>
+								<div class="layui-col-md2">
+									<div class="item-tag">退货订单数</div>
+									<div class="item-count" id="fail">0</div>
+								</div>
+								<div class="layui-col-md2">
+									<div class="item-tag">交易金额</div>
+									<div class="item-count" id="successMoney">0</div>
+								</div>
+								<div class="layui-col-md2">
+									<div class="item-tag">退款金额</div>
+									<div class="item-count" id="failMoney">0</div>
+								</div>
+								<div class="layui-col-md2">
+									<div class="item-tag">金额合计</div>
+									<div class="item-count" id="AllMoney">0</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="layui-card">
+						<div class="layui-card-header"></div>
+						<div class="layui-card-body">
+							<div id="main-echarts" style="width: 100%;height:500px;margin-top: 10px;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+	</body>
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+	<script src="../../layuiadmin/layui/layui.js"></script>
+	<script src="../../layuiadmin/lib/extend/echartsTheme.js"></script>
+	<script src="../../icei/js/finance/echarts.js"></script>
+	<script>
+		var layer;
+		var startDate;
+        var endDate;
+		layui.use('laydate', function() {
+			var laydate = layui.laydate;
+			laydate.render({
+				elem: '#date',
+				type: 'datetime',
+				range: '   ~   ',
+				format: 'yyyy-M-d',
+				done: function(value, date) {
+					var arrs = value.split('   ~   ');
+					startDate = $.trim(arrs[0]);
+					endDate = $.trim(arrs[1]);
+				}
+			});
+		});
+		layui.use('layer',function () {
+			layer=layui.layer;
+        });
+        function initInfo(){
+            var date = new Date();
+            var startDate=date.getFullYear()+"-"+(date.getMonth()+1)+"-1";
+            var endDate=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+            $.ajax({
+                url:"getOrderFinanceDetail",
+                method:"POST",
+                data:{
+                    startDate:startDate,
+					endDate:endDate
+                },
+                dataType:"JSON",
+                success:function (data) {
+                    if(data.code==0){
+                        $("#allcount").text(data.data.allcount);
+                        $("#success").text(data.data.success);
+                        $("#fail").text(data.data.fail);
+                        $("#successMoney").text(data.data.successMoney);
+                        $("#failMoney").text(data.data.failMoney);
+                        $("#AllMoney").text(data.data.successMoney+data.data.failMoney+"￥");
+					}
+                }
+            });
+		}
+
+        $("#search").click(function(){
+            var brandId=$("#brand-id").val();
+            if(brandId==null||brandId==undefined||startDate==null||startDate==undefined||endDate==null||endDate==undefined){
+                layer.msg("请输入搜索条件！");
+                return;
+			}
+            $.ajax({
+                url:"getOrderFinanceDetail",
+                method:"POST",
+                data:{
+                    brandId:brandId,
+                    startDate:startDate,
+                    endDate:endDate
+                },
+                dataType:"JSON",
+                success:function (data) {
+                    if(data.code==0){
+                        $("#allcount").text(data.data.allcount);
+                        $("#success").text(data.data.success);
+                        $("#fail").text(data.data.fail);
+                        $("#successMoney").text(data.data.successMoney);
+                        $("#failMoney").text(data.data.failMoney);
+                        $("#AllMoney").text(data.data.successMoney+data.data.failMoney);
+                    }
+                }
+            });
+            $.ajax({
+				url:"getOrderFinanceInfoDetail",
+				method:"POST",
+				data:{
+                    brandId:brandId,
+                    startDate:startDate,
+                    endDate:endDate
+				},
+				dataType:"JSON",
+				success:function (data) {
+					if(data.code==0){
+					    var allDate=[];
+                        var success=[];
+                        var fail=[];
+                        var allmoney=[];
+					    for(var key in data.data.allMoney){
+					        allDate.push(key);
+						}
+                        for(var key in data.data.success){
+                            success.push(data.data.success[key]);
+                        }
+                        for(var key in data.data.fail){
+                            fail.push(data.data.fail[key]);
+                        }
+                        for(var key in data.data.allMoney){
+                            allmoney.push(data.data.allMoney[key]);
+                        }
+                        initEcharts(allDate,success,fail,allmoney);
+					}
+                }
+			});
+		});
+
+
+        initEcharts();
+        function initEcharts(allDate,success,fail,allmoney){
+            var colors = ['#5793f3', '#d14a61', '#675bba'];
+            var myChart = echarts.init(document.getElementById('main-echarts'));
+            option = {
+                color: colors,
+
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross'
+                    }
+                },
+                grid: {
+                    right: '20%'
+                },
+                toolbox: {
+                    feature: {
+
+                        saveAsImage: {
+                            show: true
+                        },
+                        dataView: {
+                            show: false,
+                            readOnly: false
+                        },
+                        restore: {
+                            show: false
+                        }
+                    }
+                },
+                legend: {
+                    data: ['成交订单数', '退款订单数', '当日收益']
+                },
+                xAxis: [{
+                    type: 'category',
+                    axisTick: {
+                        alignWithLabel: true
+                    },
+                    data: allDate
+                }],
+                yAxis:[
+                    {
+                        type: 'value',
+                        name: '成交订单数',
+                        min: 0,
+                        max: 50,
+                        position: 'right',
+                        axisLine: {
+                            lineStyle: {
+                                color: colors[0]
+                            }
+                        },
+                        axisLabel: {
+                            formatter: '{value} '
+                        }
+                    },
+                    {
+                        type: 'value',
+                        name: '退款订单数',
+                        min: 0,
+                        max: 50,
+                        position: 'right',
+                        offset: 80,
+                        axisLine: {
+                            lineStyle: {
+                                color: colors[1]
+                            }
+                        },
+                        axisLabel: {
+                            formatter: '{value} '
+                        }
+                    },
+                    {
+                        type: 'value',
+                        name: '当日收益',
+                        min: 0,
+                        max: 1000,
+                        position: 'left',
+                        axisLine: {
+                            lineStyle: {
+                                color: colors[2]
+                            }
+                        },
+                        axisLabel: {
+                            formatter: '{value} ￥'
+                        }
+                    }
+                ],
+                series: [{
+                    name: '成交订单数',
+                    type: 'bar',
+                    data: success
+                },
+                    {
+                        name: '退款订单数',
+                        type: 'bar',
+                        yAxisIndex: 1,
+                        data: fail
+                    },
+                    {
+                        name: '当日收益',
+                        type: 'line',
+                        yAxisIndex: 2,
+                        data: allmoney
+                    }
+                ]
+            };
+            myChart.setOption(option);
+		}
+	</script>
+
+</html>

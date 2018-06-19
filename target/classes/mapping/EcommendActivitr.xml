@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icei.mapper.EcommendActivitrMapper">
+	<resultMap id="BaseResultMap" type="com.icei.domain.EcommendActivitr">
+		<id column="ecommend_id" property="ecommendId" />
+		<result column="ecommend_userid" property="ecommendUserid" />
+		<result column="ecommend_count" property="ecommendCount" />
+		<result column="ecommend_name" property="ecommendName" />
+		<result column="user_relationid" property="discountsId" />
+		<result column="discounts_id" property="discountsId" />
+		<association property="discounts" javaType="com.icei.domain.Discounts">
+			    <id column="discounts_id" jdbcType="INTEGER" property="discountsId" />
+			    <result column="discounts_start_time" jdbcType="TIMESTAMP" property="discountsStartTime" />
+			    <result column="discounts_end_time" jdbcType="TIMESTAMP" property="discountsEndTime" />
+			    <result column="get_time" jdbcType="TIMESTAMP" property="getTime" />
+			    <result column="discounts_scope" jdbcType="INTEGER" property="discountsScope" />
+			    <result column="brand_id" jdbcType="INTEGER" property="brandId" />
+			    <result column="big_money" jdbcType="INTEGER" property="bigMoney" />
+			    <result column="small_money" jdbcType="INTEGER" property="smallMoney" />
+			    <result column="user_id" jdbcType="INTEGER" property="userId" />
+			    <result column="template_id" jdbcType="INTEGER" property="templateId" />
+    			<result column="iscounts_name" jdbcType="VARCHAR" property="discountsName" />
+		</association>
+		<association property="userDetail" javaType="com.icei.domain.UserDetail">
+			<id column="user_id" jdbcType="INTEGER" property="userId" />
+		    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+		    <result column="user_code" jdbcType="VARCHAR" property="userCode" />
+		    <result column="user_gender" jdbcType="INTEGER" property="userGender" />
+		    <result column="phone_num" jdbcType="BIGINT" property="phoneNum" />
+		    <result column="user_status" jdbcType="INTEGER" property="userStatus" />
+		    <result column="user_integral" jdbcType="REAL" property="userIntegral" />
+		    <result column="img_path" jdbcType="VARCHAR" property="imgPath" />
+		    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+	    </association>
+	</resultMap>
+	<select id="selectCount" resultType="java.lang.Integer">
+		select count(*) from ecommend_activitr e
+		inner join discounts d on d.discounts_id=e.discounts_id
+		inner join user_detail u on u.user_id=e.ecommend_userid
+		where 1=1
+		<if test="discountsid!=0">
+			and ecommend_id=#{discountsid}
+		</if>
+	</select>
+	<select id="selectorderByCount" resultMap="BaseResultMap">
+		select * from ecommend_activitr e
+		inner join discounts d on d.discounts_id=e.discounts_id
+		inner join user_detail u on u.user_id=e.ecommend_userid
+		order by e.ecommend_count DESC
+		limit 0,5
+	</select>
+	<select id="getAll" resultMap="BaseResultMap">
+		select * from ecommend_activitr e
+		inner join discounts d on d.discounts_id=e.discounts_id
+		inner join user_detail u on u.user_id=e.ecommend_userid
+		where 1=1
+		<if test="discountsid!=0">
+			and ecommend_id=#{discountsid}
+		</if>
+		limit #{page},#{limit}
+	</select>
+	
+	<select id="selectByINid" resultMap="BaseResultMap">
+		select * from user_detail where user_id in (select new_user_id from user_relation where user_id=#{id}) 
+		limit #{page},#{limit}
+	</select>
+	
+	<select id="selectByINidCount" resultType="java.lang.Integer">
+		select count(*) from user_detail where user_id in (select new_user_id from user_relation where user_id=#{id})
+	</select>
+	<insert id="insertAll" parameterType="com.icei.domain.EcommendActivitr">
+		    insert into ecommend_activitr
+		    <trim prefix="(" suffix=")" suffixOverrides=",">
+		      <if test="ecommendId != null">
+		        ecommend_id,
+		      </if>
+		      <if test="ecommendUserid != null">
+		        ecommend_userid,
+		      </if>
+		      <if test="ecommendCount != null">
+		        ecommend_count,
+		      </if>
+		      <if test="ecommendName != null">
+		        ecommend_name,
+		      </if>
+		      <if test="userRelationid != null">
+		        user_relationid,
+		       </if>
+		      <if test="userRelationid != null">
+		        user_relationid,
+		      </if>
+		    </trim>
+		    <trim prefix="values (" suffix=")" suffixOverrides=",">
+		      <if test="ecommendId != null">
+		        #{ecommendId},
+		      </if>
+		      <if test="ecommendUserid != null">
+		        #{ecommendUserid},
+		      </if>
+		      <if test="ecommendName != null">
+		        #{ecommendName},
+		      </if>
+		      <if test="userRelationid != null">
+		        #{userRelationid},
+		      </if>
+		      <if test="userRelationid != null">
+		        #{userRelationid},
+		      </if>
+		    </trim>
+	</insert>
+	
+</mapper>

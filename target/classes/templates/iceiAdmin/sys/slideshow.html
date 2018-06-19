@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>主页轮播设置</title>
+		<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" />
+		<link href="../../layuiadmin/style/table.css" rel="stylesheet" />
+		<link rel="stylesheet" href="/layuiadmin/style/sys/addSlides.css">
+		<link rel="stylesheet" href="../../layuiadmin/fontcss/colorpicker.css">
+		<style type="text/css">
+			html,body{
+				height:100%;
+			}
+			.layui-fluid{
+				height: 100%;
+				box-sizing: border-box;
+			}
+			.layui-col-md2{
+				    max-height: 785px;
+				    box-sizing: border-box;
+				    overflow: hidden;
+			}
+			#slide{
+				height: 743px;
+				box-sizing: border-box;
+			}
+			.slides{
+				width: 100%;
+				margin-bottom: 10px;
+			}
+			.slides img{
+				width:100%;
+			}
+			#luck{
+				 position: relative;
+			}
+			#luck>td>div{
+				 position: absolute;
+				 top:0px;
+			}
+			#color{
+				padding-left:50px !important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="layui-fluid">
+			<div class="layui-row layui-col-space15">
+				<!-- 表单 -->
+				<div class="layui-col-md10">
+					<div class="layui-row layui-col-space15">
+						<div class="layui-col-md12 main-container">
+							<div class="layui-card">
+								<div class="layui-card-header">主页轮播设置</div>
+								<div class="layui-card-body">
+									<div class="layui-form-item" style="border-bottom: 1px solid #f6f6f6;">
+										<div class="layui-input-block">
+											<div class="layui-inline" style="float: right;"> 
+												<a id="addslide" class="layui-btn">添加</a>
+											</div>
+										</div>
+									</div>
+									<table class="layui-hide" id="slides"  lay-data="{id: 'slides'}" lay-filter="slides"></table>
+									<script type="text/html" id="barDemo">
+  										<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="1">删除</a>
+									</script>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 表单End -->
+				<!-- 轮播 -->
+				<div class="layui-col-md2">
+					<div class="layui-row layui-col-space15">
+						<div class="layui-col-md12 main-container">
+							<div class="layui-card">
+								<div class="layui-card-header">轮播预览</div>
+								<div class="layui-card-body" id="slide"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 轮播End -->
+			</div>
+		</div>
+	</body>
+	<div id="only" style="display: none;">
+		<form>
+			<table class="top_table">
+				<tr>
+					<td class="key">标题</td>
+					<td class="val"><input type="text" placeholder="请填写标题" name="title" ></td>
+				</tr>
+				<tr>
+					<td class="key">描述</td>
+					<td class="val"><textarea name="content" placeholder="请填写描述(段落以<p></p>包裹)" class="layui-textarea"></textarea></td>
+				</tr>
+				<tr>
+					<td class="key">链接</td>
+					<td class="val"><input type="text" placeholder="请填写活动链接" name="goodsUrl" ></td>
+				</tr>
+				<tr>
+					<td class="key">背景颜色</td>
+					<td class="val"  id="luck">
+					<input type="text"  readonly="readonly" placeholder="请选择背景颜色" name="backColor" id="color">
+					<!-- 颜色取色器 -->
+			    	<div id="customWidget" style=" z-index:999;">
+						<div id="colorSelector2"><div style="background-color: #00ff00"></div></div>
+				        <div id="colorpickerHolder2"></div>
+					</div>
+					<!-- 颜色取色器 结束-->
+					</td>
+				</tr>
+			</table>
+			<table class="centre_table">
+				<tr>
+					<td class="key new_key">(商品/活动)图片</td>
+					<td class="val val_new">
+						<div class="file">
+							<input type="file" name="typeImg" id="upload" style="display:none;">
+							<i class="iconfont icon-shangchuan1"></i>
+							<a id="Aupload">上传视图(必填)</a>
+							<img src="" />
+						</div>
+						<div class="file">
+							<input type="file" name="typeImg" id="upload1" style="display:none;">
+							<i class="iconfont icon-shangchuan1"></i>
+							<a id="Aupload1">上传背景(必填)</a>
+							<img src="" />
+						</div>
+						<div class="file">
+							<input type="file" name="typeImg" id="upload2" style="display:none;">
+							<i class="iconfont icon-shangchuan1"></i>
+							<a id="Aupload2">上传视频(可选)</a>
+							<video id="video" controls="controls" autoplay="autoplay" src=""></video>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div class="present">提交</div>
+		</form>
+	</div>
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+	<script src="../../layuiadmin/layui/layui.all.js"></script>
+	<script src="/icei/js/jquery.nicescroll.min.js"></script>
+	<script type="text/javascript" src="/ImgYunTop.js"></script>
+	<script type="text/javascript" src="../../layuiadmin/js/colorpicker.js"></script>
+	<script type="text/javascript">
+		$(function(){
+		    var mainUrl="http://spoons.test.upcdn.net";
+			$("#slide").niceScroll({
+				cursorcolor: "#ccc",//#CC0071 光标颜色
+			});
+			layui.form.render();
+			var tableIns = layui.table;
+			tableIns.render({
+				elem: '#slides',
+				url: "/admin/sys/getSlideAll",
+				id: 'slides',
+				cols: [
+					[ //表头
+						{
+						field: "id",title: 'ID', width: 60, sort: true,edit: 'text'
+						}, {field: "title",title: "标题",width: 200,edit: 'text'
+						}, {field: "content",title: "介绍内容",edit: 'text'
+						}, {field: "goodsImg",title: "活动图片",width: 140,edit: 'text'
+						}, {field: "goodsBack",title: "轮播背景",width: 120,edit: 'text'
+						}, {field: "goodsVideo",title: "轮播视频",width:120,edit: 'text'
+						}, {field: "goodsUrl",title: "活动链接",width:120,edit: 'text'
+						}, {field: "backColor",title: "背景颜色",width:120,edit: 'text'
+						}, {fixed: 'right',title:"操作", width:100, align:'center', toolbar: '#barDemo'
+						}
+					]
+				],
+				done: function(res, curr, count){
+					$.each(res.data,function(k,v){
+						$("#slide").append('<div class="slides"><img src="'+mainUrl+v.goodsImg+'"/></div>');
+					})
+				}
+			});
+			//监听工具条
+			tableIns.on('tool(slides)', function(obj){
+				var layEvent = obj.event;
+				var data = obj.data;
+				var tr = obj.tr;
+				if(layEvent == 1){
+					delSlide(data.id);
+				}
+			});
+			//监听单元格编辑
+		  	tableIns.on('edit(slides)', function(obj){
+		  	  	var value = obj.value //得到修改后的值
+		    	,data = obj.data //得到所在行所有键值
+		    	,field = obj.field; //得到字段
+		    	layer.confirm('是否修改:[ID: '+ data.id +'] ' + obj.field + ' 字段更改为：'+ obj.value, {icon: 3, title:'提示'}, function(index){
+		    		$.ajax({
+						url:'/admin/sys/updSlideshow',
+						data:data,
+						type:'Put',
+						success:function(data){
+							if(data.code==0){
+								layer.msg("修改成功", {
+									icon: 6,
+									time:1500,
+								});
+							}else if (data.code!=0) {
+								layer.msg(data.msg, {
+									icon: 6,
+									time:1500,
+								});
+							}
+						}
+					})
+  	  				layer.close(index);
+  				});
+		  	});
+		})
+		/*删除轮播*/
+		var delSlide=function(id){
+			$.ajax({
+				url:"/admin/sys/delSlideshow",
+				type:"post", //提交方式
+				data:{"id":id},
+				dataType:"json",
+				success:function(data){
+					if(data.code==0&&data.data==1){
+						layer.msg("删除成功", {
+							icon: 6,
+							time:1500,
+							end:function(){
+								window.location.reload();//刷新当前页面
+							}
+						});
+					}else{
+						layer.msg(data.msg, {icon: 5});
+					}
+				}
+			});
+		}
+	</script>
+	<script type="text/javascript">
+		$(function(){
+			$("#addslide").click(function(){
+		        //自定页
+		        layer.open({
+		            title:'首页轮播添加',
+		            type: 1,
+		            fixed:true,
+		            skin: 'layui-layer-demo', //样式类名
+		            anim: 2,
+		            shadeClose: true, //开启遮罩关闭
+		            scrollbar: false,
+		            content: $('#only'),
+		            area: ['760px','740px'],
+		            success: function(layero, index){},
+		            end:function(){
+		            	$("#only").hide();
+		            }
+		        });
+			})
+			$("#Aupload").click(function(){
+				 $("#upload").click();
+			})
+			$("#Aupload1").click(function(){
+				$("#upload1").click();
+			})
+			$("#Aupload2").click(function(){
+				$("#upload2").click();
+			})
+			$("#upload").click(function(){
+				$(this).change(function(){
+					$(this).FileChangeFn($("#upload"),0);
+				});
+			});
+			$("#upload1").click(function(){
+				$(this).change(function(){
+					$(this).FileChangeFn($("#upload1"),0);
+				});
+			});
+			$("#upload2").click(function(){
+				$(this).change(function(){
+					$(this).FileChangeFn($("#upload2"),1);
+				});
+			});
+			/*点击提交表单*/
+		    $(".present").click(function(){
+		    	var url="/admin/sys/addSlideshow";
+				var	formData = new FormData();
+				formData.append("title",$("input[name='title']").val());
+				formData.append("content",$("textarea[name='content']").val());
+				formData.append("goodsUrl",$("input[name='goodsUrl']").val());
+				formData.append("backColor",$("input[name='backColor']").val());
+			    formData.append('file', $('#upload')[0].files[0]);
+			    formData.append('file', $('#upload1')[0].files[0]);
+			    formData.append('file', $('#upload2')[0].files[0]);
+				$(this).yunimg(formData,url);
+			})
+		})
+	</script>
+	<!-- 颜色取色器 -->
+	<script type="text/javascript">
+	$(function(){
+		$('#colorpickerHolder').ColorPicker({flat: true})
+		$('#colorpickerHolder2').ColorPicker({
+			flat: true,
+			color: '#00ff00',
+			onSubmit: function(hsb, hex, rgb) {
+				$('#colorSelector2 div').css('backgroundColor', '#' + hex);
+			}
+		});
+		$('#colorpickerHolder2>div').css('position', 'absolute');
+		var widt = false;
+		$('#colorSelector2').bind('click', function() {
+			$('#colorpickerHolder2').stop().animate({height: widt ? 0 : 173}, 500);
+			widt = !widt;
+		});
+		//取色
+		$('.colorpicker_submit').bind('click', function() {
+			$('#colorpickerHolder2').stop().animate({height: widt ? 0 : 173}, 500);
+			widt = !widt;
+		
+			$("#color").val("#"+$(".colorpicker input").val());
+		});
+		$('#colorpickerField1, #colorpickerField2, #colorpickerField3').ColorPicker({
+			onSubmit: function(hsb, hex, rgb, el) {
+				$(el).val(hex);
+				$(el).ColorPickerHide();
+			
+			},
+			onBeforeShow: function () {
+				$(this).ColorPickerSetColor(this.value);
+				
+			}
+		})
+		.bind('keyup', function(){
+			$(this).ColorPickerSetColor(this.value);
+		});
+	});
+	</script>
+<!-- 结束 -->
+</html>

@@ -1,0 +1,348 @@
+<!doctype html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>冰淇淋小屋</title>
+    <link rel="stylesheet" href="http://spoons.test.upcdn.net/layui/css/layui.css"><!--layui-->
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/Public.css"><!--Public-->
+    <link rel="stylesheet" href="css/myOrder/myOrder.css"><!--myOrder-->
+    <link rel="stylesheet" href="css/top.css"><!--导航-->
+    <link rel="stylesheet" href="css/myOrder/kdcx.css"><!--快递查询css-->
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="http://spoons.test.upcdn.net/layui/layui.all.js"></script><!--layui-->
+    <script src="http://spoons.test.upcdn.net/layui/layui.js"></script><!--layui-->
+    <script src="js/wow.min.js"></script>
+    <script src="js/TweenMax.min.js"></script>
+    <script src="js/myOrder/myOrder.js"></script>
+    <script src="js/myOrder/OrderRefund.js"></script>
+<script src="/ImgYunTop.js"></script>
+    <script>
+        new WOW().init();
+    </script>
+    <style>
+        .c-header{
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.8);
+        }
+        #refund{
+        	width:80%;
+        	display:block;
+        	margin:20px auto;
+        }
+      #assess{
+      	width:80%;
+      }
+      #test10{
+        margin-left:110px;
+      }
+      #assess>.layui-form-mid{
+        margin-left: 120px;
+      }
+      #assess>.layui-btn{
+         position: absolute;
+         top:435px;
+         left:420px;
+      }
+      #assess>.kd-info{
+      	 margin-left: 30px;
+      	  margin-top: 20px;
+      }
+      #fileupload{
+      	 margin-left: 30px;
+      }
+      #fileupload>button{
+      	 margin-left: 10px;
+      }
+    </style>
+</head>
+  <form action=" " id="assess" style="display:none" class="layui-form">
+     <!-- 商品信息 -->
+        <div class="kd-info">
+            <img src="" alt="" id="kd-order-img1">
+            <p id="kd-order-name1"></p>
+     
+        </div>
+    <!-- 商品信息End -->
+      <div class="layui-form-item">
+         <label class="layui-form-label">描述相符</label>
+         <div class="layui-input-inline">
+            <div id="test1"></div>
+         </div>
+        <div class="layui-form-mid layui-word-aux">非常好</div>
+      </div>
+     <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">宝贝评价</label>
+        <div class="layui-input-block">
+          <textarea name="assessDec"  placeholder="请输入内容" class="layui-textarea"></textarea>
+        </div>
+      </div>
+    <div class="layui-form-item" id="fileupload">
+       	<input type="file" name="typeImg" id="upload1" style="display:none;">
+         <img id="classimg" src="" style="width: 100px;height: 100px">
+         <button  type="button" class="layui-btn layui-btn-danger" id="luck2">
+		  	<i class="layui-icon">&#xe67c;</i>上传图片
+		</button>
+    </div>
+
+    <div class="layui-form-item">
+         <label class="layui-form-label">店铺评分</label>
+         <div class="layui-input-inline">
+            <div id="test2"></div>
+         </div>
+        <div class="layui-form-mid layui-word-aux">非常好</div>
+      </div>
+
+      <div class="layui-form-item">
+         <label class="layui-form-label">物流评分</label>
+         <div class="layui-input-inline">
+            <div id="test3"></div>
+         </div>
+        <div class="layui-form-mid layui-word-aux">非常好</div>
+      </div>
+      <div class="layui-btn layui-btn-danger" onclick="addAssess()">发布</div>
+   </form>
+<body>
+    <div th:replace="/icei/public/tool::One"></div>
+    <!--header-->
+    <header class="c-header">
+        <div class="wow fadeInLeft c-logo"><a href="/icei/"><img src="img/logo/logo.png"></a></div>
+        <nav>
+            <div class="wow fadeInRight c-main-nav" style="display: none">
+                <ul>
+                    <li><a href="https://www.baidu.com/" class="o-link">登录</a></li>
+                    <li><a class="o-link">注册</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!--headerEnd-->
+    <section class="block">
+        <div class="people-header-left">
+        <div class="people-slur" style="background-image: url(img/myOrder/20171201155709_tHSCm1.jpeg)"></div>
+        <div class="header-bg-mask"></div>
+        <div class="user-info">
+            <div class="people-info"style="padding-top: 110px;" >
+                <a class="people-avatar" onclick="drawer(3)"><img src="img/myOrder/admin.jpg"></a>
+                <div class="people-name" onclick="drawer(3)"><a>宅猫猫-喵</a></div>
+            </div>
+        </div>
+    </div>
+        <div class="people-header-right" style="background-image: url(img/myOrder/20171201155709_tHSCm1.jpeg)">
+            <div class="member-card">
+                <div class="dk-card" isnum="2">隐藏会员卡</div>
+                <div class="logo-card">冰淇淋定制</div>
+                <div class="user-card">
+                    <span>宅猫猫-喵</span>
+                    <img src="img/myOrder/admin.jpg">
+                </div>
+                <div class="card-info">
+                    <p>账户内余额(元)</p>
+                    <h1 id="card-money">0.00</h1>
+                    <div id="card-add">立即充值</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <main style="position: relative">
+        <section class="gonggao" style="float: left">
+            <ul style="padding-bottom: 0">
+                <li onclick="serac()" >全部</li>
+                <li onclick="serac(1)">待付款</li>
+                <li onclick="serac(2)">待发货</li>
+                <li onclick="serac(3)">待收货</li>
+                <li onclick="serac(4)">待评价</li>
+                <li onclick="serac(5)">退款\售后</li>
+            </ul>
+            <ul>
+                <li onclick="drawer(0)">收藏夹</li>
+                <li onclick="drawer(1)">关注店铺</li>
+                <li onclick="drawer(2)">卡券包</li>
+            </ul>
+        </section>
+        <!--订单-->
+        <section class="order-items" style="float: right">
+            <div class="orderScroll">
+              <!-- 全部订单 --> <!-- 全部订单 --> <!-- 全部订单 --> <!-- 全部订单 --> <!-- 全部订单 -->
+           </div>
+        </section>
+        <!--订单End-->
+    </main>
+</body>
+<script type="text/javascript">
+    /*查询快递*/
+    function kdcx(num,type){
+    	if(num!=undefined||num!=""){
+    		layer.open({
+    		  	type: 1
+    		  	,title: false //不显示标题栏
+    		  	,closeBtn: false
+    		  	,area: ['550px','430  px']
+    		  	,shade: 0.5 //遮罩
+    		  	,shadeClose: true//是否点击遮罩关闭
+    		  	,anim: 2//弹出动画
+    		  	,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+    		  	,resize: false
+    		  	,moveType: 1 //拖拽模式，0或者1
+    		  	,content: $('#kdcx')
+    		  	,skin: 'kdcx-class'
+    		  	,success: function(layero){
+    		  		var name=$("#order-name").text();
+    		  		$("#kd-order-img").attr("src",$(".order-info>img").attr("src"));
+    				$("#kd-order-img").attr("alt",name);
+    				$("#kd-order-name").text(name);
+    		  		kuaidi(num,type);//快递查询
+    			}
+    			,end:function(){
+    				$("#kdcx").css("display","none");
+    			}
+    		});
+    	}else {
+    		layer.msg("该订单还未发货，请耐心等待");
+    	}
+    }
+ 
+    <!--华丽分割线--><!--华丽分割线--><!--华丽分割线--><!--华丽分割线--><!--华丽分割线--><!--华丽分割线--><!--华丽分割线--><!--华丽分割线--><!--华丽分割线-->
+     $(".drawer-filtrate>span>a").click(
+          function(){
+            $(".drawer-filtrate>h2").css("display","none");
+            $(".drawer-filtrate>span").css("display","none");
+            $(".drawer-filtrate>.search").css("display","block");
+    });
+    $(".drawer-filtrate>.search>a").click(
+          function(){
+            $(".drawer-filtrate>h2").css("display","block");
+            $(".drawer-filtrate>span").css("display","block");
+            $(".drawer-filtrate>.search").css("display","none");
+    });
+    /*获取用户信息*/
+    function getuser(){
+        $.ajax({
+            url:"",
+            type:"POST",
+            data:{},
+            dataType:"json",
+            success:show
+        });
+        function show(data){
+
+        }
+    }
+</script>
+<script type="text/javascript" src="js/myOrder/kdcx.js"></script>
+<script src="js/myOrder/effect.js"></script>
+<!-- 快递查询 -->
+<section id="kdcx" style="display: none;">
+    <section class="kd-show">
+        <!-- 商品信息 -->
+        <div class="kd-info">
+            <img src="" alt="" id="kd-order-img">
+            <p id="kd-order-name"></p>
+            <p id="order-kdno"></p>
+            <div id="order-is"></div>
+        </div>
+        <!-- 商品信息End -->
+        <!-- 步骤 -->
+        <div style="border-bottom: 1px dashed #dedede;">
+            <ul style="padding-bottom: 42px;padding-top: 42px;color: rgb(13, 183, 138);display: flex;">
+                <li class="kd-step-item kd-step-item-current">
+                    <em></em>
+                    <div class="kd-step-item-top">
+                        <div class="kd-step-item-top-text"><span>已发货</span></div>
+                    </div>
+                </li>
+                <li class="kd-step-item">
+                    <em></em>
+                    <div class="kd-step-item-top">
+                        <div class="kd-step-item-top-text"><span>在途中</span></div>
+                    </div>
+                </li>
+                <li class="kd-step-item">
+                    <em></em>
+                    <div class="kd-step-item-top">
+                        <div class="kd-step-item-top-text"><span>正在派件</span></div>
+                    </div>
+                </li>
+                <li class="kd-step-item">
+                    <em></em>
+                    <div class="kd-step-item-top">
+                        <div class="kd-step-item-top-text"><span>已签收</span></div>
+                    </div>
+                </li>
+                <li class="kd-step-item">
+                    <em></em>
+                    <div class="kd-step-item-top">
+                        <div class="kd-step-item-top-text"><span>派件失败</span></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!-- 步骤End -->
+        <!-- 详情 -->
+        <div class="kd-content">
+            <div style="border-bottom: 1px dashed #dedede;width:523px;height: 266px;overflow-y: scroll;">
+                <div class="kd-timeline">
+                    <ul class="kd-timeline-content"></ul>
+                </div>
+            </div>
+        </div>
+        <!-- 详情End -->
+    </section>
+</section>
+<!-- 快递查询End -->
+<!-- 退款申请 -->
+ <form class="layui-form" action="" id="refund" style="display:none">
+      <div class="layui-form-item">
+        <label class="layui-form-label">退款原因</label>
+        <div class="layui-input-block">
+          <input type="text" name="refundContent" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">退款金额</label>
+        <div class="layui-input-block">
+          <input type="text" name="price" readonly  placeholder="￥45.00"  class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">退款说明</label>
+        <div class="layui-input-block">
+          <input type="text" name="title"   placeholder="选填"  class="layui-input">
+        </div>
+      </div>
+    <div class="layui-form-item">
+       <input type="file" name="assessImg" id="upload" style="display:none;">
+            	<img id="classimg" src="" style="width: 100px;height: 100px">
+	            <button  type="button" class="layui-btn" id="assessImg">
+				  	<i class="layui-icon">&#xe67c;</i>上传图片
+				</button>
+     </div>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <div class="layui-btn" lay-submit lay-filter="formDemo" onclick="refundPay()">立即提交</div>
+          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+      </div>
+   </form>
+   <script>
+   //退款图片上传
+   $("#assessImg").click(function(){
+			$("#upload").click();
+	})
+	$("#upload").click(function(){
+		$(this).change(function(){
+			$(this).FileChangeFn($("#upload"),0);
+		});
+	});
+   //评价图片上传
+   $("#luck2").click(function(){
+		$("#upload1").click();
+	})
+	$("#upload1").click(function(){
+		$(this).change(function(){
+			$(this).FileChangeFn($("#upload1"),0);
+		});
+	});
+   </script>
+</html>

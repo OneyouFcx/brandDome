@@ -1,0 +1,229 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+
+<body>
+<!--侧边导航-->
+<section class="right-drawer" th:fragment="One">
+    <!--css-js文件-->
+    <link rel="stylesheet" href="/icei/css/drawer/drawer.css" >
+    <script src="/icei/js/tool/drawer/stopExecutionOnTimeout.js"></script>
+    <script src="/icei/js/tool/drawer/drawer.js"></script>
+    <script src="/icei/js/tool/drawer/likeGoodsAndBrand.js"></script>
+    <!--css-js文件End-->
+    <div class="switch"><i class="layui-icon">&#xe65a;</i></div>
+    <div class="wow fadeInRight user-login">
+        <div class="login-card">
+            <span>宅猫猫-喵</span>
+            <img src="img/myOrder/admin.jpg">
+        </div>
+    </div>
+    <div class="drawer_close-menu"></div>
+    <div class="drawer_section drawer_section-1" data-section="1">
+        <div class="drawer_menu-btn"></div>
+        <h2 class="drawer_section-heading">收藏夹</h2>
+        <div class="drawer-public">
+            <!--&lt;!&ndash;搜索商品&ndash;&gt;-->
+            <div class="drawer-search">
+                <div class="drawer-filtrate">
+                    <h2 style="color: #E57B60">全部关注<i class="layui-icon" style="font-size:14px; color:#E57B60;">&#xe61a;</i></h2>
+                    <span>
+                            <a href="#">
+                                <i class="layui-icon" style="font-size:18px; color:#E57B60;">&#xe615;</i>
+                            </a>
+                        </span>
+                    <!--&lt;!&ndash;搜索框&ndash;&gt;-->
+                    <div class="search">
+                        <i class="layui-icon" style="font-size:18px; color:#E57B60;">&#xe615;</i>
+                        <input type="text" placeholder="搜索已收藏的宝贝" style="color: #E57B60">
+                        <a href="#" style="color: #E57B60">取消</a>
+                    </div>
+                </div>
+            </div>
+            <!--&lt;!&ndash;商品列表&ndash;&gt;-->
+            <div class="goods-items">
+             <!-- 动态加载关注商品 -->
+            </div>
+            <!--&lt;!&ndash;商品列表ENd&ndash;&gt;-->
+        </div>
+    </div>
+    <div class="drawer_section drawer_section-2 active" data-section="2">
+        <div class="drawer_menu-btn"></div>
+        <h2 class="drawer_section-heading">关注店铺</h2>
+        <!--&lt;!&ndash;关注店铺&ndash;&gt;-->
+        <div class="drawer-public">
+           <!-- &lt;!&ndash;关注店铺分类&ndash;&gt;-->
+            <div class="drawer-type">
+                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">关注</li>
+                        <li>发现</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <!--&lt;!&ndash;搜索店铺&ndash;&gt;-->
+                            <div class="drawer-search">
+                                <div class="drawer-filtrate">
+                                    <h2>全部关注  <i class="layui-icon" style="font-size:14px; color:#000;">&#xe61a;</i></h2>
+                                    <span>
+                                            <a href="#">
+                                                <i class="layui-icon" style="font-size:18px; color:#2E4A57;">&#xe615;</i>
+                                            </a>
+                                        </span>
+                                   <!-- &lt;!&ndash;搜索框&ndash;&gt;-->
+                                    <div class="search">
+                                        <i class="layui-icon" style="font-size:18px; color:#2E4A57;">&#xe615;</i>
+                                        <input type="text" placeholder="搜索已关注的店铺">
+                                        <a href="#">取消</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--&lt;!&ndash;店铺&ndash;&gt;-->
+                            <div class="drawer-store">
+                                <!--&lt;!&ndash;店铺图片&ndash;&gt;-->
+                                <div class="drawer-img"><img src="img/goodsInfo/evaluate-img1.jpg"></div>
+                                <!--&lt;!&ndash;店铺介绍&ndash;&gt;-->
+                                <div class="drawer-name">
+                                    <h2>小米-米兔制作企业店<span>企业店铺</span></h2>
+                                </div>
+                               <!-- &lt;!&ndash;更多&ndash;&gt;-->
+                                <div class="drawer-tab">
+                                    <i class="layui-icon" style="font-size:18px; color:#000;">&#xe65f;</i>
+                                </div>
+                            </div>
+                            <div class="drawer-store">
+                                <div class="drawer-img"><img src="img/goodsInfo/evaluate-img1.jpg"></div>
+                                <div class="drawer-name">
+                                    <h2>silkn旗舰店<span>优选好店</span></h2>
+                                </div>
+                                <div class="drawer-tab">
+                                    <i class="layui-icon" style="font-size:18px; color:#000;">&#xe65f;</i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-tab-item"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="drawer_section drawer_section-3 inactive" data-section="3">
+        <div class="drawer_menu-btn"></div>
+        <h2 class="drawer_section-heading">卡券包</h2>
+        <div class="drawer-public">
+            <div class="drawer-search">
+                <div class="drawer-filtrate">
+                    <h2 style="color: #AD4A5D">全部关注<i class="layui-icon" style="font-size:14px; color:#AD4A5D;">&#xe61a;</i></h2>
+                    <span>
+                            <a href="#">
+                                <i class="layui-icon" style="font-size:18px; color:#AD4A5D;">&#xe615;</i>
+                            </a>
+                        </span>
+                    <!--&lt;!&ndash;搜索框&ndash;&gt;-->
+                    <div class="search">
+                        <i class="layui-icon" style="font-size:18px; color:#AD4A5D;">&#xe615;</i>
+                        <input type="text" placeholder="搜索优惠券" style="color: #AD4A5D">
+                        <a href="#" style="color: #AD4A5D">取消</a>
+                    </div>
+                </div>
+            </div>
+           <!-- &lt;!&ndash;优惠券&ndash;&gt;-->
+            <div class="goods-coupon">
+                <div class="coupon-left">
+                    <div class="c-range">
+                        <div class="range-item">
+                            <span class="label">限时长：</span>
+                            <span class="txt">至2018.04.30</span>
+                        </div>
+                        <div class="range-item">
+                            <span class="label">券编号：</span>
+                            <span class="txt">33571585253</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="coupon-right">
+                    <p class="c-price">￥5</p>
+                    <p class="c-limit">满99可用</p>
+                </div>
+            </div>
+            <div class="goods-coupon">
+                <div class="coupon-left">
+                    <div class="c-range">
+                        <div class="range-item">
+                            <span class="label">限时长：</span>
+                            <span class="txt">至2018.04.30</span>
+                        </div>
+                        <div class="range-item">
+                            <span class="label">券编号：</span>
+                            <span class="txt">33571585253</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="coupon-right">
+                    <p class="c-price">￥5</p>
+                    <p class="c-limit">满99可用</p>
+                </div>
+            </div>
+            <div class="goods-coupon">
+                <div class="coupon-left">
+                    <div class="c-range">
+                        <div class="range-item">
+                            <span class="label">限时长：</span>
+                            <span class="txt">至2018.04.30</span>
+                        </div>
+                        <div class="range-item">
+                            <span class="label">券编号：</span>
+                            <span class="txt">33571585253</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="coupon-right">
+                    <p class="c-price">￥5</p>
+                    <p class="c-limit">满99可用</p>
+                </div>
+            </div>
+         <!--   &lt;!&ndash;优惠券End&ndash;&gt;-->
+        </div>
+    </div>
+    <div class="drawer_section drawer_section-4 inactive" data-section="4">
+        <div class="drawer_menu-btn"></div>
+        <h2 class="drawer_section-heading">我的资料</h2>
+        <div class="drawer-public">
+          <!--  &lt;!&ndash;地址&ndash;&gt;-->
+            <div class="address-itme">
+                <div class="address-info">
+                    <p>
+                        <span class="address-name">小明</span>
+                        <span class="address-phone">18809098760</span>
+                    </p>
+                    <p class="address-region">河南省洛阳市涧西区</p>
+                    <p class="address-details">九都西路太原路口北大青鸟</p>
+                </div>
+                <div class="address-handle">
+                    <div class="address-tally">学校</div>
+                    <div class="tally-btn"><i class="layui-icon">&#xe642;</i></div>
+                    <div class="tally-btn"><i class="layui-icon">&#xe640;</i></div>
+                </div>
+            </div>
+            <div class="address-itme">
+                <div class="address-info">
+                    <p>
+                        <span class="address-name">小明</span>
+                        <span class="address-phone">18809098760</span>
+                    </p>
+                    <p class="address-region">河南省洛阳市涧西区</p>
+                    <p class="address-details">九都西路太原路口北大青鸟</p>
+                </div>
+                <div class="address-handle">
+                    <div class="address-tally">学校</div>
+                    <div class="tally-btn"><i class="layui-icon">&#xe642;</i></div>
+                    <div class="tally-btn" ><i class="layui-icon">&#xe640;</i></div>
+                </div>
+            </div>
+           <!-- &lt;!&ndash;地址End&ndash;&gt;-->
+        </div>
+    </div>
+</section>
+<!--侧边导航-->
+</body>
+</html>

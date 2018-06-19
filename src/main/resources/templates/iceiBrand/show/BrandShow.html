@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>买家秀</title>
+<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" />
+<link href="../../layuiadmin/style/table.css" rel="stylesheet" />
+<link href="//at.alicdn.com/t/font_612454_4ygqqj5erqaug14i.css" rel="stylesheet"/>
+<style>
+.img-container .img-item {
+	width: 220px;
+	height: 220px;
+	margin: 0.5% 0.5%;
+	position:relative;
+}
+
+.img-container .img-container-row {
+	width: 1160px;
+	margin: 0px auto;
+	display: flex;
+}
+
+.img-container .img-item img {
+	width: 220px;
+	height: 220px;
+}
+
+html, body, body>.layui-fluid {
+	height: 100%;
+}
+
+#img-upload {
+	width: 100%;
+	padding: 30px 0px;
+}
+
+#prev-img {
+	width: 220px;
+	height: 220px;
+}
+
+#prev-img img {
+	width: 100%;
+	height: 100%;
+}
+.del-btn{
+width:24px;
+height:24px;
+position:absolute;
+right:-12px;
+top:-12px;
+color:red;
+opacity :0;
+}
+.img-item:hover .del-btn{
+opacity:1;
+transition:all 1s;
+}
+.del-btn .iconfont{
+font-size:24px;
+}
+#upload-block{
+display:none;
+}
+</style>
+</head>
+
+<body>
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-col-md12 main-container">
+				<div class="layui-card">
+					<div class="layui-card-header">买家秀</div>
+					<div class="layui-card-body">
+						<div class="img-container">
+							
+						</div>
+					</div>
+				</div>
+				<div class="layui-card" id="upload-block">
+					<div class="layui-card-header">上传</div>
+					<div class="layui-card-body">
+						<form class="layui-form">
+							<div class="layui-upload-drag" id="img-upload">
+								<i class="layui-icon"></i>
+								<p>点击上传，或将文件拖拽到此处</p>
+							</div>
+							<div class="layui-form-item" style="margin-top: 20px;">
+								<label class="layui-form-label">图片说明：</label>
+								<div class="layui-input-block">
+									<input placeholder="请输入图片说明" name="describe"
+										class="layui-input"></input>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">预览图：</label>
+								<div class="layui-input-block">
+									<div class="layui-upload-list" id="prev-img">
+										<img class="layui-upload-img" />
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<div class="layui-input-block">
+									<a class="layui-btn" id="submit">立即提交</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script type="text/javascript" src="/ImgYunTop.js"></script>
+
+<script>
+	var tFile;
+	var layer;
+	function OpenUploadBlock(){
+		 layer.open({
+		      type: 1,
+		      title: '上传',
+		      shadeClose: false,
+		      shade: 0.6,
+		      maxmin: true, //开启最大化最小化按钮
+		      area: ['893px', '600px'],
+		      content: $("#upload-block")
+		    });
+	}
+	$(document).ready(function() {
+		initData();
+		layui.use('layer', function() {
+			layer = layui.layer;
+		});
+		layui.use('util', function(){
+			  var util = layui.util;
+			  
+			  //执行
+			  util.fixbar({
+			    bar1: true
+			    ,click: function(type){
+			      console.log(type);
+			      if(type === 'bar1'){
+			    	  OpenUploadBlock();
+			      }
+			    }
+			  });
+			  var elem=$("li[lay-type=bar1]");
+			  elem.text("");
+			  elem.addClass(['iconfont','icon-shangchuan1']);
+			  
+			}); 
+		layui.use('upload', function() {
+			var upload = layui.upload;
+			upload.render({
+				elem : '#img-upload',
+				size : 3072, //3M
+				auto : false,
+				choose : function(obj) {
+					obj.preview(function(index, file, result) {
+						$("#prev-img img").attr("src", result);
+						tFile = file
+					});
+				}
+			});
+			$("#submit").click(function() {
+				var url = "/brand/show/upload";
+				var formData = new FormData();
+				formData.append("describe", $("input[name=describe]").val());
+				formData.append("file", tFile);
+				$(this).yunimg(formData, url);
+			});
+		});
+	});
+	function initData() {
+		var baseUrl = "http://spoons.test.upcdn.net/";
+		$
+				.ajax({
+					url : "getShow",
+					method : "POST",
+					dataType : "JSON",
+					success : function(data) {
+						if (data.code == 0) {
+							$(data.data).each(function(index, elem) {
+												if (index == 0) {
+													$(".img-container").append('<div class="img-container-row"></div>');
+													$(".img-container-row").last().append('<div class="img-item"><img src="'+baseUrl+elem.imgPath+'"/><div class="del-btn" data='+elem.showId+' data-name='+elem.imgPath+'><span class="iconfont icon-close-b"></span></div></div>');
+												} else if ((index + 1) % 5 == 0) {
+													$(".img-container-row").last().append('<div class="img-item"><img src="'+baseUrl+elem.imgPath+'"/><div class="del-btn" data='+elem.showId+' data-name='+elem.imgPath+'><span class="iconfont icon-close-b"></span></div></div>');
+													$(".img-container").append('<div class="img-container-row"></div>');
+												} else if ((index + 1) % 5 != 0) {
+													$(".img-container-row").last().append('<div class="img-item"><img src="'+baseUrl+elem.imgPath+'"/><div class="del-btn" data='+elem.showId+' data-name='+elem.imgPath+'><span class="iconfont icon-close-b"></span></div></div>');
+												}
+											});
+							bindClick();
+							
+						} else {
+							layer.msg("初始化失败");
+						}
+					}
+				});
+	}
+	function bindClick(){
+		$(".del-btn").click(function(){
+			var id=$(this).attr("data");
+			var fileName=$(this).attr("data-name");
+			layer.confirm('确认要删除吗', {
+				  btn: ['确认','取消'] //按钮
+				}, function(){
+					$.ajax({
+						url:"delBrandShow",
+						method:"POST",
+						data:{
+							id:id,
+							fileName:fileName
+						},
+						dataType:"JSON",
+						success:function(data){
+							if(data.code==0){
+								layer.msg("删除成功!",{icon:1});
+								setTimeout(function(){
+									window.location.reload();
+								},1000);
+							}
+						}
+					});
+				}, function(){
+					
+				});
+		});
+	}
+</script>
+
+</html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>店铺管理</title>
+		<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+		<link href=" ../../layuiadmin/style/table.css" rel="stylesheet" media="all" />
+		<link href="../../layuiadmin/style/admin.css" rel="stylesheet" media="all">
+		<link href="//at.alicdn.com/t/font_400842_q6tk84n9ywvu0udi.css" rel="stylesheet" />
+		<style>
+		.body {
+				background-color: #666666;
+			}
+			
+			.card-left width: 100%;
+			height: 630px;
+		}
+		.md3-right {
+			width: 100%;
+			height: 630px;
+		}
+		.layui-inline {
+			display: block;
+			margin-top: 40px;
+		}
+		.card-left ul li {
+			width: 400px;
+			height: 60px;
+			line-height: 60px;
+			margin: 0px auto;
+		}
+		.card-left ul li span {
+			display: block;
+			width: 80px;
+			height: 60px;
+			line-height: 60px;
+			text-align: center;
+			float: left;
+			font-size: 16px;
+		}
+		.card-left ul li input {
+			width: 280px;
+			height: 30px;
+			line-height: 60px;
+			border-left-width: 0px;
+			border-top-width: 0px;
+			border-right-width: 0px;
+			margin-left: 30px;
+		}
+		.md3-img1 {
+			width: 300px;
+			height: 220px;
+			margin: 13px auto;
+			line-height: 110px;
+		}
+		.md3-img2 {
+			width: auto;
+			overflow: auto;
+			float: left;
+			margin: 5px;
+		}
+		.layui-btn-group {
+			width: 100%;
+			text-align: center;
+		}
+		.fly-list li {
+			position: relative;
+			height: 60px;
+			line-height: 60px;
+			padding: 15px 15px 15px 75px;
+			border-bottom: 1px dotted #e2e2e2;
+		}
+		.fly-avatar {
+			position: absolute;
+			left: 15px;
+			top: 15px;
+		}
+		.fly-avatar img {
+			display: block;
+			width: 45px;
+			height: 45px;
+			margin: 0;
+			border-radius: 2px;
+		}
+		.fly-list li h2 {
+    height: 26px;
+    font-size: 0;
+}
+.fly-list li h2, .fly-list li h2 a, .fly-list-info {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.fly-list li h2 .layui-badge {
+    top: -2px;
+    height: 16px;
+    line-height: 16px;
+    padding: 0 5px;
+    margin-right: 10px;
+    font-size: 12px;
+    border: 1px solid #5FB878;
+    background: none;
+    color: #5FB878;
+}
+.fly-list li h2 a {
+    display: inline-block;
+    max-width: 80%;
+    padding-right: 10px;
+    font-size: 16px;
+}
+
+.fly-list li h2, .fly-list li h2 a, .fly-list-info {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.fly-list-info {
+    position: relative;
+    font-size: 13px;
+    color: #999;
+}
+.fly-list-info > * {
+    padding-right: 15px;
+}
+a {
+    color: #333;
+    text-decoration: none;
+}
+.fly-list-info {
+    font-size: 13px;
+    color: #999;
+}
+.fly-list li h2, .fly-list li h2 a, .fly-list-info {
+    white-space: nowrap;
+}
+.fly-list li {
+    line-height: 22px;
+}
+li {
+    list-style: none;
+}
+body {
+    line-height: 24px;
+    font: 14px Helvetica Neue,Helvetica,PingFang SC,微软雅黑,Tahoma,Arial,sans-serif;
+        font-size: 14px;
+        line-height: normal;
+}
+.fly-list-info {
+    font-size: 13px;
+    color: #999;
+}
+.fly-list-kiss {
+    color: #FF5722;
+}
+.fly-list-badge {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    font-size: 0;
+}
+.icon-pinglun1::before {
+    content: "\e631";
+}
+.fly-list-nums {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding-right: 0 !important;
+}
+.zhu{
+	text-align: center;
+}
+.md3-img1{
+	margin: 5px auto;
+}
+.fly-max{
+	width: 100%;
+	
+}
+#message_divs{
+	width: 100%;
+	height: 80px;
+	line-height: 80px;
+	display: block;
+	text-align: center;
+	color: rgba(1,1,1);
+}
+		</style>
+	</head>
+
+	<body>
+		<div class="layui-fluid">
+			<div class="layui-row layui-col-space15">
+				<div class="layui-col-md8 main-container">
+					<div class="layui-card">
+						<div class="card-left">
+							<ul>
+								<li><span>商品名称：</span><input type="text" name="goods_name" value="" /></li>
+								<li><span>具体类型：</span><input type="text" name="type_detail_name"/></li>
+								<li><span>基础价格：</span><input type="text" name="goods_price"/></li>
+								<li><span>商品折扣：</span><input type="text" name="goods_discount"/></li>
+								<li><span>是否定制：</span><input type="text" name="is_diy"/></li>
+								<li><span>定制收费：</span><input type="text" name="diy_price"/></li>
+								<li><span>生产周期：</span><input type="text" name="production_cycle"/></li>
+								<li><span>商品材质：</span><input type="text" name="materials"/></li>
+								<li><span>商品销量：</span><input type="text" name="sales_volume" /></li>
+								<li><span>商品描述：</span><input type="text" name="goods_dec" /></li>
+							</ul>
+						</div>
+
+					</div>
+
+				</div>
+				<div class="layui-col-md4 right-rank">
+					<div class="md3-right">
+						<div class="zhu"><img style="width: 300px;height: 300px;" src="../../layuiadmin/image/head/K.jpg"></div>
+						<div class="md3-img1">
+							<div class="md3-img2"><img style="width: 90px;height:90px;" src="../../layuiadmin/image/head/K.jpg"></div>
+							<div class="md3-img2"><img style="width: 90px;height: 90px;" src="../../layuiadmin/image/head/K.jpg"></div>
+							<div class="md3-img2"><img style="width: 90px;height: 90px;" src="../../layuiadmin/image/head/K.jpg"></div>
+							<div class="md3-img2"><img style="width: 90px;height: 90px;" src="../../layuiadmin/image/head/K.jpg"></div>
+							<div class="md3-img2"><img style="width: 90px;height: 90px;" src="../../layuiadmin/image/head/K.jpg"></div>
+							<div class="md3-img2"><img style="width: 90px;height: 90px;" src="../../layuiadmin/image/head/K.jpg"></div>
+
+						</div>
+						<div class="md3-buttom">
+							<div class="layui-btn-group">
+								<button class="layui-btn">增加</button>
+								<button class="layui-btn">编辑</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		
+			<div class="fly-max">
+				<div id="message_divs">阿三大苏打</div>
+				<ul class="fly-list">
+					<li>
+						<a href="/u/13488216" class="fly-avatar">
+							<img src="//thirdqq.qlogo.cn/qqapp/101235792/620445441A449A5C5AC0224D4A7AB5D6/100" alt="周三岁"> </a>
+						<h2>
+							<a class="layui-badge">提问</a> <a href="/jie/25490/">无法改变form 表单中的 开关样式 </a> 
+						</h2>
+						<div class="fly-list-info">
+							<a href="/u/13488216" link="">
+								<cite>周三岁</cite>
+							</a>
+							<span>1小时前</span>
+							<span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻">
+								<i class="iconfont icon-kiss"></i> 20
+							</span>
+							<span class="fly-list-nums"> 
+								<i class="iconfont icon-pinglun1" title="回答"></i> 0 
+							</span>
+						</div>
+						<div class="fly-list-badge"> </div>
+					</li>
+					<li>
+						<a href="/u/13488216" class="fly-avatar">
+							<img src="//thirdqq.qlogo.cn/qqapp/101235792/620445441A449A5C5AC0224D4A7AB5D6/100" alt="周三岁"> </a>
+						<h2>
+							<a class="layui-badge">提问</a> <a href="/jie/25490/">无法改变form 表单中的 开关样式 </a> 
+						</h2>
+						<div class="fly-list-info">
+							<a href="/u/13488216" link="">
+								<cite>周三岁</cite>
+							</a>
+							<span>1小时前</span>
+							<span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻">
+								<i class="iconfont icon-kiss"></i> 20
+							</span>
+							<span class="fly-list-nums"> 
+								<i class="iconfont icon-pinglun1" title="回答"></i> 0 
+							</span>
+						</div>
+						<div class="fly-list-badge"> </div>
+					</li>
+					<li>
+						<a href="/u/13488216" class="fly-avatar">
+							<img src="//thirdqq.qlogo.cn/qqapp/101235792/620445441A449A5C5AC0224D4A7AB5D6/100" alt="周三岁"> </a>
+						<h2>
+							<a class="layui-badge">提问</a> <a href="/jie/25490/">无法改变form 表单中的 开关样式 </a> 
+						</h2>
+						<div class="fly-list-info">
+							<a href="/u/13488216" link="">
+								<cite>周三岁</cite>
+							</a>
+							<span>1小时前</span>
+							<span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻">
+								<i class="iconfont icon-kiss"></i> 20
+							</span>
+							<span class="fly-list-nums"> 
+								<i class="iconfont icon-pinglun1" title="回答"></i> 0 
+							</span>
+						</div>
+						<div class="fly-list-badge"> </div>
+					</li>
+					<li>
+						<a href="/u/13488216" class="fly-avatar">
+							<img src="//thirdqq.qlogo.cn/qqapp/101235792/620445441A449A5C5AC0224D4A7AB5D6/100" alt="周三岁"> </a>
+						<h2>
+							<a class="layui-badge">提问</a> <a href="/jie/25490/">无法改变form 表单中的 开关样式 </a> 
+						</h2>
+						<div class="fly-list-info">
+							<a href="/u/13488216" link="">
+								<cite>周三岁</cite>
+							</a>
+							<span>1小时前</span>
+							<span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻">
+								<i class="iconfont icon-kiss"></i> 20
+							</span>
+							<span class="fly-list-nums"> 
+								<i class="iconfont icon-pinglun1" title="回答"></i> 0 
+							</span>
+						</div>
+						<div class="fly-list-badge"> </div>
+					</li>
+					<li>
+						<a href="/u/13488216" class="fly-avatar">
+							<img src="//thirdqq.qlogo.cn/qqapp/101235792/620445441A449A5C5AC0224D4A7AB5D6/100" alt="周三岁"> </a>
+						<h2>
+							<a class="layui-badge">提问</a> <a href="/jie/25490/">无法改变form 表单中的 开关样式 </a> 
+						</h2>
+						<div class="fly-list-info">
+							<a href="/u/13488216" link="">
+								<cite>周三岁</cite>
+							</a>
+							<span>1小时前</span>
+							<span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻">
+								<i class="iconfont icon-kiss"></i> 20
+							</span>
+							<span class="fly-list-nums"> 
+								<i class="iconfont icon-pinglun1" title="回答"></i> 0 
+							</span>
+						</div>
+						<div class="fly-list-badge"> </div>
+					</li>
+					<li>
+						<a href="/u/13488216" class="fly-avatar">
+							<img src="//thirdqq.qlogo.cn/qqapp/101235792/620445441A449A5C5AC0224D4A7AB5D6/100" alt="周三岁"> </a>
+						<h2>
+							<a class="layui-badge">提问</a> <a href="/jie/25490/">无法改变form 表单中的 开关样式 </a> 
+						</h2>
+						<div class="fly-list-info">
+							<a href="/u/13488216" link="">
+								<cite>周三岁</cite>
+							</a>
+							<span>1小时前</span>
+							<span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻">
+								<i class="iconfont icon-kiss"></i> 20
+							</span>
+							<span class="fly-list-nums"> 
+								<i class="iconfont icon-pinglun1" title="回答"></i> 0 
+							</span>
+						</div>
+						<div class="fly-list-badge"> </div>
+					</li>
+					<li>
+						<a href="/u/13488216" class="fly-avatar">
+							<img src="//thirdqq.qlogo.cn/qqapp/101235792/620445441A449A5C5AC0224D4A7AB5D6/100" alt="周三岁"> </a>
+						<h2>
+							<a class="layui-badge">提问</a> <a href="/jie/25490/">无法改变form 表单中的 开关样式 </a> 
+						</h2>
+						<div class="fly-list-info">
+							<a href="/u/13488216" link="">
+								<cite>周三岁</cite>
+							</a>
+							<span>1小时前</span>
+							<span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻">
+								<i class="iconfont icon-kiss"></i> 20
+							</span>
+							<span class="fly-list-nums"> 
+								<i class="iconfont icon-pinglun1" title="回答"></i> 0 
+							</span>
+						</div>
+						<div class="fly-list-badge"> </div>
+					</li>
+					<li>
+						<a href="/u/13488216" class="fly-avatar">
+							<img src="//thirdqq.qlogo.cn/qqapp/101235792/620445441A449A5C5AC0224D4A7AB5D6/100" alt="周三岁"> </a>
+						<h2>
+							<a class="layui-badge">提问</a> <a href="/jie/25490/">无法改变form 表单中的 开关样式 </a> 
+						</h2>
+						<div class="fly-list-info">
+							<a href="/u/13488216" link="">
+								<cite>周三岁</cite>
+							</a>
+							<span>1小时前</span>
+							<span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻">
+								<i class="iconfont icon-kiss"></i> 20
+							</span>
+							<span class="fly-list-nums"> 
+								<i class="iconfont icon-pinglun1" title="回答"></i> 0 
+							</span>
+						</div>
+						<div class="fly-list-badge"> </div>
+					</li>
+					<li>
+						<a href="/u/13488216" class="fly-avatar">
+							<img src="//thirdqq.qlogo.cn/qqapp/101235792/620445441A449A5C5AC0224D4A7AB5D6/100" alt="周三岁"> </a>
+						<h2>
+							<a class="layui-badge">提问</a> <a href="/jie/25490/">无法改变form 表单中的 开关样式 </a> 
+						</h2>
+						<div class="fly-list-info">
+							<a href="/u/13488216" link="">
+								<cite>周三岁</cite>
+							</a>
+							<span>1小时前</span>
+							<span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻">
+								<i class="iconfont icon-kiss"></i> 20
+							</span>
+							<span class="fly-list-nums"> 
+								<i class="iconfont icon-pinglun1" title="回答"></i> 0 
+							</span>
+						</div>
+						<div class="fly-list-badge"> </div>
+					</li>
+					<li>
+						<a href="/u/13488216" class="fly-avatar">
+							<img src="//thirdqq.qlogo.cn/qqapp/101235792/620445441A449A5C5AC0224D4A7AB5D6/100" alt="周三岁"> </a>
+						<h2>
+							<a class="layui-badge">提问</a> <a href="/jie/25490/">无法改变form 表单中的 开关样式 </a> 
+						</h2>
+						<div class="fly-list-info">
+							<a href="/u/13488216" link="">
+								<cite>周三岁</cite>
+							</a>
+							<span>1小时前</span>
+							<span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻">
+								<i class="iconfont icon-kiss"></i> 20
+							</span>
+							<span class="fly-list-nums"> 
+								<i class="iconfont icon-pinglun1" title="回答"></i> 0 
+							</span>
+						</div>
+						<div class="fly-list-badge"> </div>
+					</li>
+					<li>
+						<a href="/u/13488216" class="fly-avatar">
+							<img src="//thirdqq.qlogo.cn/qqapp/101235792/620445441A449A5C5AC0224D4A7AB5D6/100" alt="周三岁"> </a>
+						<h2>
+							<a class="layui-badge">提问</a> <a href="/jie/25490/">无法改变form 表单中的 开关样式 </a> 
+						</h2>
+						<div class="fly-list-info">
+							<a href="/u/13488216" link="">
+								<cite>周三岁</cite>
+							</a>
+							<span>1小时前</span>
+							<span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻">
+								<i class="iconfont icon-kiss"></i> 20
+							</span>
+							<span class="fly-list-nums"> 
+								<i class="iconfont icon-pinglun1" title="回答"></i> 0 
+							</span>
+						</div>
+						<div class="fly-list-badge"> </div>
+					</li>
+					<li>
+						<a href="/u/13488216" class="fly-avatar">
+							<img src="//thirdqq.qlogo.cn/qqapp/101235792/620445441A449A5C5AC0224D4A7AB5D6/100" alt="周三岁"> </a>
+						<h2>
+							<a class="layui-badge">提问</a> <a href="/jie/25490/">无法改变form 表单中的 开关样式 </a> 
+						</h2>
+						<div class="fly-list-info">
+							<a href="/u/13488216" link="">
+								<cite>周三岁</cite>
+							</a>
+							<span>1小时前</span>
+							<span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻">
+								<i class="iconfont icon-kiss"></i> 20
+							</span>
+							<span class="fly-list-nums"> 
+								<i class="iconfont icon-pinglun1" title="回答"></i> 0 
+							</span>
+						</div>
+						<div class="fly-list-badge"> </div>
+					</li>
+				</ul>
+				<div class="layui-table-page"><div id="layui-table-page1"><div class="layui-box layui-laypage layui-laypage-default" id="layui-laypage-1"><a href="javascript:;" class="layui-laypage-prev layui-disabled" data-page="0"><i class="layui-icon"></i></a><span class="layui-laypage-curr"><em class="layui-laypage-em"></em><em>1</em></span><a href="javascript:;" class="layui-laypage-next layui-disabled" data-page="2"><i class="layui-icon"></i></a><span class="layui-laypage-skip">到第<input min="1" value="1" class="layui-input" type="text">页<button type="button" class="layui-laypage-btn">确定</button></span><span class="layui-laypage-count">共 3 条</span><span class="layui-laypage-limits"><select lay-ignore=""><option value="10" selected="">10 条/页</option><option value="20">20 条/页</option><option value="30">30 条/页</option><option value="40">40 条/页</option><option value="50">50 条/页</option><option value="60">60 条/页</option><option value="70">70 条/页</option><option value="80">80 条/页</option><option value="90">90 条/页</option></select></span></div></div></div>
+			</div>
+		</div>
+	</body>
+	<script src="../../layuiadmin/layui/layui.js"></script>
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+	<script>
+		$(function(){
+			$.ajax({
+				type:"get",
+				url:"particular_messList.json",
+				dataType: "json",
+				success: function(data){
+					console.log(112312)
+				}
+			})
+			
+		})
+	</script>
+
+</html>

@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icei.mapper.OrderMapper">
+    <resultMap id="BaseResultMap" type="com.icei.domain.Order">
+        <id column="order_id" jdbcType="INTEGER" property="orderId"/>
+        <result column="order_index" jdbcType="VARCHAR" property="orderIndex"/>
+        <result column="trade_index" jdbcType="VARCHAR" property="tradeIndex"/>
+        <result column="exp_id" jdbcType="VARCHAR" property="expId"/>
+        <result column="exp_type" jdbcType="VARCHAR" property="expType"/>
+        <result column="order_price" jdbcType="REAL" property="orderPrice"/>
+        <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate"/>
+        <result column="paid_date" jdbcType="TIMESTAMP" property="paidDate"/>
+        <result column="send_date" jdbcType="TIMESTAMP" property="sendDate"/>
+        <result column="finish_date" jdbcType="TIMESTAMP" property="finishDate"/>
+        <result column="order_money" jdbcType="REAL" property="orderMoney"/>
+        <result column="discounts_money" jdbcType="REAL" property="discountsMoney"/>
+        <result column="discounts_id" jdbcType="INTEGER" property="discountsId"/>
+        <result column="discounts_money" jdbcType="REAL" property="discountsMoney"/>
+        <result column="address_id" jdbcType="REAL" property="addressId"/>
+        <result property="statusId" column="status_id"/>
+        <result column="user_id" property="userId"/>
+        <!--用户-->
+        <association property="userDetail" javaType="com.icei.domain.UserDetail">
+            <result javaType="java.lang.Integer" property="userId" column="user_id"/>
+            <result javaType="java.lang.String" property="userName" column="user_name"/>
+            <result javaType="java.lang.String" property="userCode" column="user_code"/>
+            <result javaType="java.lang.String" property="imgPath" column="img_path"/>
+        </association>
+        <!--订单状态-->
+        <association property="orderStatus" javaType="com.icei.domain.OrderStatus">
+            <result property="statusId" column="status_id"/>
+            <result property="statusDec" column="status_dec"/>
+        </association>
+        <!--详情详情map-->
+        <association resultMap="orderDetail" property="orderDetail"></association>
+        <!-- 付款方式 -->
+        <association resultMap="payment" property="payMent"></association>
+        <!--用户地址-->
+        <association resultMap="UserAddress" property="userAddress"></association>
+    </resultMap>
+    <!-- 付款方式 -->
+    <resultMap id="payment" type="com.icei.domain.Payment">
+        <id column="payment_id" jdbcType="INTEGER" property="paymentId"/>
+        <result column="payment_type" jdbcType="VARCHAR" property="paymentType"/>
+    </resultMap>
+    <!--详情订单map-->
+    <resultMap id="orderDetail" type="com.icei.domain.OrderDetail">
+        <id column="detail_id" jdbcType="INTEGER" property="detailId"/>
+        <result column="order_id" jdbcType="INTEGER" property="orderId"/>
+        <result column="goods_id" jdbcType="INTEGER" property="goodsId"/>
+        <result column="detail_count" jdbcType="INTEGER" property="detailCount"/>
+        <result column="diy_mould" jdbcType="INTEGER" property="diyMould"/>
+        <result column="type_mould" jdbcType="INTEGER" property="typeMould"/>
+        <result column="single_money" jdbcType="REAL" property="singleMoney"/>
+        <result column="discount" jdbcType="REAL" property="discount"/>
+        <!--商品map-->
+        <association resultMap="brandGoods" property="brandGoods"></association>
+    </resultMap>
+    <!--商品map-->
+    <resultMap id="brandGoods" type="com.icei.domain.BrandGoods">
+        <id column="goods_id" jdbcType="INTEGER" property="goodsId"/>
+        <result column="brand_id" jdbcType="INTEGER" property="brandId"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="type_detail_id" jdbcType="INTEGER" property="typeDetailId"/>
+        <result column="goods_price" jdbcType="FLOAT" property="goodsPrice"/>
+        <result column="goods_discount" jdbcType="REAL" property="goodsDiscount"/>
+        <result column="diy_price" jdbcType="REAL" property="diyPrice"/>
+        <result column="is_diy" jdbcType="INTEGER" property="isDiy"/>
+        <result column="production_cycle" jdbcType="INTEGER" property="productionCycle"/>
+        <result column="goods_dec" jdbcType="VARCHAR" property="goodsDec"/>
+        <result column="materials" jdbcType="VARCHAR" property="materials"/>
+        <result column="sales_volume" jdbcType="INTEGER" property="salesVolume"/>
+        <result column="goods_quality" jdbcType="REAL" property="goodsQuality"/>
+        <result column="server_attitude" jdbcType="REAL" property="serverAttitude"/>
+        <result column="assess_count_love" jdbcType="INTEGER" property="assessCountLove"/>
+        <result column="assess_count" jdbcType="INTEGER" property="assessCount"/>
+        <result column="like_count" jdbcType="INTEGER" property="likeCount"/>
+        <result column="goods_img" jdbcType="VARCHAR" property="goodsImg"/>
+        <result column="diy_back" jdbcType="VARCHAR" property="diyBack"/>
+    </resultMap>
+    <!--用户地址-->
+    <resultMap id="UserAddress" type="com.icei.domain.UserAddress">
+        <id column="address_id" jdbcType="INTEGER" property="addressId" />
+        <result column="user_id" jdbcType="INTEGER" property="userId" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="region" jdbcType="VARCHAR" property="region" />
+        <result column="street" jdbcType="VARCHAR" property="street" />
+        <result column="postcode" jdbcType="VARCHAR" property="postcode" />
+        <result column="tally" jdbcType="VARCHAR" property="tally" />
+    </resultMap>
+
+    <!--华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线-->
+    <!--华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线-->
+    <!--华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线华丽的分割线-->
+
+
+    <!--  查询个人订单(全部,待发货，代付款，待收货，退款，带评价) -->
+    <select id="getUserOrder" resultMap="BaseResultMap">
+        SELECT `order`.*,order_status.*,brand_goods.*,order_detail.*,p.payment_type
+        FROM `order`
+        INNER JOIN user_detail ON user_detail.user_id=order.user_id
+        INNER JOIN order_status ON order.status_id=order_status.status_id
+        INNER JOIN order_detail ON order.order_id=order_detail.order_id
+        INNER JOIN brand_goods ON brand_goods.goods_id=order_detail.goods_id
+        INNER JOIN payment p ON p.payment_id=order.payment_id
+        where 1=1
+        <if test="statusId != null ">
+            AND order.status_id=#{statusId}
+        </if>
+        
+        <if test="userId != null ">
+            AND order.user_id=#{userId}
+        </if>
+         ORDER BY `order`.creation_date desc
+    </select>
+    <!--  查询个人订单(退款) -->
+    <select id="getUserOrderRefund" resultMap="BaseResultMap">
+        SELECT `order`.*,order_status.*,brand_goods.*,order_detail.*,p.payment_type
+        FROM `order`
+        INNER JOIN user_detail ON user_detail.user_id=order.user_id
+        INNER JOIN order_status ON order.status_id=order_status.status_id
+        INNER JOIN order_detail ON order.order_id=order_detail.order_id
+        INNER JOIN brand_goods ON brand_goods.goods_id=order_detail.goods_id
+        INNER JOIN payment p ON p.payment_id=order.payment_id
+        where 1=1 and `order`.status_id>=8
+        <if test="userId != null ">
+            AND order.user_id=#{userId}
+        </if>
+         ORDER BY `order`.creation_date desc
+    </select>
+    <!--订单号和用户id查询订单-->
+    <select id="findAOrderByOrderNumber" resultMap="BaseResultMap">
+		SELECT
+		`order`.*,order_status.*,brand_goods.*,order_detail.*,user_detail.*,user_address.*
+
+		FROM `order`
+		INNER JOIN user_detail ON user_detail.user_id=order.user_id
+		INNER JOIN order_status ON order.status_id=order_status.status_id
+		INNER JOIN order_detail ON order.order_id=order_detail.order_id
+		INNER JOIN brand_goods ON brand_goods.goods_id=order_detail.goods_id
+		INNER JOIN brand ON brand.brand_id =order_detail.brand_id
+		INNER JOIN user_address on `order`.address_id = user_address.address_id
+		WHERE `order`.order_index=#{orderId}
+		and `order`.user_id=#{userId}
+	</select>
+	
+    <!--订单Id和用户ID查询订单-->
+    <select id="findAOrderById" resultMap="BaseResultMap">
+		SELECT
+		`order`.*,order_status.*,brand_goods.*,order_detail.*,user_detail.*,user_address.*
+
+		FROM `order`
+		INNER JOIN user_detail ON user_detail.user_id=order.user_id
+		INNER JOIN order_status ON order.status_id=order_status.status_id
+		INNER JOIN order_detail ON order.order_id=order_detail.order_id
+		INNER JOIN brand_goods ON brand_goods.goods_id=order_detail.goods_id
+		INNER JOIN brand ON brand.brand_id =order_detail.brand_id
+		INNER JOIN user_address on `order`.address_id = user_address.address_id
+		WHERE `order`.order_id=#{orderId}
+		and `order`.user_id=#{userId}
+	</select>
+
+    <!--订单Id 和 店铺id查询订单-->
+    <select id="findAOrderByIdAndBrandId" resultMap="BaseResultMap">
+		SELECT
+		`order`.*,order_status.*,brand_goods.*,order_detail.*,user_detail.*,user_address.*
+
+		FROM `order`
+		INNER JOIN user_detail ON user_detail.user_id=order.user_id
+		INNER JOIN order_status ON order.status_id=order_status.status_id
+		INNER JOIN order_detail ON order.order_id=order_detail.order_id
+		INNER JOIN brand_goods ON brand_goods.goods_id=order_detail.goods_id
+		INNER JOIN brand ON brand.brand_id =order_detail.brand_id
+		INNER JOIN user_address on `order`.address_id = user_address.address_id
+		WHERE `order`.order_id=#{orderId}
+		and `brand`.brand_id=#{brandId}
+	</select>
+
+    <!--订单数量-->
+    <select id="findOrdersCountByConditions" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM `order`
+        INNER JOIN user_detail ON user_detail.user_id=order.user_id
+        INNER JOIN order_status ON order.status_id=order_status.status_id
+        INNER JOIN order_detail ON order.order_id=order_detail.order_id
+        INNER JOIN brand_goods ON brand_goods.goods_id=order_detail.goods_id
+        INNER JOIN brand ON brand.brand_id=order_detail.brand_id
+        WHERE 1=1
+        <if test="orderStatus != null and orderStatus!=''">
+            AND order.order_status=#{orderStatus}
+        </if>
+        <if test="startDate != null and startDate!='' and endDate != null and endDate!=''">
+            AND order.creation_date BETWEEN #{startDate} AND #{endDate}
+        </if>
+        <if test="orderIndex != null and orderIndex!=''">
+            AND order.order_index like CONCAT('%',#{orderIndex},'%')
+        </if>
+        <if test="brandId != null">
+            AND order_detail.brand_id=#{brandId}
+        </if>
+    </select>
+    <!--订单集合-->
+    <select id="findOrdersByConditions" resultMap="BaseResultMap">
+        SELECT
+        `order`.*,order_status.*,brand_goods.*,order_detail.*,
+        user_detail.user_id,user_detail.user_name,user_detail.user_code,user_detail.img_path
+
+        FROM `order`
+        INNER JOIN user_detail ON user_detail.user_id=order.user_id
+        INNER JOIN order_status ON order.status_id=order_status.status_id
+        INNER JOIN order_detail ON order.order_id=order_detail.order_id
+        INNER JOIN brand_goods ON brand_goods.goods_id=order_detail.goods_id
+        INNER JOIN brand ON brand.brand_id =order_detail.brand_id
+        WHERE 1=1
+        <if test="orderStatus != null and orderStatus!=''">
+            AND order.order_status=#{orderStatus}
+        </if>
+        <if test="startDate != null and startDate!='' and endDate != null and endDate!=''">
+            AND order.creation_date BETWEEN #{startDate} AND #{endDate}
+        </if>
+        <if test="orderIndex != null and orderIndex!=''">
+            AND order.order_index like CONCAT('%',#{orderIndex},'%')
+        </if>
+        <if test="brandId != null">
+            AND order_detail.brand_id=#{brandId}
+        </if>
+        order by `order`.creation_date desc
+        LIMIT #{page},#{pageSize};
+    </select>
+    <insert id="addNewOrder">
+        INSERT INTO `order`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            user_id,
+            order_index,
+            address_id,
+            order_price,
+            order_money,
+            <if test="discountsId != null">
+                discounts_id,
+            </if>
+            discounts_money,
+        </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            #{userId},
+            #{orderIndex},
+            #{addressId},
+            #{orderPrice},
+            #{orderMoney},
+            <if test="discountsId != null">
+                #{discountsId},
+            </if>
+            #{discountsMoney},
+        </trim>
+    </insert>
+    <insert id="insertSelective" parameterType="com.icei.domain.Order">
+        INSERT INTO `order`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="orderIndex != null">
+                order_index,
+            </if>
+            <if test="tradeIndex != null">
+                trade_index,
+            </if>
+            <if test="paymentId != null">
+                payment_id,
+            </if>
+            <if test="statusId != null">
+                status_id,
+            </if>
+            <if test="addressId != null">
+                address_id,
+            </if>
+            <if test="expId != null">
+                exp_id,
+            </if>
+            <if test="expType != null">
+                exp_type,
+            </if>
+            <if test="orderPrice != null">
+                order_price,
+            </if>
+            <if test="creationDate != null">
+                creation_date,
+            </if>
+            <if test="paidDate != null">
+                paid_date,
+            </if>
+            <if test="sendDate != null">
+                send_date,
+            </if>
+            <if test="finishDate != null">
+                finish_date,
+            </if>
+            <if test="orderMoney != null">
+                order_money,
+            </if>
+            <if test="discountsId != null">
+                discounts_id,
+            </if>
+            <if test="discountsMoney != null">
+                discounts_money,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                #{orderId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="orderIndex != null">
+                #{orderIndex,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeIndex != null">
+                #{tradeIndex,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentId != null">
+                #{paymentId,jdbcType=INTEGER},
+            </if>
+            <if test="statusId != null">
+                #{statusId,jdbcType=INTEGER},
+            </if>
+            <if test="addressId != null">
+                #{addressId,jdbcType=INTEGER},
+            </if>
+            <if test="expId != null">
+                #{expId,jdbcType=VARCHAR},
+            </if>
+            <if test="expType != null">
+                #{expType,jdbcType=VARCHAR},
+            </if>
+            <if test="orderPrice != null">
+                #{orderPrice,jdbcType=REAL},
+            </if>
+            <if test="creationDate != null">
+                #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="paidDate != null">
+                #{paidDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendDate != null">
+                #{sendDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="finishDate != null">
+                #{finishDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orderMoney != null">
+                #{orderMoney,jdbcType=REAL},
+            </if>
+            <if test="discountsId != null">
+                #{discountsId,jdbcType=INTEGER},
+            </if>
+            <if test="discountsMoney != null">
+                #{discountsMoney,jdbcType=REAL},
+            </if>
+        </trim>
+    </insert>
+    <!-- 修改 -->
+      <update id="updateOrder" parameterType="com.icei.domain.Order">
+        update `order`
+        <set>
+            <if test="orderId != null">
+                order_id=#{orderId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                user_id=#{userId,jdbcType=INTEGER},
+            </if>
+            <if test="orderIndex != null">
+                order_index=#{orderIndex,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeIndex != null">
+                trade_index=#{tradeIndex,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentId != null">
+                payment_id=#{paymentId,jdbcType=INTEGER},
+            </if>
+            <if test="statusId != null">
+                status_id=#{statusId,jdbcType=INTEGER},
+            </if>
+            <if test="addressId != null and addressId!=''">
+                address_id=#{addressId,jdbcType=INTEGER},
+            </if>
+            <if test="expId != null">
+                exp_id=#{expId,jdbcType=VARCHAR},
+            </if>
+            <if test="expType != null">
+                exp_type=#{expType,jdbcType=VARCHAR},
+            </if>
+            <if test="orderPrice != null">
+                order_price=#{orderPrice,jdbcType=REAL},
+            </if>
+            <if test="creationDate != null">
+                creation_date=#{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="paidDate != null">
+                paid_date=#{paidDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendDate != null">
+                send_date=#{sendDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="finishDate != null">
+                finish_date=#{finishDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orderMoney != null">
+                order_money=#{orderMoney,jdbcType=REAL},
+            </if>
+            <if test="discountsId != null">
+                discounts_id=#{discountsId,jdbcType=INTEGER},
+            </if>
+            <if test="discountsMoney != null">
+                discounts_money=#{discountsMoney,jdbcType=REAL},
+            </if>
+        </set>
+        where order_id = #{orderId,jdbcType=INTEGER}
+    </update>
+	<!--分割线 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.icei.domain.Order">
+        update `order`
+        <set>
+            <if test="orderId != null">
+                order_id=#{orderId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                user_id=#{userId,jdbcType=INTEGER},
+            </if>
+            <if test="orderIndex != null">
+                order_index=#{orderIndex,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeIndex != null">
+                trade_index=#{tradeIndex,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentId != null">
+                payment_id=#{paymentId,jdbcType=INTEGER},
+            </if>
+            <if test="statusId != null">
+                status_id=#{statusId,jdbcType=INTEGER},
+            </if>
+            <if test="addressId != null and addressId!=''">
+                address_id=#{addressId,jdbcType=INTEGER},
+            </if>
+            <if test="expId != null">
+                exp_id=#{expId,jdbcType=VARCHAR},
+            </if>
+            <if test="expType != null">
+                exp_type=#{expType,jdbcType=VARCHAR},
+            </if>
+            <if test="orderPrice != null">
+                order_price=#{orderPrice,jdbcType=REAL},
+            </if>
+            <if test="creationDate != null">
+                creation_date=#{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="paidDate != null">
+                paid_date=#{paidDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendDate != null">
+                send_date=#{sendDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="finishDate != null">
+                finish_date=#{finishDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orderMoney != null">
+                order_money=#{orderMoney,jdbcType=REAL},
+            </if>
+            <if test="discountsId != null">
+                discounts_id=#{discountsId,jdbcType=INTEGER},
+            </if>
+            <if test="discountsMoney != null">
+                discounts_money=#{discountsMoney,jdbcType=REAL},
+            </if>
+        </set>
+        where order_index = #{orderIndex,jdbcType=INTEGER}
+    </update>
+    <select id="findTargetOrderInfoByBrandIdAndDate" resultType="Map">
+		SELECT COUNT(1)as 'allcount',
+		( SELECT COUNT(1) FROM `order_detail` INNER JOIN `order` ON order_detail.order_id=`order`.order_id  WHERE order.status_id in(2,3,4,5,7) and brand.brand_id=#{brandId} and `order`.creation_date &gt; #{startDate} and `order`.creation_date &lt; #{endDate})as success,
+		( SELECT COUNT(1) FROM `order_detail` INNER JOIN `order` ON order_detail.order_id=`order`.order_id  WHERE order.status_id =9 and brand.brand_id=#{brandId} and `order`.creation_date &gt; #{startDate} and `order`.creation_date &lt; #{endDate} )as fail,
+		( SELECT SUM(order_price) FROM `order_detail` INNER JOIN `order` ON order_detail.order_id=`order`.order_id WHERE order.status_id in(2,3,4,5,7) and brand.brand_id=#{brandId} and `order`.creation_date &gt; #{startDate} and `order`.creation_date &lt; #{endDate})as successMoney,
+		( SELECT SUM(order_price) FROM `order_detail` INNER JOIN `order` ON order_detail.order_id=`order`.order_id WHERE order.status_id =9 and brand.brand_id=#{brandId} and `order`.creation_date &gt; #{startDate} and `order`.creation_date &lt; #{endDate})as failMoney
+		FROM `order`
+		INNER JOIN order_detail ON order_detail.order_id=`order`.order_id
+		INNER JOIN brand ON brand.brand_id=order_detail.brand_id
+		WHERE brand.brand_id=#{brandId} and `order`.creation_date &gt; #{startDate} and `order`.creation_date &lt; #{endDate}
+	</select>
+
+
+    <select id="findTargetOrderByBrandIdAndDate" resultType="hashmap">
+        SELECT `order`.order_id,`order`.creation_date,`order`.order_price,`order`.status_id
+        FROM `order`
+        INNER JOIN order_detail ON order_detail.order_id=`order`.order_id
+        WHERE brand_id=#{brandId}
+        and creation_date BETWEEN #{startDate} AND #{endDate}
+    </select>
+</mapper>

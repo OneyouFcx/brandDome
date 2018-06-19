@@ -1,0 +1,38 @@
+{
+	"code": 0,
+	"msg": "",
+	"count": 3,
+	"data": [
+		{
+			"id": "1",
+			"userName": "管理员",
+			"userCode": "admin",
+			"imgPath": "K.jpg",
+			"gender": "0",
+			"integral": "9999",
+			"creationDate": "2018-3-26",
+			"userStatus": "0",
+			"phoneNum":"189568975"
+		}, {
+			"id": "1",
+			"userName": "管理员",
+			"userCode": "admin",
+			"imgPath": "K.jpg",
+			"gender": "0",
+			"integral": "9999",
+			"creationDate": "2018-3-26",
+			"userStatus": "0"
+			
+		}, {
+			"id": "1",
+			"userName": "管理员",
+			"userCode": "admin",
+			"imgPath": "K.jpg",
+			"gender": "0",
+			"integral": "9999",
+			"creationDate": "2018-3-26",
+			"userStatus": "0"
+			
+		}
+	]
+}

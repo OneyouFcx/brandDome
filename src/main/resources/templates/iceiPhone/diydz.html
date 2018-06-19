@@ -1,0 +1,226 @@
+<!doctype html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<title th:text="'独一无二-'+${goods.goodsName}"></title>
+		<link rel="stylesheet" href="http://spoons.test.upcdn.net/layui/css/layui.css"><!--layui-->
+		<link rel="stylesheet" href="/iceiPhone/css/Public.css"><!--Public-->
+		<link rel="stylesheet" href="/iceiPhone/css/animate.min.css">
+		<link rel="stylesheet" href="/iceiPhone/css/diydz/diydz.css"><!--diydz-->
+		<link rel="stylesheet" href="//at.alicdn.com/t/font_612454_f9ua7om4mvnxko6r.css"><!--侧栏导航字体-->
+
+		<script type="text/javascript">
+			var siteUrl="http://39.104.166.58/",//图片接口地址
+				zhiqu="http://zhiqutuku.test.upcdn.net/zhiqu/";
+		</script>
+		<script src="/iceiPhone/js/jquery-3.2.1.min.js"></script>
+		<script src="http://spoons.test.upcdn.net/layui/layui.all.js"></script><!--layui-->
+		<script src="/iceiPhone/js/TweenMax.min.js"></script>
+        <script src="/iceiPhone/js/wow.min.js"></script>
+		<!-- Canvas相关 -->
+		<script src="/iceiPhone/js/diydz/createImg/html2canvas.min.js"></script>
+		<script src="/iceiPhone/js/diydz/createImg/base64.js"></script>
+		<script src="/iceiPhone/js/diydz/createImg/canvas2image.js"></script>
+		<script src="/iceiPhone/js/diydz/createImg/createimg.js"></script><!--文件转换-->
+
+        <script src="/iceiPhone/js/diydz/hammer.min.js"></script>
+        <script src="/iceiPhone/js/diydz/move/moveeffect.js"></script><!--拖动，放大等-->
+		<style type="text/css">
+			html,body{
+				height: 100%;
+				width: 100%;
+				overflow: hidden;
+			}
+            /*弹出层*/
+            #layui-layer7,.layui-layer{
+                overflow: hidden;
+            }
+            header{
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 99999999999999;
+            }
+            header div{
+                position: absolute;
+                top: 15px;
+                width: 28px;
+                height: 28px;
+                background: #cfd9df;
+                border-radius: 14px;
+                line-height: 28px;
+                text-align: center;
+            }
+			/*复位*/
+			#restoration{
+				position: fixed;
+				top: 82%;
+				left: 50%;
+				background: #fff;
+				width: 60px;
+				height: 25px;
+				text-align: center;
+				line-height: 25px;
+				border-radius: 25px;
+				margin-left: -30px;
+				box-shadow: 0 2px 8px 0 rgba(7,17,27,.06);
+				color: #7e9b99;
+				display: none;
+			}
+		</style>
+        <script>
+            $(function () {
+                new WOW().init();
+            })
+        </script>
+	</head>
+	<body>
+        <header>
+            <div style="left: 15px;"><</div>
+            <div style="right: 15px;">...</div>
+        </header>
+		<section class="navigation bounceInUp wow">
+			<a href="SPOONS.html">
+				<i class="iconfont icon-shouye"></i>
+				<nav-title>首页</nav-title>
+			</a>
+            <a class="bendi">
+                <i class="iconfont icon-baocun1"></i>
+                <nav-title>图片</nav-title>
+            </a>
+            <input id="bendi" type="file" style="display: none">
+            <a id="btnSave">立即定制</a>
+		</section>
+		<main>
+			<section id="diy-canvas" th:attr="goodsId=${goods.goodsId},sizeId=${sizeId}">
+				<div class="wow fadeIn dz-box">
+					<!--定制模板图片-->
+					<img id="dz-img" th:src="'http://spoons.test.upcdn.net'+${goods.diyBack}">
+					<!--定制模板图片End-->
+					<div id="dz-back" style="transition: all 1s;">
+						<img src="/iceiPhone/img/diydz/20180404102820.jpg" alt="/iceiPhone/img/diydz/20180404102820.jpg" id="topimg"><!--图片背景-->
+					</div>
+				</div>
+				<div id="restoration">复位</div>
+			</section>
+		</main>
+	</body>
+	<!--弹出层-->
+	<section id="images" style="display:none">
+		<div id="canvas"></div>
+		<div id="select">
+			<div class="layui-progress" lay-filter="demo" lay-showPercent="true">
+				<div class="layui-progress-bar" lay-percent="0%"></div>
+			</div>
+			<div class="select-btn">
+				<div class="layui-btn layui-btn-radius layui-btn-sm" id="affirm">就这样子啦</div>
+				<div class="layui-btn layui-btn-radius layui-btn-primary layui-btn-sm" onclick="layer.closeAll('page')">再修改下吧</div>
+			</div>
+		</div>
+	</section>
+	<!--弹出层End-->
+	<script>
+		$(function(){
+		    //复位
+		    $("#restoration").click(function () {
+                $.RecoverAll();//恢复默认设置
+            })
+            $.MoverEffect($(".dz-box"),$("#dz-back"));
+			selectTopImg();//本地图片上传
+		});
+	</script>
+	<script>
+		$(function(){
+		    //base64位转换
+			getBase64($("#dz-img").attr("src")).then(function(img64){
+				$("#dz-img").attr("src",img64);//转64位
+			});
+			/*确认定制弹出层*/
+			$("#btnSave").click(function(){
+				layer.open({
+					type: 1
+					,title: false
+					,closeBtn: false
+					,area: ['380px', '440px']
+					,shade: 0.15
+					,shadeClose: true
+					,anim: 2
+					,scrollbar:false
+					,id: 'LAY_layuipro'
+					,resize: false
+					,moveType: 1
+					,content: $("#images")
+					,skin: 'll-class'
+					,success: function(layero){
+						layer.load();
+					}
+					,end:function(){
+						layui.element.progress('demo', 0+'%');//设置页面进度条
+						$("#images").css("display","none");
+						$("#canvas").empty();
+					}
+				});
+				//img转换base64
+				getBase64($("#dz-back").find("img").attr("src")).then(function(base64){
+					$("#dz-back").find("img").attr("src",base64);
+					canvasV($(".dz-box"),$("#canvas"));//生成canvas
+					layer.msg("样品展示成功！");
+					layer.closeAll('loading');
+				},function(err){
+					layer.closeAll('loading');
+				});
+			});
+			/*图片上传*/
+			$("#affirm").click(function(){
+                var imgAlt=$("#topimg").attr("alt");
+				if(imgAlt!="topimg"){
+				    /*云图片执行*/
+                    //转base64位
+					getBase64(imgAlt).then(function(img64){
+						topdom(convertBase64UrlToBlob(img64));//云图片接- 图片上传url,数据
+					})
+				}else{
+				    /*上传本机图片执行*/
+					topdom($("#bendi").get(0).files[0]);//云图片接- 图片上传url,数据
+				};
+			});
+		});
+        /*本地选择图片*/
+        var selectTopImg=function(){
+            $(".bendi").click(function(){
+                $("#bendi").trigger('click');
+            });
+            $("#bendi").click(function(){
+                $(this).change(function(){
+                    var ofile = $(this).get(0).files[0];//获取文件
+                    var reader = new FileReader();
+                    if(!/image\/\w+/.test(ofile.type)){
+                        layer.msg("请选择图片类型");
+                    }else{
+                        reader.readAsDataURL(ofile);//调用自带方法进行转换
+                        reader.onload = function(e) {
+                            $("#dz-back").find("img").attr("src",this.result);
+                            $("#dz-back").find("img").attr("alt","topimg");
+							$.RecoverAll();//恢复默认设置
+                        };
+                    }
+                });
+            });
+        }
+        /**
+		 * 云图片上传
+         * @param topimg 图片文件
+         */
+		var topdom=function(topimg){
+			//topimg原图
+			var	formData = new FormData();
+			formData.append("file",convertBase64UrlToBlob(boacun($("#thecanvas"))));//blob格式样品图片
+			formData.append("file",topimg);
+			yunimg(formData,"/icei/addDiyMoule");//接口图片上传
+		}
+	</script>
+	<script src="/iceiPhone/js/diydz/topimg/topimg.js"></script><!--原图片上传-->
+	<script src="/iceiPhone/js/diydz/ImgYunTop.js"></script><!--图片上传-->
+</html>

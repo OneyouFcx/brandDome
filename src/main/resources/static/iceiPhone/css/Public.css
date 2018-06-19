@@ -1,0 +1,48 @@
+﻿@charset "utf-8";
+/* CSS Document */
+*{
+	margin: 0;
+	padding: 0;
+}
+li{
+	list-style:none;
+}
+a{
+	text-decoration: none;
+	color: #333;
+	cursor:pointer;
+}
+body{
+	line-height: 1.5;
+	color: #333;
+	background-color: #ECECEC;
+	font:16px Helvetica Neue,Helvetica,PingFang SC,\5FAE\8F6F\96C5\9ED1,Tahoma,Arial,sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 400;
+}
+.container {
+	width: 1600px;
+	margin: 0px auto;
+	position: relative;
+	
+}
+/*阿里巴巴字体图标*/
+/*
+恩恩是这样子使用的
+<svg class="icon" aria-hidden="true">
+    <use xlink:href="#icon-xxx"></use>
+</svg>
+加上下面的完美啦
+*/
+.icon {
+   width: 1.4em; height: 1.4em;
+   vertical-align: -0.15em;
+   fill: currentColor;
+   overflow: hidden;
+}
+@media screen and (max-width: 1600px) {
+	.container{
+		width: auto!important;
+	}
+}

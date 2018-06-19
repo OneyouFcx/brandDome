@@ -1,0 +1,304 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>订单</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0">
+	<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+	<link href=" ../../layuiadmin/style/table.css" rel="stylesheet" media="all" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="/iceiBrand/style/order/font.css">
+	<link rel="stylesheet" href="/iceiBrand/style/order/xadmin.css">
+	<link rel="stylesheet" href="/iceiBrand/style/order/AllOrder.css">
+
+
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+	<script src="../../layuiadmin/layui/layui.js"></script>
+	<script src="/iceiBrand/js/order/xadmin.js"></script>
+	<script src="/iceiBrand/js/order/expType.js"></script><!-- 快递公司集合 -->
+	<script type="text/javascript">
+		$(function(){
+			addExpType($("#expType"));//添加快递公司
+		});
+	</script>
+	<style>
+		.layui-form-select .layui-input{
+			width: 150px!important;
+		}
+		.laytable-cell-1-1{
+			margin: 0 auto!important;
+			box-sizing: border-box!important;
+			padding: 0!important;
+		}
+	</style>
+</head>
+
+<body>
+<section style="width: 100%;display: flex">
+	<section id="orderAll">
+		<div class="x-body">
+			<div class="layui-row">
+				<form class="layui-form layui-col-md12 x-so" id="select">
+					<div class="layui-inline">
+						<input style="width: 220px;" readonly="true" type="text" class="layui-input" id="date" placeholder="请选择日期" />
+					</div>
+					<div class="layui-inline">
+						<input style="width: 220px;" id="orderId" type="text" class="layui-input" placeholder="请输入订单号" />
+					</div>
+						<div class="layui-input-inline">
+							<select name="contrller" id="orderStatus">
+								<option value="">全部</option>
+								<option value="1">待付款</option>
+								<option value="2">待发货</option>
+								<option value="3">待收货</option>
+								<option value="4">待评价</option>
+								<option value="5">退款/售后</option>
+							</select>
+						</div>
+					<button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+					<button class="layui-btn" lay-filter="sreach" id="daochu"><i class="layui-icon">&#xe601;</i>订单导出</button>
+				</form>
+			</div>
+		    <!-- 订单 -->
+		    <section id="orderList">
+				<table id="table" lay-filter="order" lay-data="{id: 'order'}"></table>
+		    </section>
+			<!-- 订单End -->
+		</div>
+	</section>
+	<!-- 详情 -->
+	<section id="details" onLoad="aaa()">
+		<div class="x-body">
+			<div class="zz-title"><i class="layui-icon">&#xe645;</i><span>注意事项:请核对后进行定制以及发货</span></div>
+			<!--地址-->
+			<div class="site">
+				<div class="address-itme">
+					<dl>
+						<dt><span class="tag" id="userTag">标签</span><em id="userName">收货人</em></dt>
+						<dd id="userPhone">联系电话</dd><dd id="userSite">地址</dd>
+						<dd id="detailSite">详细地址</dd>
+					</dl>
+				</div>
+				<form class="layui-form kdfh">
+					<input id="userId" type="hidden" name="userId" class="layui-input">
+					<input id="orderIndex" type="hidden" name="orderIndex" class="layui-input">
+					<input style="width: 245px;" id="expNo" type="text" name="expId" required lay-verify="required" placeholder="请输快递单号" autocomplete="off" class="layui-input" disabled>
+					<div class="layui-input-inline">
+						<select style="width: 149px;" name="expType" lay-verify="required" id="expType"></select>
+					</div>
+					<button class="layui-btn" type="button" lay-submit lay-filter="formDemo" id="lgExp">立即发货</button>
+				</form>
+				<div id="dz-icon"><i class="layui-icon">&#xe715;</i></div>
+			</div>
+			<!--地址End-->
+			<div class="diy-order">
+				<div id="orderNo"><i>0000 0000 0000 0000</i></div>
+				<div class="diy-order-info">
+					<div id="order-img"><img src=""></div>
+					<div id="diy-order-x">
+						<div id="diy-order-phone" class="diy-order-in"><span class="layui-badge layui-bg-green">型号:</span><i>--</i></div>
+						<div id="diy-order-type" class="diy-order-in"><span class="layui-badge">定制:</span><i>--</i></div>
+					</div>
+					<div id="diy-bot">
+						<button class="layui-btn layui-btn-radius layui-btn-primary">下载背景</button>
+						<button class="layui-btn layui-btn-radius layui-btn-primary">下载模型</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- 详情End -->
+</section>
+	<script type="text/html" id="barDemo">
+		<a class="layui-btn layui-btn-xs" lay-event="1">查看</a>
+	</script>
+	<script>
+        $(function () {
+            /*导出文件*/
+            $("#daochu").click(function () {
+                var pageSize=$(".layui-laypage-limits").children("select").val();
+                console.log(pageSize);
+                var page=$(".layui-laypage-skip").children("input").val();
+                console.log(page);
+                window.open("exportOrder?page="+page+"&limit="+pageSize+"&orderStatus="+$("#orderStatus").val()+"&orderIndex="+$("#orderId").val());
+            })
+        })
+	</script>
+	<script>
+		$(function () {
+            layui.use(['table','form'], function() {
+                var table = layui.table,
+                    form=layui.form;
+                tableinsr=table.render({
+                    elem: '#table',
+                    url: "/brand/order/findOrdersByConditions",
+                    cellMinWidth: 80,
+                    limit:6,
+                    cols: [
+                        [{
+                            title: "订单号",
+                            field:"orderIndex",
+							width:200,
+                        }, {
+                            title: "图片",
+                            templet: '<div class="goodsImg"><img src="http://spoons.test.upcdn.net{{d.orderDetail.brandGoods.goodsImg}}" width="60px" height="60px"/></div>',
+                            width:80,
+                        }, {
+                            title: "商品名称",
+                            templet:'<div>{{d.orderDetail.brandGoods.goodsName}}</div>',
+
+                        }, {
+                            title: "状态",
+                            templet: "<div>{{d.orderStatus.statusDec}}</div>",
+                            width:70,
+                        }, {
+                            field: 'orderMoney',
+                            title: "订单总价",
+                            width:80,
+                        },{
+							templet: '<div>{{d.orderDetail.diyMould!=null?"是":"否"}}</div>',
+							title: "是否定制",
+							width:105,
+						},{
+                            title: "用户昵称",
+                            templet:'<div>{{d.userDetail.userName}}</div>',
+                            width:120,
+                        }, {
+                            templet: "#barDemo",
+                            title: "操作",
+                            width:70,
+                        }
+                        ]
+                    ],
+                    page: true,
+                });
+                //监听点击的按钮
+                table.on('tool(order)', function(obj){
+                    var layEvent = obj.event;
+                    var data = obj.data;
+                    var tr = obj.tr;
+                    if(obj.event === '1'){
+                        var addressId=data.addressId;//地址ID
+                       	var orderId=data.orderId;//订单ID
+                       	var diyId=data.orderDetail.diyMould;//定制Id
+                       	var modelId=data.orderDetail.typeMould;//类型iD
+						var statusId=data.orderStatus.statusId;//订单状态
+						//订单状态
+						if(statusId==2){
+                            layer.msg("请核对详情进行发货",{icon: 6});
+                            $("#orderIndex").val(data.orderIndex);//设置订单号
+							$("#userId").val(data.userDetail.userId);
+                            $("#lgExp").removeAttr("disabled");
+                            $("#expNo").removeAttr("disabled");
+                            $("#expNo").val("");
+                            $(".site").css("border","3px solid #1E9FFF");
+						}else {
+                            layer.msg("该订单处于("+data.orderStatus.statusDec+")状态,无法操作发货",{icon: 5});
+                            $("#lgExp").attr("disabled","disabled");
+                            $("#expNo").attr("disabled","disabled");
+                            $(".site").css("border","3px solid #FF5722");
+						}
+                    	/*地址回显*/
+            			$.ajax({
+            				url:"/brand/ByOrderIdGetAddress",
+            				type:"Get",
+            				data:{"addressId":addressId},
+            				dataType:"json",
+            				success:function(data){
+            					$("#userName").text("收货人：");//详细地址
+                				$("#userTag").text("标签：");//标签  
+                				$("#userPhone").text("联系电话：");//电话
+                				$("#userSite").text("地址：");//地址
+                				$("#detailSite").text("详细地址：");//详细地址
+            					/*追加*/
+                				$("#userName").text($("#userName").text()+":"+data.name);//详细地址
+                				$("#userTag").text($("#userTag").text()+":"+data.tally);//标签  
+                				$("#userPhone").text($("#userPhone").text()+":"+data.phone);//电话
+                				$("#userSite").text($("#userSite").text()+":"+data.region);//地址
+                				$("#detailSite").text($("#detailSite").text()+":"+data.street);//详细地址
+                			}
+            			});
+                        /*显示*/
+						//是否定制
+						if(data.orderDetail.diyMould==null){
+							$.ajax({
+								url:'/brand/BymodelIdGetInfo',
+								data:{modelId:modelId},
+								success:function(data){
+									//商品类型
+									$("#diy-order-phone").find('i').text(data.modelName);
+									$("#diy-order-type").find('i').text("否");
+									//大图背景
+									$(".diy-order").css({"background-image":"url(http://spoons.test.upcdn.net"+data.modelImg+")","background-size":"100% 100%"});
+									//小图显示
+									$("#order-img>img").remove();
+									var img="<img src='http://spoons.test.upcdn.net"+data.modelImg+"'>";
+									$("#order-img").append(img);
+								}
+							})
+						}else{
+							$("#diy-order-type").find('i').text("是");
+							$.ajax({
+								url:'/brand/ByDiyIdGetDiyMould',
+								data:{diyId:diyId},
+								success:function(data){
+									//商品类型
+									$("#diy-order-phone").find('i').text("你猜呀 ");
+									//大图背景
+									$(".diy-order").css({"background-image":"url(http://spoons.test.upcdn.net"+data.mouldBack+")","background-size":"100% 100%"});
+									
+									//小图显示
+									$("#order-img>img").remove();
+									var img="<img src='http://spoons.test.upcdn.net"+data.mouldImg+"'>";
+									$("#order-img").append(img);
+								}
+							})
+						}
+                    }
+                });
+			})
+            layui.use('laydate', function() {
+                laydate = layui.laydate;
+                laydateRender();
+            });
+            function laydateRender() {
+                laydate.render({
+                    elem: '#date',
+                    type: 'datetime',
+                    range: '   ~   ',
+                    format: 'yyyy-M-d H:m:s',
+                    done: function(value, date) {
+                        var arrs = value.split('   ~   ');
+                        var startDate = $.trim(arrs[0]);
+                        var endDate = $.trim(arrs[1]);
+                    }
+                });
+            }
+        })
+	</script>
+	<script type="text/javascript">
+		//发货
+        layui.use('form', function(){
+            var form = layui.form;
+            form.on('submit(formDemo)', function(data){
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                $.ajax({
+                    url:"/brand/order/updEsc",
+                    type:"Put",
+                    data:data.field,
+                    dataType:"json",
+                    success:function (res) {
+                        if (res.code==0){
+                            layer.msg("发货成功",{icon: 6});
+						}
+                    }
+                });
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+		})
+	</script>
+
+</body>
+</html>

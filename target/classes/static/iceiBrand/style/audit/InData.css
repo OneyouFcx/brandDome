@@ -1,0 +1,88 @@
+ #only{
+      width: 100%;
+      margin: 0px auto;
+      font-family: sans-serif;
+      color: #7e7e7e;
+      padding: 30px 0;
+      display: none;
+  }
+ #only table{
+      width: 800px;
+      margin: 0px auto;
+      border-bottom: 1px solid #f2f2f2;
+  }
+ #only table tr{
+      height: 60px;
+      line-height: 60px;
+  }
+ #only table .key{
+      text-align: right;
+      padding-right: 20px;
+      width: 200px;
+      font-size: 14px;
+  }
+ #only table .val input{
+      width: 250px;
+      font-size: 12px;
+      box-sizing: border-box;
+      border: 1px solid #e5e5e5;
+      background: #f5f5f5;
+      color: #000;
+      font-size: 14px;
+      padding: 10px 13px;
+      transition: 0.2s background ease-out;
+  }
+ #only table .new_val input{
+      width: 135px;
+  }
+ #only .top_table .new_val img{
+      display: inline-block;
+      margin-left: 6px;
+      vertical-align: middle;
+  }
+ #only .top_table .std-btn{
+      color: #bcbfc4;
+      background: #d2d4d7;
+      cursor: not-allowed;
+      width: 108px;
+      line-height: 40px;
+      height: 40px;
+      display: inline-block;
+      text-align: center;
+      margin-left: 8px;
+  }
+#only .bottom_table .new_key{
+      vertical-align: top;
+      height: 193px;
+  }
+ #only .bottom_table .val_new div{
+      display: inline-block;
+      width: 182px;
+      height: 182px;
+      border: 1px solid #e5e5e5;
+  }
+ #only .centre_table .new_key{
+      vertical-align: top;
+      height: 193px;
+  }
+ #only .centre_table .val_new div{
+       display: inline-block;
+       border: 1px solid #e5e5e5;
+      width: 182px;
+      height: 182px;
+  }
+ #only .present{
+      width: 112px;
+      height: 42px;
+      border-radius: 21px;
+      background:#d2d4d7;
+      color: #bcbfc4;
+      text-align: center;
+      line-height: 42px;
+      cursor: not-allowed;
+      margin: 25px auto;
+  }
+   #only .file img{
+  	width: 100%;
+  	height: 100%; 
+  }

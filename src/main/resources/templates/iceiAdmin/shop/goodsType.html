@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+<link rel="stylesheet" href="../../layuiadmin/fontcss/demo.css">
+<link rel="stylesheet" href="../../layuiadmin/fontcss/colorpicker.css">
+<link rel="stylesheet" href="../../layuiadmin/fontcss/iconfont.css">
+</head>
+<style>
+	body{
+		background-color: #fff;
+	}
+	.add{
+		margin:2% 0px;
+		width:100%;
+		padding-left:50px;
+	
+	}
+	.add>input{
+		width:15%;
+		display:inline-block
+	}
+	.add>input:nth-of-type(3){
+		width:5%;
+	}
+	.add>input:nth-of-type(4){
+		width:5%;
+	}
+	#only{
+            width: 800px;
+            margin: 0px auto;
+            font-family: sans-serif;
+            color: #7e7e7e;
+
+        }
+        .top_table{
+            width: 800px;
+            margin: 0px auto;
+            display: block;
+            margin-left: 100px;
+            border-bottom: 1px solid #f2f2f2;
+        }
+        .top_table tr{
+            height: 60px;
+            line-height: 60px;
+        }
+        .top_table td:nth-of-type(1){
+            text-align: right;
+            padding-right: 20px;
+            width: 200px;
+            font-size: 14px;
+        }
+        .top_table td:nth-of-type(2) input{
+            width: 250px;
+            font-size: 12px;
+            box-sizing: border-box;
+            border: 1px solid #e5e5e5;
+            background: #f5f5f5;
+            color: #000;
+            font-size: 14px;
+            padding: 10px 13px;
+            transition: 0.2s background ease-out;
+        }
+        .present{
+            width: 112px;
+            height: 42px;
+            border-radius: 21px;
+            background:#d2d4d7;
+            color: #bcbfc4;
+            text-align: center;
+            line-height: 42px;
+            cursor: not-allowed;
+            margin: 25px auto;
+        }
+        #bgc{
+        	padding-left:50px;
+        }
+        #sure{
+        	width:75px;
+        	margin-left:10px;
+        }
+        #add{
+        	width:75px;
+        }
+</style>
+<body>
+	 <div class="layui-inline add"> <!-- 注意：这一层元素并不是必须的 -->				 	
+		<label class="layui-form-label">分类ID</label>
+		<input type="text" name="typeId"  lay-verify="required"   class="layui-input"/>
+		<label style="float:none;display:inline-block;" class="layui-form-label">分类名称</label>
+	    <input type="text" name="typeName"  lay-verify="required" placeholder="支持模糊查询" class="layui-input"/>
+		<input type="button" class="layui-btn" id="sure" value="确定">
+		<input type="button" class="layui-btn" id="add" value="添加">
+	</div>				
+	<table id="demo" lay-data="{id: 'idTest'}" lay-filter="test" class="layui-table"></table>
+</body>
+<script src="../../layuiadmin/layui/layui.all.js"></script>
+<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+<script>
+//表单验证
+//非空验证
+function checktrue(){
+	var flag=false;
+	if($("input[name='typeIcon']").val()!=''&&$("input[name='typeIcon']").val()!=null&&$("#name").val()!=''&&$("#name").val()!=null&&$("input[name='typeImg']").val()!=''&&$("input[name='typeImg']").val()!=null&&$("input[name='typeBgc']").val()!=''&&$("input[name='typeBgc']").val()!=null){
+		flag=true;
+	}
+	return flag;
+}
+$(document).ready(function() {
+	//文件上传
+	$("#test1").click(function(){
+		$("#upload").trigger("click");
+	})
+	$("#upload").change(function(){
+		var dom = '',
+	        ofile = $("#upload").get(0).files[0],
+	        otype = ofile.type || '获取失败', //文件类型
+	        osize = ofile.size / 1054000, //文件大小
+	        ourl = window.URL.createObjectURL(ofile); //文件临时地址
+	    if ('image/jpeg' == otype || 'image/png' == otype || 'image/gif' == otype) {
+	        osize.toFixed(2)+"MB)";//文件大小
+	        ifTF=true;
+	        $("#classimg").attr("src",ourl);//设置回显图片
+	    }else {
+	    	layer.msg('请选择img格式文件');
+		}
+	})
+	$(".present").click(function(){
+		if(checktrue()){
+		    var	formData = new FormData();
+			formData.append("typeName",$('#name').val());//类型名称
+			formData.append("typeBgc",$('input[name="typeBgc"]').val());//类型背景色
+			formData.append("typeIcon",$('input[name="typeIcon"]').val());//类型ICON
+		    formData.append('file', $('#upload')[0].files[0]);//类型图片
+			yunimg(formData);
+		}else{
+			layer.msg('请完善表单信息');
+		}
+	})
+	var yunimg=function (formData) {
+		//侦查附件上传情况,大概0.05-0.1秒执行一次
+		function OnProgRess(event) {
+		    var event = event || window.event;
+		    console.log("已经上传：" + event.loaded);
+		};
+		//ajax图片上传
+		function UploadFileFn(){
+			var xhr = $.ajaxSettings.xhr();
+			$.ajax({
+		        type: "POST",
+		        url: "/admin/shop/AddGoodsType",
+		        data: formData,//formData数据
+		        cache: false,//缓存
+		        async: true,//异步执行
+		        processData: false,//处理发送的数据(必须false避开jQuery对formdata的默认处理)
+		        contentType: false,//设置Content-Type请求头
+		        xhr: function() {
+		            if (OnProgRess && xhr.upload) {
+		                xhr.upload.addEventListener("progress", OnProgRess, false);
+		                return xhr;
+		            }
+		        },
+		        dataType:"json",
+		        success: function(res) {
+		        	if(res == 1){
+		        		layer.msg('图片上传成功',{time: 1000},function(){
+		        			layer.closeAll(); 
+		        			$('#only').css("display","none");
+		        			location.reload();
+		        		});	
+		          	}else{
+		          		return layer.msg('图片上传失败');
+		          	}
+		        },
+		        error: function(returndata) {
+		            layer.msg('服务器错误');
+		        }
+		    });
+		}UploadFileFn();
+	}
+//
+	layui.use('table', function() {
+		var table = layui.table;
+	//监听单元格编辑
+	    table.on('edit(test)', function(obj){
+	      var data = obj.data ;
+	      layer.confirm('是否修改:[ID: '+ data.typeId +'] ' + obj.field + ' 字段更改为：'+ obj.value, {icon: 3, title:'提示'}, function(index){
+	    	  console.log(data);
+	    	  $.ajax({
+					url:'/admin/shop/UpdateGoodsType',
+					data:data,
+					type:'Put',
+					success:function(v){
+						if(v==1){
+							layer.msg('修改成功');
+						}
+					}
+				})
+	    	  layer.close(index);
+	    	});
+	    });
+	//结束
+		table.render({
+			elem: '#demo',
+			url: "/admin/shop/getAllGoodsType",
+			cellMinWidth: 80,
+			limit:5,
+			id:'idTest',
+			size: 'lg',
+			cols: [
+				[{
+						type: 'checkbox'
+					},
+					{
+						field: "typeId",
+						title: "类型ID",
+					}, {
+						title: "类型名称",
+						field: 'typeName',
+						edit: 'text'
+					}, {
+						field: "typeImg",
+						title: "类型图片",
+						edit: 'text',
+					
+						templet: function(d){
+					        return '<img  src="http://spoons.test.upcdn.net'+d.typeImg+'" style="height:50xp;width:50px">'
+					    }
+					}, {
+						field: "typeBgc",
+						title: "类型背景颜色",
+						edit: 'text'
+					}, { 
+						field: "typeIcon",
+						title: "类型矢量图标",
+						edit: 'text'
+					} ,
+					{
+						title:'操作',
+						templet:'<div><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></div>'
+					}
+				]
+			],
+			page: true
+		});
+		//查询
+		$("#sure").click(function(){
+			var typeid=$("input[name='typeId']").val();
+			var typename=$("input[name='typeName']").val();
+			table.reload('idTest', {
+				where:{typeid:typeid,typename:typename}
+				  ,page: {
+				    curr: 1 //重新从第 1 页开始
+				  }
+				});
+		})
+		//监听工具条
+		 table.on('tool(test)', function(obj){
+			var data = obj.data;
+			if(obj.event === 'del'){
+			      layer.confirm('真的删除行么', function(index){
+			        obj.del();
+			        $.ajax({
+			        	url:'/admin/shop/deleteGoodsType',
+			        	data:{"id":data.typeId},
+			        	type:'POST',
+			        	success:function(v){
+			        		if(v==1){
+			        			layer.msg('删除成功');
+			        		}
+			        	}
+			        })
+			        layer.close(index);
+			      });
+			    } 
+		 })
+	//监听结束
+	});
+})
+//添加
+$("#add").click(function(){
+		 //自定页
+        layer.open({
+            title:'新增商品类型',
+            type: 1,
+            fixed:true,
+            skin: 'layui-layer-demo', //样式类名
+            closeBtn: 1, //显示关闭按钮
+            anim: 2,
+       
+            content: $('#only'),
+            scrollbar:false,
+            area: ['60%','60%'] ,
+            cancel: function(index, layero){ 
+            	  if(true){ //只有当点击confirm框的确定时，该层才会关闭
+            		$('#only').css("display","none");
+            	    layer.close(index)
+            	  }
+            	  return false; 
+            	}    
+		});
+	//选择商品分类ICOn
+	$("input[name='typeIcon']").click(function(){
+		 //自定页
+        layer.open({
+            title:'新增商品类型',
+            type: 1,
+            fixed:true,
+            skin: 'layui-layer-demo', //样式类名
+            anim: 2,
+            shadeClose: true, //开启遮罩关闭
+            content: $('.markdown'),
+            scrollbar:false,
+            area: ['100%','100%']
+		}); 
+		 //获取商品分类Icon
+		 $('.markdown > ul li').click(function(){
+			layer.close(layer.index); 
+			$('.markdown').css("display","none");
+			var i=$(this).text()
+			var typeIcon=i.substr(i.lastIndexOf("."));//截取字符串
+			$("input[name='typeIcon']").val(typeIcon)
+			//当完善表单信息后，改变按钮
+			if($("input[name='typeIcon']").val()!=''&&$("input[name='typeIcon']").val()!=null){
+				$(".present").css({"background":"#009688","cursor":"default","color":"#fff"});
+			}else{
+				$(".present").css({"background":"#d2d4d7","cursor":"not-allowed","color":"#bcbfc4"});
+			}
+		 })		
+	}) 
+})
+</script>
+<script type="text/javascript" src="../../layuiadmin/js/colorpicker.js"></script>
+<!-- 颜色取色器 -->
+<script type="text/javascript">
+$(function(){
+	
+	$('#colorpickerHolder').ColorPicker({flat: true})
+	$('#colorpickerHolder2').ColorPicker({
+		flat: true,
+		color: '#00ff00',
+		onSubmit: function(hsb, hex, rgb) {
+			$('#colorSelector2 div').css('backgroundColor', '#' + hex);
+		}
+	});
+	$('#colorpickerHolder2>div').css('position', 'absolute');
+	var widt = false;
+	$('#colorSelector2').bind('click', function() {
+		$('#colorpickerHolder2').stop().animate({height: widt ? 0 : 173}, 500);
+		widt = !widt;
+	});
+	//取色
+	$('.colorpicker_submit').bind('click', function() {
+		$('#colorpickerHolder2').stop().animate({height: widt ? 0 : 173}, 500);
+		widt = !widt;
+		$("#bgc").val("#"+$(".colorpicker input").val());
+	});
+	$('#colorpickerField1, #colorpickerField2, #colorpickerField3').ColorPicker({
+		onSubmit: function(hsb, hex, rgb, el) {
+			$(el).val(hex);
+			$(el).ColorPickerHide();
+		
+		},
+		onBeforeShow: function () {
+			$(this).ColorPickerSetColor(this.value);
+			
+		}
+	})
+	.bind('keyup', function(){
+		$(this).ColorPickerSetColor(this.value);
+	});
+});
+
+</script>
+<!-- 结束 -->
+
+<form action="" id="only"  class="layui-form" style="display: none;">
+    <table class="top_table">
+        <tr>
+            <td>商品分类名称</td>
+            <td><input type="text" id="name" name="typeName" class="layui-input" ></td>
+        </tr>
+        <tr>
+           	<td>商品类型图片</td>
+            <td>
+            	<input type="file" name="typeImg" id="upload" style="display:none;" >
+            	<img id="classimg" src="" style="width: 100px;height: 100px">
+	            <button  type="button" class="layui-btn" id="test1">
+				  	<i class="layui-icon">&#xe67c;</i>上传图片
+				</button>
+		  	</td>
+        </tr>
+        <tr>
+            <td>商品背景颜色</td>
+            <td style="position:relative;"><input type="text" id="bgc" readonly="readonly" placeholder="点击选取" name="typeBgc">
+              <!-- 颜色取色器 -->
+			    <div id="customWidget">
+					<div id="colorSelector2"><div style="background-color: #00ff00"></div></div>
+			        <div id="colorpickerHolder2"></div>
+				</div>
+			<!-- 颜色取色器 结束-->
+			</td>
+        </tr>
+        <tr>
+            <td class="key">商品类型图标</td>
+            <td class="val"><input type="text" readonly="readonly" placeholder="点击选取" name="typeIcon" /></td>
+        </tr>
+    </table>
+    <div class="present"> 提交</div>
+  
+</form>
+<!-- 间隔 -->
+ <div class="main markdown"  style="display: none;">
+        <h1>IconFont 图标</h1>
+        <ul class="icon_lists clear">
+                <li>
+                <i class="icon iconfont icon-dianpu1"></i>
+                    <div class="name">店铺</div>
+                    <div class="fontclass">.icon-dianpu1</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-biaoqing"></i>
+                    <div class="name">表情</div>
+                    <div class="fontclass">.icon-biaoqing</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-zan"></i>
+                    <div class="name">赞</div>
+                    <div class="fontclass">.icon-zan</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-shoucang"></i>
+                    <div class="name">收藏</div>
+                    <div class="fontclass">.icon-shoucang</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-dingzhijiaju"></i>
+                    <div class="name">定制家居</div>
+                    <div class="fontclass">.icon-dingzhijiaju</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-tousujubao"></i>
+                    <div class="name">投诉举报</div>
+                    <div class="fontclass">.icon-tousujubao</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-shangchuan1"></i>
+                    <div class="name">上传</div>
+                    <div class="fontclass">.icon-shangchuan1</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-24xiaoshifahuo"></i>
+                    <div class="name">24小时发货</div>
+                    <div class="fontclass">.icon-24xiaoshifahuo</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-shouye"></i>
+                    <div class="name">首页</div>
+                    <div class="fontclass">.icon-shouye</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-shouye1"></i>
+                    <div class="name">家人</div>
+                    <div class="fontclass">.icon-shouye1</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-shouye4"></i>
+                    <div class="name">完成</div>
+                    <div class="fontclass">.icon-shouye4</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-shouye3"></i>
+                    <div class="name">消息</div>
+                    <div class="fontclass">.icon-shouye3</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-duihao"></i>
+                    <div class="name">对号</div>
+                    <div class="fontclass">.icon-duihao</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-fenlei01"></i>
+                    <div class="name">分类</div>
+                    <div class="fontclass">.icon-fenlei01</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-fenlei"></i>
+                    <div class="name">分类</div>
+                    <div class="fontclass">.icon-fenlei</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-cup"></i>
+                    <div class="name">杯子</div>
+                    <div class="fontclass">.icon-cup</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-shouye2"></i>
+                    <div class="name">首页</div>
+                    <div class="fontclass">.icon-shouye2</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-xingxing"></i>
+                    <div class="name">星星</div>
+                    <div class="fontclass">.icon-xingxing</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-shangchuan"></i>
+                    <div class="name">上传</div>
+                    <div class="fontclass">.icon-shangchuan</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-liwu"></i>
+                    <div class="name">礼物</div>
+                    <div class="fontclass">.icon-liwu</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-ruler"></i>
+                    <div class="name">尺子</div>
+                    <div class="fontclass">.icon-ruler</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-baocun1"></i>
+                    <div class="name">保存 (1)</div>
+                    <div class="fontclass">.icon-baocun1</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-sanjiao_xia"></i>
+                    <div class="name">三角_下</div>
+                    <div class="fontclass">.icon-sanjiao_xia</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-shouji"></i>
+                    <div class="name">手机</div>
+                    <div class="fontclass">.icon-shouji</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-xiangji"></i>
+                    <div class="name">相机</div>
+                    <div class="fontclass">.icon-xiangji</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-liwu1"></i>
+                    <div class="name">礼物</div>
+                    <div class="fontclass">.icon-liwu1</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-jiaqi"></i>
+                    <div class="name">实物-行李箱</div>
+                    <div class="fontclass">.icon-jiaqi</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-dianpu"></i>
+                    <div class="name">店铺</div>
+                    <div class="fontclass">.icon-dianpu</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-t-shirt"></i>
+                    <div class="name">T恤</div>
+                    <div class="fontclass">.icon-t-shirt</div>
+                </li>
+            
+        </ul>
+    </div>
+</html>

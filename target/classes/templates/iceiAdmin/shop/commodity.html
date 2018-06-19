@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>网站用户</title>
+		<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+		<link href="../../layuiadmin/style/table.css" rel="stylesheet" media="all" />
+		<link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+	</head>
+<style type="text/css">
+	.layui-fluid{
+		margin: 0 auto;
+		width: 1205px;
+	}
+</style>
+	<body>
+
+		<div class="layui-fluid">
+			<div class="layui-row layui-col-space15">
+				<div class="layui-col-md-12">
+					<div class="layui-card">
+						<div class="layui-card-header">
+							网站用户
+						</div>
+						<div class="layui-card-body">
+							<div class="layui-form-item" style="border-bottom: 1px solid #f6f6f6;">
+								<label class="layui-form-label">请选择</label>
+								<div class="layui-input-block">
+									<div class="layui-inline">
+										<input type="text" name="keyword" style="width: 240px;display: inline;" required lay-verify="required" placeholder="请输入关键字" autocomplete="off" class="layui-input" />
+									</div>
+									<div class="layui-inline">
+										<form class="layui-form" style="width: 200px;display: inline;">
+											<select name="type">
+												<option value="">选择类型</option>
+												<option value="ID">全部</option>
+												<option value="ID">什么玩意</option>
+												<option value="NAME">什么玩意</option>
+											</select>
+										</form>
+									</div>
+									<div class="layui-inline">
+										<form class="layui-form" style="width: 200px;display: inline;">
+											<select name="type">
+												<option value="">选择具体类型</option>
+												<option value="ID">全部</option>
+												<option value="ID">什么玩意</option>
+												<option value="NAME">什么玩意</option>
+											</select>
+										</form>
+									</div>
+									
+									<div class="layui-inline">
+										<form class="layui-form" style="width: 200px;display: inline;">
+											<select name="type">
+												<option value="">选择店铺</option>
+												<option value="ID">全部</option>
+												<option value="ID">什么玩意</option>
+												<option value="NAME">什么玩意</option>
+											</select>
+										</form>
+									</div>
+									<div class="layui-inline">
+										<a id="search" class="layui-btn">搜索</a>
+									</div>
+								</div>
+							</div>
+							<table id="table"></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--弹出框内容显示-->
+		<div class="pop-up-box" style="display: none;">
+
+			<div class="lay_box1">
+				<a type="button" class="layui-btn" id="test1">
+			      <i class="layui-icon">&#xe67c;</i>上传图片
+			      <img class="layui-upload-img" id="demo1">
+				</a>
+			</div>
+			<div class="lay_box2">456</div>
+			<div class="lay_box3">789</div>
+		</div>
+
+	</body>
+	<script src="../../layuiadmin/layui/layui.js"></script>
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+	<script id="imgTemplet" type="text/html">
+		<img src="../../layuiadmin/image/head/{{d.goods_img}}" width="60px" height="60px" />
+	</script>
+	<script type="text/html" id="barDemo">
+		<a onclick="tabshow(this)" data-method="offset" data-type="auto" class="layui-btn layui-btn-normal">居中弹出</a>
+	</script>
+	<script type="text/javascript">
+		var table;
+		$(document).ready(function() {
+
+			layui.use(['table', 'layer', 'upload'], function() {
+				table = layui.table;
+				/*商品列表*/
+				table.render({
+					elem: '#table',
+					url: "../../layuiadmin/json/commodity_information.json",
+					cellMinWidth: 80,
+					cols: [
+						[{
+								type: 'checkbox'
+							},
+							{
+								field: "goods_id",
+								title: "编号",
+								sort: true
+							}, {
+								templet: "#imgTemplet",
+								title: "商品头像"
+							}, {
+								field: "goods_name",
+								title: "商品名称",
+							}, {
+								field: "type_detail_name",
+								title: "具体类型"
+							}, {
+								field: "goods_price",
+								title: "商品价格",
+							}, {
+								field: "goods_discount",
+								title: "商品折扣"
+							}, {
+								field: "assess_count_love",
+								title: "商品满意度"
+							}, {
+								title: "商品详情",
+								toolbar: "#barDemo"
+							}
+						]
+					],
+					page: true
+				});
+				/*商品列表结束*/
+
+				/*商品图片上传start*/
+
+				/*商品图片上传End*/
+
+			});
+
+		});
+
+		
+
+		/*商品弹出窗*/
+		function tabshow(o) {
+				var id=$(o).parents('tr').find(' td').eq(1).find(' div').text();
+				console.log(id)
+			    layer.open({
+			      type: 2,
+			      title: '很多时候，我们想最大化看，比如像这个页面。',
+			      shadeClose: true,
+			      shade: true,
+			      maxmin: true, //开启最大化最小化按钮
+			      area: ['1000px', '700px'],
+			      content: 'particular.html?id='+id
+			    });
+			  $("#layui-layer-shade1").removeClass();
+			 
+		}
+	</script>
+
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css">
+    <style>
+        body{
+            width: 100%;
+            display: block;
+        }
+        .add{
+            width:80%;
+            margin: 25px auto 0px;
+            height: 100px;
+		    line-height: 100px;
+		    background-color: #fff;
+		    padding-left:50px;
+        }
+        .add>input{
+            width: 10%;
+            display: inline-block;
+        }
+        .add>label{
+            float: none;
+            display: inline-block;
+        }
+ 		#only{
+            width: 800px;
+            margin: 0px auto;
+            font-family: sans-serif;
+            color: #7e7e7e;
+
+        }
+        .top_table{
+            width: 800px;
+            margin: 0px auto;
+            display: block;
+            margin-left: 100px;
+            border-bottom: 1px solid #f2f2f2;
+        }
+        .top_table tr{
+            height: 60px;
+            line-height: 60px;
+        }
+        .top_table td:nth-of-type(1){
+            text-align: right;
+            padding-right: 20px;
+            width: 200px;
+            font-size: 14px;
+        }
+        .top_table td:nth-of-type(2) input{
+            width: 250px;
+            font-size: 12px;
+            box-sizing: border-box;
+            border: 1px solid #e5e5e5;
+            background: #f5f5f5;
+            color: #000;
+            font-size: 14px;
+            padding: 10px 13px;
+            transition: 0.2s background ease-out;
+        }
+        .present{
+            width: 112px;
+            height: 42px;
+            border-radius: 21px;
+            background:#d2d4d7;
+            color: #bcbfc4;
+            text-align: center;
+            line-height: 42px;
+            cursor: not-allowed;
+            margin: 25px auto;
+        }
+        #sure{
+        	width:75px;
+        	margin-left:10px;
+        }
+        #add{
+        	width:75px;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-inline add" > <!-- 注意：这一层元素并不是必须的 -->
+        <label class="layui-form-label">优惠券id</label>
+         <input type="text" name="discountTemplateId" required  lay-verify="required" placeholder="请输入优惠券ID" autocomplete="off" class="layui-input">
+        <label class="layui-form-label">有效期</label>
+        <input type="text" class="layui-input" id="luck" placeholder="YYYY-MM-DD">
+            -----
+        <input type="text" class="layui-input" id="luck1" placeholder="YYYY-MM-DD">
+        <input type="button" class="layui-btn" id="sure" value="确定">
+        <input type="button" class="layui-btn" id="add" value="添加">
+    </div>
+    <table id="Audit"  lay-data="{id: 'Audit'}" lay-filter="test-table-cellEdit"></table>
+    <div id="test1"></div>
+
+</body>
+<form action="" id="only"  class="layui-form" style="display: none;">
+    <table class="top_table">
+        <tr>
+            <td>优惠券有效期开始时间</td>
+            <td><input  type="text" name="discountsStartTime" class="layui-input" id="luck2" placeholder="YYYY-MM-DD"></td>
+        </tr>
+        <tr>
+            <td>优惠券有效期截止时间</td>
+            <td><input type="text" name="discountsEndTime" class="layui-input" id="luck3"  placeholder="YYYY-MM-DD"></td>
+        </tr>
+        
+        <tr>
+            <td>优惠券使用门槛</td>
+            <td><input type="text" placeholder="" name="bigMoney">
+        </tr>
+        <tr>
+            <td class="key">优惠券抵用金额</td>
+            <td class="val"><input type="text" placeholder="" name="smallMoney">
+        </tr>
+    </table>
+    <div class="present"> 提交</div>
+</form>
+<script src="../../layuiadmin/layui/layui.all.js"></script>
+<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+<script>
+//非空验证
+function checktrue(){
+	var flag=false;
+	if($("input[name='smallMoney']").val()!=''&&$("input[name='smallMoney']").val()!=null&&$("input[name='discountsEndTime']").val()!=''&&$("input[name='discountsEndTime']").val()!=null&&$("input[name='discountsStartTime']").val()!=''&&$("input[name='discountsStartTime']").val()!=null&&$("input[name='bigMoney']").val()!=''&&$("input[name='bigMoney']").val()!=null){
+		flag=true;
+	}
+	return flag;
+}
+//结束
+$(document).ready(function() {
+	var id=$('input[name="discountTemplateId"]').val();
+	var stret=$('#luck').val();
+	var end=$('#luck1').val();
+	  layui.use('laydate', function(){
+      var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#luck' //指定元素
+        });
+        laydate.render({
+            elem: '#luck1' //指定元素
+          });
+        laydate.render({
+            elem: '#luck2' //指定元素
+          });
+        laydate.render({
+            elem: '#luck3' //指定元素
+          });
+      });
+	//渲染表格
+	layui.use('table', function() {
+		var table = layui.table;
+		 //监听单元格事件
+			 //监听单元格编辑
+    table.on('edit(test-table-cellEdit)', function(obj){
+      var data = obj.data ;
+      layer.confirm('是否修改:[ID: '+ data.discountTemplateId +'] ' + obj.field + ' 字段更改为：'+ obj.value, {icon: 3, title:'提示'}, function(index){
+    	  console.log(data);
+    	  $.ajax({
+				url:'/admin/discounts/UpdateTemplate',
+				data:data,
+				type:'POST',
+				success:function(v){
+					if(v==1){
+						layer.msg('修改成功');
+					}
+				}
+			})
+    	  layer.close(index);
+    	});   
+    });
+		//结束
+		table.render({
+			elem: '#Audit',
+			url: "/discounts/ByIDgetBrandTemplate.json",
+			cellMinWidth: 80,
+			limit:5,
+			where:{discountTemplateId:id,"discountsStartTime":stret,"discountsEndTime":end},
+			cols: [
+				[{
+						type: 'checkbox'
+					},
+					{
+						field: "discountTemplateId",
+						title: "优惠券模板ID",
+						sort: true
+					}, {
+						title: "优惠券开始时间",
+						field:'discountsStartTime',
+						edit: 'text'
+					}, {
+						field: "discountsEndTime",
+						title: "优惠券截止时间",
+						edit: 'text'
+					}, {
+						field: "discountsScope",
+						title: "优惠券使用范围",
+					}, { 
+						field: "brandId",
+						title: "店铺ID",
+					},{
+						
+						field: "bigMoney",
+						title: "使用限制",
+						edit: 'text'
+					
+					}, {
+						field: "smallMoney",
+						title: "优惠金额",
+						edit: 'text'
+					},
+					{
+						title:'操作',
+						templet:'<div><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></div>'
+					}
+				]
+			],
+			page: true
+		});
+		//
+		  //监听工具条
+ 			 table.on('tool(test-table-cellEdit)', function(obj){
+ 				var data = obj.data;
+ 				if(obj.event === 'del'){
+ 				      layer.confirm('真的删除行么', function(index){
+ 				        obj.del();
+ 				        $.ajax({
+ 				        	url:'/admin/discounts/dateleTemplate',
+ 				        	data:{"id":data.discountTemplateId},
+ 				        	type:'POST',
+ 				        	success:function(v){
+ 				        		if(v==1){
+ 				        			layer.msg('删除成功');
+ 				        		}
+ 				        	}
+ 				        })
+ 				        layer.close(index);
+ 				      });
+ 				    } 
+ 			 })
+
+		//监听结束
+	});
+});
+//查询
+$("#sure").click(function(){
+	var id=$('input[name="discountTemplateId"]').val();
+	var stret=$('#luck').val();
+	var end=$('#luck1').val();
+	console.log(end)
+	layui.use('table', function() {
+		var table = layui.table;
+		table.render({
+			elem: '#Audit',
+			url: "/discounts/ByIDgetBrandTemplate.json",
+			cellMinWidth: 80,
+			limit:5,
+			where:{discountTemplateId:id,"discountsStartTime":stret,"discountsEndTime":end},
+			cols: [
+				[{
+						type: 'checkbox'
+					},
+					{
+						field: "discountTemplateId",
+						title: "优惠券模板ID",
+						sort: true
+					}, {
+						title: "优惠券开始时间",
+						field:'discountsStartTime',
+						edit: 'text'
+					}, {
+						field: "discountsEndTime",
+						title: "优惠券截止时间",
+						edit: 'text'
+					}, {
+						field: "discountsScope",
+						title: "优惠券使用范围",
+					}, { 
+						field: "brandId",
+						title: "店铺ID",
+						edit: 'text'
+					},{
+						
+						field: "bigMoney",
+						title: "使用限制",
+						edit: 'text'
+					
+					}, {
+						field: "smallMoney",
+						title: "优惠金额",
+						edit: 'text'
+					},
+					{
+						title:'操作',
+						templet:'<div><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></div>'
+					}
+				]
+			],
+			page: true
+		});
+	
+	});	
+})
+//添加模板
+ $("#add").click(function(){
+            //自定页
+            layer.open({
+                title:'新增优惠券模板',
+                type: 1,
+                fixed:true,
+                skin: 'layui-layer-demo', //样式类名
+                closeBtn: 1, //不显示关闭按钮
+                anim: 2,
+                content: $('#only'),
+                scrollbar:false,
+                area: ['1000px'],
+                cancel: function(index, layero){ 
+                	  if(true){ //只有当点击confirm框的确定时，该层才会关闭
+                		$('#only').css("display","none");
+                	    layer.close(index)
+                	  }
+                	  return false; 
+                	} 
+            });
+        	//改变按钮	
+        	$("input[name='bigMoney']").blur(function(){
+        		if($("input[name='bigMoney']").val()!=''&&$("input[name='bigMoney']").val()!=null){
+        			$(".present").css({"background":"#009688","cursor":"default","color":"#fff"});
+        		}else{
+        			$(".present").css({"background":"#d2d4d7","cursor":"not-allowed","color":"#bcbfc4"});
+        		}
+        	})
+        	//提交模板
+        	$(".present").click(function(){
+        		var template={
+        				discountsStartTime:$("input[name='discountsStartTime']").val(),
+        				discountsEndTime:$("input[name='discountsEndTime']").val(),
+        				discountsScope:1,
+        				brandId:1,
+        				bigMoney:$("input[name='bigMoney']").val(),
+        				smallMoney:$("input[name='smallMoney']").val()	
+        		}
+        		if(checktrue()){
+        			$.ajax({
+        				url:'/admin/discounts/ToAddTemplate',
+        				data:template,
+        				success:function(data){
+        					if(data==1){
+        						$(".present").css({"background":"#d2d4d7","cursor":"not-allowed","color":"#bcbfc4"});
+    						   	$("input[name='discountsStartTime']").val(""),
+    							$("input[name='discountsEndTime']").val(""),
+    							$("input[name='bigMoney']").val(""),
+    							$("input[name='smallMoney']").val("")	
+        						layer.msg("添加成功",{time:1000},function(){
+        							$('#only').css("display","none");
+        							layer.closeAll();	
+        						});         						   
+        					}else{
+        						layer.msg("请重新添加");
+        					}
+        				}
+        			})
+        		}else{
+        			layer.msg("请添加表单数据");
+        		}
+        	})
+        })
+
+</script>
+</html>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<classPathEntry location="E:\Maven\.m2\repository\mysql\mysql-connector-java\8.0.11\mysql-connector-java-8.0.11.jar" />
+
+	<context id="MysqlContext" targetRuntime="MyBatis3" defaultModelType="flat">
+  
+  	<!--数据库链接URL，用户名、密码 --> 
+    <jdbcConnection connectionURL="jdbc:mysql://39.104.171.134:3306/icei" 
+    				driverClass="com.mysql.jdbc.Driver" 
+    				userId="diy"
+    				password="diy123" />
+    				
+    <!-- 生成模型的包名和位置--> 
+    <javaModelGenerator targetPackage="com.icei.domain" 
+    					targetProject="demo - 副本\src\main\java" />
+    					
+    <!-- 生成映射文件的包名和位置-->    
+    <sqlMapGenerator targetPackage="com.icei.mapping" 
+    				 targetProject="demo - 副本\src\main\java" />
+    
+    <!-- 生成DAO的包名和位置-->
+    <javaClientGenerator targetPackage="com.icei.mapper" 
+    					 targetProject="demo - 副本\src\main\java"
+    					 type="XMLMAPPER" />
+    
+    <!-- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名-->
+  <table tableName="%" enableCountByExample="false"
+        enableUpdateByExample="false" enableDeleteByExample="false"
+        enableSelectByExample="false" selectByExampleQueryId="false"></table>
+  </context>
+</generatorConfiguration>

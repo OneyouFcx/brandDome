@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>评论审核</title>
+	<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+	<link href="../../layuiadmin/style/admin.css" rel="stylesheet" media="all">
+	<link href="../../layuiadmin/style/audit/InData.css" rel="stylesheet" media="all">
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+	<script src="../../layuiadmin/layui/layui.all.js"></script>
+</head>
+<body>
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-col-md-12">
+				<div class="layui-card">
+					<div class="layui-card-header">评论举报审核</div>
+					<div class="layui-card-body">
+						<div class="layui-form-item" style="border-bottom: 1px solid #f6f6f6;">
+							<label class="layui-form-label">请选择</label>
+							<div class="layui-input-block">
+								<div class="layui-inline">
+									<input id="input_id" type="text" name="keyword" style="width: 240px;display: inline;" required="" lay-verify="required" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+								</div>
+								<div class="layui-inline">
+									<form class="layui-form" style="width: 200px;display: inline;">
+										<select name="type" id="select_one">
+											<option value="">请选择</option>
+											<option value="1">ID查询</option>
+											<option value="2">举报人查询</option>
+											<option value="3">被举报人查询</option>
+										</select>
+									</form>
+								</div>
+								<div class="layui-inline">
+									<a id="search" class="layui-btn">搜索</a>
+								</div>
+							</div>
+						</div>
+						<table class="layui-hide" id="Audit"  lay-data="{id: 'Audit'}" lay-filter="Audit"></table>
+						<script type="text/html" id="barDemo">
+  							<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="1">删除</a>
+							<a class="layui-btn layui-btn-xs" lay-event="2">和谐</a>
+  							<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="3">驳回</a>
+						</script>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+	$(function(){
+		layui.form.render();
+		var tableIns = layui.table;
+		tableIns.render({
+			elem: '#Audit',
+			url: "/admin/audit/getAssessReportPage.json",
+			where: {
+				val:(($("#input_id").val()!='')?$("#input_id").val():0),
+				id:(($("#select_one").val())?$("#select_one").val():0)},
+			id: 'Audit',
+			cols: [
+				[ //表头
+					{
+					field: "auditId",title: 'ID', width: 80, sort: true
+					}, {field: "assessId",title: "评论ID",
+					}, {field: "userId",title: "评论用户ID",
+						templet: function(d){
+					        return '<span style="color: #c00;">'+ d.orderAssess.userId +'</span>'
+					    }
+					}, {field: "orderAssess",title: "评论内容",
+						templet: function(d){
+					        return '<span style="color: #c00;">'+ d.orderAssess.assessDec +'</span>'
+					    }
+					}, {field: "userId",title: "举报人ID",
+					}, {field: "reportContent",title: "举报描述",width: 300
+					}, {fixed: 'right', title:"操作", width:180, align:'center', toolbar: '#barDemo'
+					}
+				]
+			],
+			page:true
+		});
+		$("#search").click(function(){
+			layui.table.reload('Audit',{
+				where: {
+					val:(($("#input_id").val()!='')?$("#input_id").val():0),
+					id:(($("#select_one").val())?$("#select_one").val():0)
+				}
+			});
+		})
+		//监听工具条
+		tableIns.on('tool(Audit)', function(obj){
+			var layEvent = obj.event;
+			var data = obj.data;
+			var tr = obj.tr;
+			if(layEvent === '1'){
+				layer.confirm('确认删除该评论吗', function(index){
+					delAssessReport(data.auditId,obj);
+				 	layer.close(index);
+				});
+			}else if(obj.event === '2'){
+			    layer.confirm('和谐这条评论', function(index){
+			    	updAssess(data.auditId,obj);
+				 	layer.close(index);
+				});
+			} else if(obj.event === '3'){
+				layer.confirm('确认驳回吗', function(index){
+					delAssess(data.auditId,obj);
+					layer.msg(data.auditId, {icon: 1});
+				 	layer.close(index);
+				});
+			}
+		});
+	});
+	var updAssess=function(auditId,dom){
+		$.ajax({
+			url:"/admin/audit/updAssessReport",
+			type:"PUT", //提交方式
+			data:{"auditId":auditId},
+			dataType:"json",
+			success:function(data){
+				if(data.data==1){
+					dom.del();
+					layer.msg(data.msg, {icon: 1});
+					layer.closeAll('loading');
+				}else{
+					layer.msg('请刷新重试', {icon: 5});
+					layer.closeAll('loading');
+				}
+			}
+		});
+	}
+	var delAssessReport=function(auditId,dom){
+		$.ajax({
+			url:"/admin/audit/delAssessReport",
+			type:"DELETE", //提交方式
+			data:{"auditId":auditId,_method: 'DELETE'},
+			dataType:"json",
+			success:function(data){
+				if(data.data==1){
+					dom.del();
+					layer.msg(data.msg, {icon: 1});
+					layer.closeAll('loading');
+				}else{
+					layer.msg('请刷新重试', {icon: 5});
+					layer.closeAll('loading');
+				}
+			}
+		});
+	}
+	var delAssess=function(auditId,dom){
+		$.ajax({
+			url:"/admin/audit/delAssess",
+			type:"DELETE", //提交方式
+			data:{"auditId":auditId,_method: 'DELETE'},
+			dataType:"json",
+			success:function(data){
+				if(data.data==1){
+					dom.del();
+					layer.msg(data.msg, {icon: 1});
+					layer.closeAll('loading');
+				}else{
+					layer.msg('请刷新重试', {icon: 5});
+					layer.closeAll('loading');
+				}
+			}
+		});
+	}
+</script>
+</html>

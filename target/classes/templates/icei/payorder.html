@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>创建美好，定制diy</title>
+    <link rel="stylesheet" href="css/Public.css" />
+    <link rel="stylesheet" href="http://spoons.test.upcdn.net/layui/css/layui.css" /><!--layui-->
+    <link rel="stylesheet" href="css/payOrder/payOrder.css" /><!--payOrder-->
+    <link rel="stylesheet" href="css/top.css">
+
+    <script type="text/javascript">
+        var siteUrl="";
+        var basePath="";
+    </script>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="http://spoons.test.upcdn.net/layui/layui.all.js"></script><!--layall-->
+    <script type="text/javascript" src="js/payOrder/payOrder.js"></script><!--payOrder-->
+    <script type="text/javascript" src="js/payOrder/addressUtil.js"></script><!--payOrder-->
+    <style>
+        .o-link{
+            color: #fff!important;
+        }
+        .o-link::after {
+            background: #fff;
+        }
+        #amend{
+            display: none;
+        }
+        #tooltip{
+            position:absolute;
+            border:1px solid #e0e0e0;
+            background:#fff;
+            padding:2px;
+            display:none;
+            color:#ccc;
+        }
+        #tooltip img{
+            width:300px;
+        }
+    </style>
+</head>
+<body>
+<!--header-->
+<header class="c-header">
+    <div class="wow fadeInLeft c-logo"><a href="/icei/"><img src="img/logo/logo1.png"></a></div>
+    <nav>
+        <div class="wow fadeInRight c-main-nav">
+            <ul>
+                <li><a href="https://www.baidu.com/" class="o-link">登录</a></li>
+                <li><a class="o-link">注册</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<!--headerEnd-->
+
+<section class="top"></section>
+<div class="page-main">
+    <div class="container">
+        <div class="address">
+            <div class="section section-address">
+                <div class="section-header">
+                    <h3 class="title">收货地址</h3>
+                </div>
+                <!-- 地址选择 -->
+                <div class="section-foot">
+                    <!--<div class="address-itme" select="0" siteId="'+data.msg+'" onclick="resItme(this)"><dl><dt>
+                    <span class="tag">'+tally+'</span>
+                    <em>'+name+'</em></dt>
+                    <dd>'+phone+'</dd>
+                    <dd class="unaddress">'+region+'</dd>
+                    <dd class="actions layui-hide">
+                        <a class="change" id="amend">修改</a>
+                        <a class="change" siteId="'+data.msg+'" onclick="delres(this)">删除</a>
+                    </dd></dl>
+                </div>-->
+                    <div class="address-itme add">
+                        <dl>
+                            <i class="layui-icon" id="address">&#xe61f</i>
+                            <span>添加新地址</span>
+                        </dl>
+                    </div>
+                </div>
+                <!-- 地址选择End -->
+            </div>
+            <div class="section">
+                <ul>
+                    <li class="section-options">
+                        <h3 class="title">支付方式</h3>
+                        <span>在线支付 （占时支持支付宝,后续会介入其他支付）</span>
+                    </li>
+                    <li class="section-options">
+                        <h3 class="title">配送方式</h3>
+                        <span>快递配送（免运费）</span>
+                    </li>
+                    <li class="section-options time">
+                        <h3 class="title">配送时间</h3>
+                        <h4>不限送货时间：周一至周日</h4>
+                        <h4>不限送货时间：周一至周日</h4>
+                        <h4>不限送货时间：周一至周日</h4>
+                    </li>
+                </ul>
+            </div>
+            <div class="section shopping">
+                <h3 class="title">商品</h3>
+                <div class="goods" th:attr="goodsId=${goods.goodsId},sizeId=${sizeId}">
+                    <ul>
+                        <li>
+                            <div class="col col-img">
+                                <img th:src="'http://spoons.test.upcdn.net'+${mpdelImg}" /><!--模板图片-->
+                            </div>
+                            <div class="col col-name">
+                                <a th:if="${isdiy==true}" th:text="${goods.goodsName}+'(定制)'">...</a>
+                                <a th:if="${isdiy==false}" th:text="${goods.goodsName}">...</a>
+                            </div>
+                            <div class="col layui-form" id="type"></div>
+                            <div class="col col-total" style="float: right;" id="diyPrice">
+                                <span th:if="${isdiy==true}" th:text="${goods.goodsPrice}+'+'+${goods.diyPrice}+'元'"></span>
+                                <span th:if="${isdiy==false}" th:text="${goods.goodsPrice}+'元'"></span>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="section section-count">
+                <div class="count-action">
+                    <div class="count-trigger">
+                        <i class="layui-icon" onclick="layer.msg('没有可用优惠')">&#xe61f;</i>使用优惠券
+                    </div>
+                    <div class="money-box">
+                        <ul>
+                            <li>
+                                <label>商品件数：</label>
+                                <span class="val" id="amount"><em>1</em>件</span>
+                            </li>
+                            <li>
+                                <label>金额合计：</label>
+                                <span class="val" id="sunprice">
+                                    <em th:text="${SunPrice}"></em>
+                                    元
+                                </span>
+                            </li>
+                            <li>
+                                <label>活动优惠：</label>
+                                <span class="val" th:text="${discounts}+'元'"></span>
+                            </li>
+                            <li>
+                                <label>活动券抵扣：</label>
+                                <span class="val">-0元</span>
+                            </li>
+                            <li>
+                                <label>运费：</label>
+                                <span class="val">0元</span>
+                            </li>
+                            <li class="total-price">
+                                <label>应付金额：</label>
+                                <span class="val" id="sum"><em th:text="${payPrice}">0</em>元</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="section-bar">
+                <div class="fr">
+                    <a class="layui-btn" style="background-color: #f25807;" id="settle">去结算</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!--地址弹出层-->
+<div class="fly" style="display: none">
+    <form class="layui-form" action="" style="width: 625px;margin: 0 auto;margin-top: 35px;">
+        <div class="layui-form-item">
+            <div class="fly-meg">
+                <input type="text" title="姓名" placeholder="姓名" class="layui-input meg" id="name" />
+                <input type="text" title="手机号" placeholder="手机号" class="layui-input meg" style="margin-right: 0;" id="iphone" />
+            </div>
+            <div class="city">
+                <select id="cmbProvince" name="cmbProvince" lay-filter="province"></select>
+                <select id="cmbCity" name="cmbCity" lay-filter="city"></select>
+                <select id="cmbArea" name="cmbArea" lay-filter="citys"></select>
+            </div>
+            <textarea class="layui-textarea" placeholder="请输入详细地址" style="width: 625px;" id="township"></textarea>
+            <div class="fly-meg">
+                <input type="text" title="邮编" placeholder="邮编 例如：000000" class="layui-input meg" id="email"/>
+                <input type="text" title="地址标签" placeholder="地址标签:公司/小区/单元/门牌号" class="layui-input meg" style="margin-right: 0;" id="tally" />
+            </div>
+            <div class="fly-meg save">
+                <button type="button" class="layui-btn" style="float: left;margin-left: 0" onclick="geocoding()">
+                    <i class="layui-icon">&#xe715;</i>获取位置
+                </button>
+                <input type="button" style="background-color:#ff6700 ;" class="layui-btn" id="closeIframe" value="取消" onclick="layer.closeAll('page');"/>
+                <input type="button" style="background-color:#ff6700 ;" class="layui-btn" id="transmit" value="保存" />
+            </div>
+        </div>
+    </form>
+</div>
+<!--地址弹出层End-->
+<script>
+    $(function() {
+        bigImg();//商品大图
+    });
+    //获取url参数
+    function GetRequest() {
+        var url = location.search; //获取url中"?"符后的字串
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for(var i = 0; i < strs.length; i ++) {
+                theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+</script>
+<script type="text/javascript">
+    var Request = new Object();
+    Request = GetRequest();
+    var sizeId,diyId,modelId,goodsSize;
+    sizeId = Request['sizeId'];
+    diyId=Request['diyId'];
+    modelId=Request['modelId'];
+    goodsSize=Request['goodsSize'];
+    $(function(){
+        /*商品结算*/
+        $("#settle").click(function(){
+            var addressId=$(".address-itme[select=1]").attr("siteId");//地址
+            var goodsId=$(".goods").attr("goodsId");
+            var json={"addressId":addressId,"goodsId":goodsId,"paymentId":1,}
+            if(sizeId!=undefined||sizeId!=null){
+                json.goodsSize=goodsSize;
+            }
+            if(diyId!=undefined||diyId!=null){
+                json.diyMouId=diyId;
+            }else if(modelId!=undefined||modelId!=null){
+                json.typeMouId=modelId;
+            }
+            if(addressId!=null&&addressId!=""&&addressId!=undefined){
+                $.ajax({
+                    url:"/icei/payOrder",
+                    type:"get",
+                    data:json,
+                    dataType:"json",
+                    success:show
+                });
+                function show(data){
+                    if(data.code==0){
+                        layer.msg('提交成功...',{time:800},function() {
+                            window.location.href="/alipay/pay/"+data.data;
+                        });
+                    }else {
+                        layer.msg("请稍后再试");
+                    }
+                }
+            }else {
+                layer.msg('请选择地址');
+            }
+        });
+    });
+</script>
+<script>
+    /*商品大图*/
+    function bigImg(){
+        var x = 10;
+        var y = 20;
+        $(".col-img>img").mouseover(function(e){
+            var tooltip = "<div id='tooltip'><img src='"+ this.src +"' alt='产品预览图'/><\/div>"; //创建 div 元素
+            $("body").append(tooltip);	//把它追加到文档中
+            $("#tooltip").css({
+                "top": (e.pageY+y) + "px",
+                "left":  (e.pageX+x)  + "px"
+            }).show("fast");	  //设置x坐标和y坐标，并且显示
+        }).mouseout(function(){
+            $("#tooltip").remove();	 //移除
+        }).mousemove(function(e){
+            $("#tooltip").css({
+                "top": (e.pageY+y) + "px",
+                "left":  (e.pageX+x)  + "px"
+            });
+        });
+    }
+</script>
+<!-- 高德地图 -->
+<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.6&key=753e1b6ceb8833cc2bdcf91e15884a3f"></script>
+<script type="text/javascript">
+    /*定位系统*/
+    var map, geolocation;
+    //加载地图，调用浏览器定位服务
+    map = new AMap.Map('container');
+    var geocoding=function(){
+        layer.load(1);
+        map.plugin('AMap.Geolocation', function () {
+            geolocation = new AMap.Geolocation({
+                enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+                maximumAge: 0,           //定位结果缓存0毫秒，默认：0
+                convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+                showButton: true,        //显示定位按钮，默认：true
+                buttonPosition: 'LB',    //定位按钮停靠位置，默认：'LB'，左下角
+                buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                showMarker: true,        //定位成功后在定位到的位置显示点标记，默认：true
+                showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
+                panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
+                zoomToAccuracy:true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+            });
+            map.addControl(geolocation);
+            geolocation.getCurrentPosition();
+            AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+            AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+        });
+
+        //解析定位结果
+        function onComplete(data) {
+            console.log(data.position.getLng()+"  "+data.position.getLat());
+            geocod(data.position.getLng(),data.position.getLat());
+        }
+        //解析定位错误信息
+        function onError(data) {
+            console.log(data);
+            layer.closeAll('loading');
+            layer.msg("定位失败,请重新尝试");
+        }
+    }
+    /*地理逆转换*/
+    function geocod(lng,lat){
+        $.ajax({
+            "url":"getGeocoding",
+            "type":"get",
+            "data":{"precision":lng,"dimensionality":lat},
+            "dataType":"json",
+            "success":show
+        });
+        function show(data){
+            var form = layui.form;
+            var province=data.regeocode.addressComponent.province;//省
+            var city=data.regeocode.addressComponent.city;//市
+            var district=data.regeocode.addressComponent.district;//区
+            var formatted_address=data.regeocode.formatted_address;//详细地址
+            var xxdzlen=province.length+city.length+district.length;//省市区长度
+            formatted_address=formatted_address.substring(xxdzlen,formatted_address.length);//详细地址算法
+            province=province.substring(0,province.length-1);//省算法
+
+            //省
+            $("#cmbProvince").val(province);
+            $("#cmbCity").empty();//清除市
+            $("#cmbArea").empty();//清除区
+            changeProvince();//加载数据
+            form.render('select'); //刷新select选择框渲染
+
+            //城市
+            $("#cmbCity").val(city);
+            $("#cmbArea").empty();//清除区
+            changeCity();//加载数据
+            form.render('select'); //刷新select选择框渲染
+
+            //区
+            $("#cmbArea").val(district);
+            form.render('select'); //刷新select选择框渲染
+            $("#township").text(formatted_address);//详细地址
+            $("#email").val(data.regeocode.addressComponent.adcode);//邮编
+            $("#tally").val(data.regeocode.addressComponent.township);//标签
+            form.render('select');
+            layer.closeAll('loading');
+            layer.msg("定位成功");
+        }
+    }
+</script>
+<script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+<script type="text/javascript" src="js/payOrder/addRess.js"></script><!-- 地址处理 -->
+</html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Spoons-GoodsInfo</title>
+    <link rel="stylesheet" href="css/rem.css">
+    <link rel="stylesheet" href="css/goodsInfo/goodsInfo.css">
+    <link rel="stylesheet" href="http://spoons.test.upcdn.net/layui/css/layui.css">
+    <link rel="stylesheet" href="css/top.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_612454_5qzj7o8b9vuw61or.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/swiper-4.2.0.min.css">
+    <script src="js/rem.js"></script>
+    <script src='js/jquery-3.2.1.min.js'></script>
+    <script src="http://spoons.test.upcdn.net/layui/layui.all.js"></script>
+    <script src="js/swiper-4.2.0.min.js"></script>
+    <script src="js/jquery.nicescroll.min.js"></script>
+    <script src="js/TweenMax.min.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script>
+        $(function () {
+            $(".user-evaluate-left-ul").niceScroll({
+                cursorcolor: "#000",
+                cursoropacitymax: 0.2,
+            });
+        })
+    </script>
+    <style>
+        /*样品悬浮*/
+        .o-link{
+            color: #fff!important;
+        }
+        .o-link::after {
+            background: #fff;
+        }
+        #amend{
+            display: none;
+        }
+        #tooltip{
+            position:absolute;
+            border:1px solid #e0e0e0;
+            background:#fff;
+            padding:2px;
+            display:none;
+            color:#ccc;
+        }
+        #tooltip img{
+            width:300px;
+        }
+    </style>
+<style>
+    html,body{
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+.product-size>span:hover{
+	cursor:pointer;
+}
+.evaluate-img{
+	margin:5px 5px;
+}
+</style>
+</head>
+<body>
+    <!--头部-->
+    <header class="c-header">
+        <div class="wow fadeInLeft c-logo"><a href="/icei/"><img src="img/logo/logo.png"></a></div>
+        <nav>
+            <div class="wow fadeInRight c-main-nav">
+                <ul>
+                    <li><a href="https://www.baidu.com/" class="o-link">登录</a></li>
+                    <li><a class="o-link">注册</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!--轮播-->
+    <div class="swiper-container content_rotate">
+        <section class="goods-info">
+            <div class="wow fadeIn goods-money"  data-wow-delay="3s" th:utext="'<span class=tag></span>'+'￥'+${goods.goodsPrice}"></div>
+            <div class="wow fadeIn goods-name"  data-wow-delay="1s" th:utext="'<span class=tag></span>'+${goods.goodsName}"></div>
+        </section>
+        <div class="swiper-wrapper ">
+            <!--无图片集合显示默认图片-->
+            <div class="swiper-slide" th:if="${goodsmedia}==null">
+                <div class="imgs">
+                    <div>
+                        <div class="goods-img">
+                            <div th:style="'background-image:url(http://spoons.test.upcdn.net' + ${goods.goodsImg} + ');'"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--无图片集合显示默认图片End-->
+            <!--图片集合-->
+            <div class="swiper-slide" th:each="goodsMedias : ${goodsmedia}">
+                <div class="imgs"> 
+                    <div  th:style="'background-image:url(' + ${goodsMedias.introPath} + ');'">
+                        <!--左-->
+                        <div class="goods-img">
+                            <!--商品视频-->
+                            <video th:if="${goodsMedias.introType=='video'}" class="back-video" width="100%" autoplay loop th:src="'http://spoons.test.upcdn.net'+${goodsMedias.introPath}"></video>
+                            <div th:if="${goodsMedias.introType=='img'}" th:style="'background-image:url(http://spoons.test.upcdn.net' + ${goodsMedias.introPath} + ');'"></div>
+                            <!--商品视频end-->
+                        </div>
+                        <!--左End-->
+                        <!--右-->
+                        <div class="goods-right-back" th:style="'background-image:url(' + ${goodsMedias.introPath} + ');'"></div>
+                        <!--右End-->
+                    </div>
+                </div>
+            </div>
+            <!--图片集合End-->
+        </div>
+    </div>
+    <div class="product-information">
+        <!--商品规格-->
+        <div class="product-specification">
+        	<input type="hidden" id="goodsID" th:value="${goods.goodsId}" >
+            <h2 class="wow fadeInUp" th:utext="${goods.goodsName}+'<span>'+'￥'+${goods.goodsPrice}+'</span>'"></h2>
+            <div class="wow fadeIn" data-wow-delay="0.5s">DESCRIPTION</div>
+            <div class="wow fadeInUp"  data-wow-delay="0.5s" th:text="${goods.goodsDec}"></div>
+            <div class="wow fadeIn" data-wow-delay="0.8s">MATERIALS</div>
+            <div class="wow fadeInUp product-texture" data-wow-delay="0.8s" th:text="${goodsTypeDetail.typeDetailName}"></div>
+            <div class="wow fadeInUp product-texture" data-wow-delay="0.8s"  th:text="${goods.materials}"></div>
+            <div class="wow fadeIn" data-wow-delay="1.1s">BRAND</div>
+            <div class="wow fadeInUp product-texture" data-wow-delay="1.1s"><a th:href="'shop.html?id='+${goods.brandId}" th:text="${goods.brand.brandName}"></a></div>
+            <div class="product-size">
+                <span id="one">Model</span>
+                <span id="two" th:if="${goodsSize!=null}">/ SIZE</span>
+            </div>
+            <div class="classification">
+             	<ul id="type">
+                    <li class="col-img" data-type="0" th:attr="modelId=${goodsmodel.modelId},imgurl='http://spoons.test.upcdn.net'+${goodsmodel.modelImg}" onclick="dianji(this)" th:each="goodsmodel : ${goodsModel}" th:text="${goodsmodel.modelName}"></li>
+                    <li data-type="1" onclick="dianji(this)" th:if=${goods.isDiy==0}>定制</li>
+                </ul>
+                <ul id="size" style="display:none">
+                 	<li data-type="11" th:attr="sizeId=${goodssize.sizeId}" onclick="dianjisize(this)" th:each="goodssize : ${goodsSize}" th:text="${goodssize.sizeName}"></li>
+                </ul>
+                <div class="purchase"><a th:attr="goods-id=${goods.goodsId}" id="ahref">去 定 制</a></div>
+            </div>
+        	<div>
+        		<i class="iconfont icon-ruler" style="font-size:24px;"></i>
+        		<span th:text="'定制周期+'+${goods.productionCycle}+'天,收取定制费用'+${goods.diyPrice}+'元'"></span>
+                <div>NEED Help?</div>
+            </div>
+        </div>
+        <!--商品规格End-->
+        <!--商品评价-->
+        <section class="evaluate">
+            <div class="evaluate-main">
+                <!--<div class="evaluate-rut">返回</div>-->
+                <!--评价-->
+                <div class="evaluate-info">
+                    <div class="evaluate_top">
+                        <h2>大家认为</h2>
+                            <ul> 
+                            </ul>
+                    </div>
+                    <!--用户评价-->
+                    <div class="user-evaluate">
+                        <h2>热门评价</h2>
+                        <!--用户评价列表-->
+                        <div class="user-evaluate-left">
+                            <ul class="user-evaluate-left-ul">
+                            </ul>
+                        </div>
+                        <!--最新评价-->
+                        <div class="user-evaluate-right">
+                            <!--总购买人数-->
+                            <div class="total-pay-user">
+                                <h2></h2>
+                                <!--满意度进度条-->
+                                <div class="m-percent-box"> 
+                                    <p class="percent" style="width:98.4%;">满意度 98.4%</p>
+                                </div>
+                            </div>
+                            <!--最新评价-->
+                            <h2>最新评价</h2>
+                            <!--评价内容-->
+                            <ul class="user-evaluate-right-ul">
+                                <li class="user-evaluate-right-li">
+                                    <div class="evaluate-right-time">
+                                        <span>49分钟前 - 81908356</span>
+                                    </div>
+                                    <div class="evaluate-right-content">
+                                       	 很不错,小巧可爱
+                                    </div>
+                                    <div class="font_tubiao">
+                                         <i class="layui-icon" style="font-size:22px; color: #616161;">&#xe6c6;</i>     
+                                    </div>
+                                    <div class="supper_love">
+                                        <span>
+                                        <i class="layui-icon" style="font-size:22px; color: #ff7b33;">&#xe650;</i>
+                                        	超爱
+                                        </span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--商品评价End-->
+        <!--轮播按钮-->
+        <div class="rotate_button">
+            <span class="left_button"><i class="layui-icon" style="color: #3ab200;">&#xe65a;</i></span>
+            <span class="right_button"><i class="layui-icon" style="color: #3ab200;">&#xe65b;</i></span>
+            <hr>
+        </div>
+        <!--轮播按钮End-->
+        <div class="function">
+            <ul>
+                <li>
+                    <a href="shop.html">
+                        <i class="iconfont icon-shouye"></i>
+                        <span>店铺</span>
+                    </a>
+                </li>
+                <li>
+                    <i class="iconfont icon-shouye3"></i>
+                    <span>评价</span>
+                </li>
+                <li id="like" onclick="LikeGoods()">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>收藏</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+<script>
+    $(function() {
+        bigImg();//商品大图
+    });
+    /*商品大图*/
+    function bigImg(){
+        var x = 10;
+        var y = 20;
+        $(".col-img").mouseover(function(e){
+            var tooltip = "<div id='tooltip'><img src='"+ $(this).attr("imgurl") +"' alt='产品预览图'/><\/div>"; //创建 div 元素
+            $("body").append(tooltip);	//把它追加到文档中
+            $("#tooltip").css({
+                "top": (e.pageY+y) + "px",
+                "left":  (e.pageX+x)  + "px"
+            }).show("fast");	  //设置x坐标和y坐标，并且显示
+        }).mouseout(function(){
+            $("#tooltip").remove();	 //移除
+        }).mousemove(function(e){
+            $("#tooltip").css({
+                "top": (e.pageY+y) + "px",
+                "left":  (e.pageX+x)  + "px"
+            });
+        });
+    }
+</script>
+<script>
+//商品Model和Size切换显示
+$("#one").click(function(){
+	$(".classification").find("ul:eq(1)").hide('100');
+	$(".classification").find("ul:eq(0)").show('100');
+})
+$("#two").click(function(){
+	$(".classification").find("ul:eq(1)").show('100');
+	$(".classification").find("ul:eq(0)").hide('100');
+})
+//商品Model和Size切换显示       结束
+//商品收藏
+function LikeGoods(){
+	var goodsId=$("#goodsID").val();//商品ID
+	//收藏前，验证是否已经收藏该商品
+	$.ajax({
+		url:'/icei/search',
+		data:{goodsId:goodsId,userId:1},
+		success:function(data){
+			if(data==1){
+				layer.tips('你还想再来一发吗？', '#like',{
+					  tips: 1,
+					  time:2000,
+				})
+			}else{
+				$.ajax({
+					url:'/icei/addLikeGoods',
+					data:{goodsId:goodsId,userId:1},
+					success:function(data){
+						if(data==1){
+							layer.tips('我还以为你从来不会选我呢···', '#like',{
+								  tips: 1,
+								  time:2000,
+							})
+						}else{
+							layer.tips('如果我俩角色互换,我会让你看看什么叫做残!', '#like',{
+								  tips: 1,
+								  time:2000,
+							})
+						}
+					}
+				})
+			}
+		}
+	})
+}
+//举报评论
+function report(dom){
+	 var assessId=$(dom).parent().parent().find("input[name='assessId']").val();
+	//prompt层
+	layer.prompt({title: '请填写举报内容', formType: 2}, function(text, index){
+		layer.close(index);
+		//提交举报信息
+		var reportContent=text;
+	    var userId=12;
+		$.ajax({
+			url:'/icei/addAssessReport',
+			data:{reportContent:reportContent,userId:userId,assessId:assessId},
+			success:function(data){
+				if(data.code==0){
+					layer.tips('献给那些即使饱受创伤仍然坚守正道的召唤师', dom,{
+						  tips: 1,
+						  time:2000,
+					});
+				}
+			}
+		})
+	});	
+}
+//点赞
+function likeCount(dom){
+    var likeCount=$(dom).find('span').text();
+    var assessId=$(dom).parent().parent().find("input[name='assessId']").val();
+    $(dom).find("i").css("color","#ef8632");
+    $.ajax({
+        url:'/icei/byAssessIdAddLikeCount',
+        type:'Put',
+        data:{assessId:assessId,likeCount:++likeCount},
+        success:function(data){
+            if(data.code==0){
+            	$(dom).find('span').text(likeCount);
+                layer.tips('❤', dom,{
+                    tips: 1,
+                    time:800,
+                });
+            }
+        }
+    })
+};
+//产品类型
+var size=null;
+var modelId=null;
+var ifDiy=false;
+var ifx=true;
+function dianji(dom) {
+    qh(dom);//切换
+    ifx=false;
+    if($(dom).attr('data-type')!=1){
+        ifDiy=false;//不为定制
+        modelId=$(dom).attr("modelId");//模型id
+    }else {
+        ifDiy=true;
+    }
+};
+function dianjisize(dom) {
+    qh(dom);//切换
+    size=$(dom).attr("sizeId");
+};
+var qh=function (dom) {
+    var t = new TimelineMax();
+    t.to($(dom), 0.6, {color:'#fff',backgroundColor:'#000'});
+    t.to($(dom).siblings(), 0.6, {color:'#000',backgroundColor:'#fff'},0);
+    t.play();
+}
+$(function () {
+    $("#ahref").click(function () {
+        var goodsId=$(".purchase>a").attr("goods-id");
+        if($("#size").children().length>1){
+            if(size==null){
+                layer.msg("请选择尺寸");
+            }else if(ifx){
+                layer.msg("请选择型号");
+            }else {
+                if($("#size").children().length>1){
+                    if(ifDiy){
+                        $('.purchase>a').attr('href','DiyDz.html?goodsId='+goodsId+'&sizeId='+size);//带尺寸定制
+                    }else {
+                        $('.purchase>a').attr('href','payorder.html?goodsId='+goodsId+'&sizeId='+size+'&modelId='+modelId);//带尺寸不定制
+                    }
+                }else {
+                    if(ifDiy){
+                        $('.purchase>a').attr('href','DiyDz.html?goodsId='+goodsId);//定制
+                    }else {
+                        $('.purchase>a').attr('href','payorder.html?goodsId='+goodsId+'&modelId='+modelId);//不定制
+                    }
+                }
+            }
+        }else if(ifx){
+            layer.msg("请选择型号");
+        }else {
+            if($("#size").children().length>1){
+                if(ifDiy){
+                    $('.purchase>a').attr('href','DiyDz.html?goodsId='+goodsId+'&sizeId='+size);//带尺寸定制
+                }else {
+                    $('.purchase>a').attr('href','payorder.html?goodsId='+goodsId+'&sizeId='+size+'&modelId='+modelId);//带尺寸不定制
+                }
+            }else {
+                if(ifDiy){
+                    $('.purchase>a').attr('href','DiyDz.html?goodsId='+goodsId);//定制
+                }else {
+                    $('.purchase>a').attr('href','payorder.html?goodsId='+goodsId+'&modelId='+modelId);//不定制
+                }
+            }
+        }
+    })
+})
+//结束
+$(function () {
+    	//计算该商品出售满意度
+    	calculateCount()
+    	function calculateCount(){
+    		var goodsID=$("#goodsID").val();
+    		$.ajax({
+    			url:'/icei/getAssessCount',
+    			data:{goodsId:goodsID},
+    			success:function(data){
+    				var text=""+data+"<span>人购买后满意</span>";
+    				$(".total-pay-user>h2").append(text);
+    			}
+    		})
+    	}
+    	//评价分类
+    	getAsseccTypeList();
+    	function getAsseccTypeList(){
+    		$.ajax({
+    			url:'/icei/getAllAssessTag',
+    			success:function(data){
+    				$(".evaluate_top>ul").append("<li>全部</li>");
+    				$.each(data,function(v,val){
+    					var li="<li>"+val.assessTagname+"</li>";
+    					$(".evaluate_top>ul").append(li);
+    				})
+    			}
+    		})
+    	}
+        //获取评价
+        $(".function>ul>li:nth-of-type(2)").click(function(){
+        	var goodsID=$("#goodsID").val();
+        	$.ajax({
+        		url:'/icei/byGoodsIdGetInfo',
+        		data:{goodsId:goodsID},
+        		success:function(data){
+        			$(".user-evaluate-left-ul>li").remove();
+        			$.each(data,function(v,val){
+        				var $li=$("<li class='user-evaluate-left-ul-li'></li>");
+        				var $userImg=$("<input type='hidden' name='assessId' value="+val.assessId+">"+
+        	        			       "<input type='hidden' name='userId' value="+val.userDetail.userId+">"+
+        	                           "<span><img src='http://spoons.test.upcdn.net"+val.userDetail.imgPath+"'></span>");
+        				var $userInfo=$("<div class='user-info'>"+
+        	                        		 "<h2>"+val.userDetail.userName+"</h2>"+
+        	                           		 "<span>"+val.assessDate+"</span>"+
+        	                        	"</div>"+
+        								"<div class='evaluate-content'>"+val.assessDec+"</div>");
+						$li.append($userImg)
+       	    			$li.append($userInfo)
+        	            $.each(val.ai,function(i,j){
+            				var $assessImg=$("<div class='evaluate-img'>"+
+			       		 						"<img src='http://spoons.test.upcdn.net"+j.imgPath+" '>"+
+			          					   "</div>");
+          					$li.append($assessImg)
+        	            })
+        				var $behavior=$("<div class='evaluate-praise'>"+
+        	                            "<div class='classify'>"+
+        	                                 "<span>颜色分类:"+val.goodsModel+"</span>"+
+        	                                 "<span>"+val.brandGoods.goodsName+"</span>"+
+        	                            "</div>"+             
+        	                            "<a class='report' onclick='report(this)'>"+
+        	                                "<i class='iconfont icon-tousujubao'></i> "+
+        	                            "</a>"+
+        	                            "<a class='praise' onclick='likeCount(this)'>"+
+        	                                "<i class='layui-icon' style='font-size:22px; color: #616161;''>&#xe6c6;</i> "+
+        	                                "<span>"+val.likeCount+"</span> "+
+        	                            "</a>"+
+	        	                        "</div>"+
+	        	                        "<div class='left_supper_love'>"+
+	        	                            "<i class='layui-icon' style='font-size:22px; color: #ff7b33;'>&#xe650;</i>"+
+	        	                            "<span>22</span> "+
+	        	                        "</div>");
+        					$li.append($behavior)
+                        $(".user-evaluate-left-ul").append($li);
+        			})
+        		}
+        	})
+        }) 
+    })
+</script>
+<script src='js/goodsInfo/goodsInfo.js'></script>
+</html>

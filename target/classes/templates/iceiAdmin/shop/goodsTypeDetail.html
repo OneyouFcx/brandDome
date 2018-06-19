@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+</head>
+<style>
+	body{
+		background:#fff;
+	}
+	.add{
+		margin:2% auto;
+		width:500px;
+		display:block;
+	}
+	.add>input{
+		width:5%;
+		display:inline-block
+	}
+		#only{
+            width: 800px;
+            margin: 0px auto;
+            font-family: sans-serif;
+            color: #7e7e7e;
+        }
+        .top_table{
+            width: 800px;
+            margin: 0px auto;
+            display: block;
+            margin-left: 100px;
+            border-bottom: 1px solid #f2f2f2;
+        }
+        .top_table tr{
+            height: 60px;
+            line-height: 60px;
+        }
+        .top_table td{
+            text-align: right;
+            padding-right: 20px;
+            width: 200px;
+            font-size: 14px;
+          
+        }
+        .top_table td select{
+          color: #7e7e7e!important;
+        }
+        .present{
+            width: 112px;
+            height: 42px;
+            border-radius: 21px;
+            background:#d2d4d7;
+            color: #bcbfc4;
+            text-align: center;
+            line-height: 42px;
+            cursor: not-allowed;
+            margin: 25px auto;
+        }
+         #xuanze{
+		width:200px;
+		height:38px;
+		line-height:38px;
+		border-color: #D2D2D2!important;
+		border-width: 1px;
+	    border-style: solid;
+	    background-color: #fff;
+	    border-radius: 2px;
+	    color: #7e7e7e;
+	}
+	   #sure{
+        	width:75px;
+        	margin-left:10px;
+        }
+        #add{
+        	width:75px;
+        }
+</style>
+<body>
+<div class="layui-inline add "> <!-- 注意：这一层元素并不是必须的 -->	
+	    <label class="layui-form-label">类型名称</label>
+	      <select name="city" id="xuanze" >
+	      <option value="0">请选择</option>
+	      </select>
+	   <input type="button" class="layui-btn" id="sure" value="确定">
+	<input type="button" class="layui-btn" id="add" value="添加">
+  	</div>
+</div>				
+<table id="demo" lay-data="{id: 'idTest'}" lay-filter="test" class="layui-table"></table>
+
+
+<script src="../../layuiadmin/layui/layui.all.js"></script>
+<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+<script>
+//非空验证
+function checktrue(){
+	var flag=false;
+	if($("input[name='typeDetailName']").val()!=''&&$("input[name='typeDetailName']").val()!=null){
+		flag=true;
+	}
+	return flag;
+}
+//
+$(document).ready(function() {
+	//绑定下拉框
+	function selecttypename(){
+		$.ajax({
+			url:'/admin/shop/getAllGoodsTypeName',
+			dataType:'JSON',
+			success:function(data){
+				$.each(data,function(v,val){
+					var op="<option value="+val.typeId+">"+val.typeName+"</option>";
+					$("#xuanze").append(op);
+				})
+			}
+		})
+	}
+	//绑定下拉框
+	selecttypename();
+	//获取下拉框的值
+	var typeId=$("#xuanze option:selected").val();
+	layui.use('table', function() {
+		var table = layui.table;
+		 //监听单元格编辑
+	    table.on('edit(test)', function(obj){
+	      var data = obj.data ;
+	      layer.confirm('是否修改:[ID: '+ data.typeDetailId +'] ' + obj.field + ' 字段更改为：'+ obj.value, {icon: 3, title:'提示'}, function(index){
+	    	  console.log(data);
+	    	  $.ajax({
+					url:'/admin/shop/UpdateGoodsTypeDetail',
+					data:data,
+					type:'Put',
+					success:function(v){
+						if(v==1){
+							layer.msg('修改成功');
+						}
+					}
+				})
+	    	  layer.close(index);
+	    	});
+	    });
+		//结束
+		table.render({
+			elem: '#demo',
+			url: "/admin/shop/getAllGoodsTypeDetail",
+			cellMinWidth: 80,
+			limit:5,
+			id:'idTest',
+			where:{typeId:typeId},
+			cols: [
+				[{
+						type: 'checkbox'
+					},
+					{
+						field: "typeDetailId",
+						title: "具体类型ID",
+					}, {
+						title: "具体类型名称",
+						field: 'typeDetailName',
+						edit: 'text'
+					}, {
+						field: "typeId",
+						title: "类型Id",
+						edit: 'text'
+					}, {
+						field: "typeName",
+						title: "类型名称",
+						edit: 'text'
+					},
+					{
+						title:'操作',
+						templet:'<div><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></div>'
+					}
+				]
+			],
+			page: true
+		});
+		//查询
+		$("#sure").click(function(){
+			var typeId=$("#xuanze option:selected").val();
+			table.reload('idTest', {
+				   where:{"typeId":typeId}
+				  ,page: {
+				    curr: 1 //重新从第 1 页开始
+				  }
+				});
+		})
+		//监听工具条
+		 table.on('tool(test)', function(obj){
+			var data = obj.data;
+			if(obj.event === 'del'){
+			      layer.confirm('真的删除行么', function(index){
+			        obj.del();
+			        $.ajax({
+			        	url:'/admin/shop/deleteGoodsTypeDetail',
+			        	data:{"id":data.typeDetailId},
+			        	type:'POST',
+			        	success:function(v){
+			        		if(v==1){
+			        			layer.msg('删除成功');
+			        		}
+			        	}
+			        })
+			        layer.close(index);
+			      });
+			    } 
+		 })
+	//监听结束
+	});
+})
+//添加
+$("#add").click(function(){
+	$.ajax({
+		url:'/admin/shop/getAllGoodsTypeName',
+		dataType:'JSON',
+		success:function(data){
+			$.each(data,function(v,val){
+				var op="<option value="+val.typeId+">"+val.typeName+"</option>";
+				$("#xuan").append(op);
+			})
+		}
+	})
+		 //自定页
+        layer.open({
+            title:'新增商品类型',
+            type: 1,
+            fixed:true,
+            skin: 'layui-layer-demo', //样式类名
+            closeBtn: 1, //显示关闭按钮
+            anim: 2,
+            shadeClose: true, //开启遮罩关闭
+            content: $('#only'),
+            scrollbar:false,
+            area: ['60%','60%'],
+            cancel: function(index, layero){ 
+          	  if(true){ //只有当点击confirm框的确定时，该层才会关闭
+          		$('#only').css("display","none");
+          	    layer.close(index)
+          	  }
+          	  return false; 
+          	}    
+            
+		});
+	//改变按钮样式
+	$("#xuan").click(function(){
+		if($("input[name='typeDetailName']").val()!=''&&$("input[name='typeDetailName']").val()!=null&&$("#xuan option:selected").val()!=0){
+			$(".present").css({"background":"#009688","cursor":"default","color":"#fff"});
+			
+			//提交
+			$(".present").click(function(){
+				//非空判断
+				if(checktrue()){
+					var goodtypedetail={
+							typeDetailName:$("input[name='typeDetailName']").val(),
+							typeId:$("#xuan option:selected").val()
+					}
+					$.ajax({
+						url:'/admin/shop/AddGoodsTypeDetail',
+						data:goodtypedetail,
+						success:function(data){
+							if(data==1){
+								$(".present").css({"background":"#d2d4d7","cursor":"not-allowed","color":"#bcbfc4"});
+								 layer.msg("添加成功",{time: 1000},function(){
+									 layer.closeAll(); 
+					        			$('#only').css("display","none");
+								 });
+							}else{
+								layer.msg("添加失败");
+							}
+						}
+					})
+				}
+			})
+		}else{
+			$(".present").css({"background":"#d2d4d7","cursor":"not-allowed","color":"#bcbfc4"});
+		}
+	})
+		 
+})
+</script>
+</body>
+<form action="" id="only"  class="layui-form" style="display: none;">
+    <table class="top_table">
+        <tr>
+            <td>具体分类名称</td>
+            <td><input type="text" id="name" name="typeDetailName" class="layui-input" ></td>
+        </tr>
+        <tr>
+           <td>商品类型选择
+           </td>
+            <td> 
+            	  <select class="layui-input"  name="city" id="xuan" style="display:inline-block;">
+			      <option value="0">请选择</option>
+			      </select>
+	      </td>
+        </tr>
+     
+    </table>
+    <div class="present">提交</div>
+</form>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>layuiAdmin 控制台主页一</title>
+		<link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../layuiadmin/style/admin.css" />
+		<link rel="stylesheet" href="../../layuiadmin/style/table.css" />
+		<style type="text/css">
+			.shop-info-container {
+				display: flex;
+				width: 100%;
+				height: 100%;
+			}
+			
+			.shop-detail-info-img {
+				overflow: hidden;
+				height: 120px;
+				width: 120px;
+				border-radius: 50%;
+				margin-top: 32.5px;
+			}
+			
+			.shop-detail-info-img img {
+				height: 120px;
+				width: 120px;
+			}
+			
+			.shop-detail-info {
+				height: 185px;
+				width: 350px;
+				margin-left: 70px;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div class="layui-fluid">
+			<div class="layui-row layui-col-space15">
+				<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+					<legend>基本信息</legend>
+				</fieldset>
+				<div class="layui-col-md6">
+					<div class="layui-card">
+						<div class="layui-card-header">商铺详情</div>
+						<div class="layui-card-body">
+							<div class="shop-info-container">
+								<div class="shop-detail-info-img">
+									<img src="../../layuiadmin/image/head/K.jpg" />
+								</div>
+								<div class="shop-detail-info">
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-md6">
+					<div class="layui-card">
+						<div class="layui-card-header">实时数据<span style="float: right;margin-right: 10px;">更新至2018/4/19-9:48</span></div>
+						<div class="layui-card-body">
+							<div class="layui-carousel layadmin-carousel layadmin-backlog">
+								<div carousel-item>
+									<ul class="layui-row layui-col-space10">
+										<li class="layui-col-xs6">
+											<a href="javascript:;" class="layadmin-backlog-body">
+												<h3>支付金额</h3>
+												<p><cite>66</cite></p>
+											</a>
+										</li>
+										<li class="layui-col-xs6">
+											<a href="javascript:;" class="layadmin-backlog-body">
+												<h3>退款金额</h3>
+												<p><cite>12</cite></p>
+											</a>
+										</li>
+										<li class="layui-col-xs6">
+											<a href="javascript:;" class="layadmin-backlog-body">
+												<h3>访客数量</h3>
+												<p><cite>99</cite></p>
+											</a>
+										</li>
+										<li class="layui-col-xs6">
+											<a href="javascript:;" class="layadmin-backlog-body">
+												<h3>支付子订单数</h3>
+												<p><cite>20</cite></p>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<script src="../../layuiadmin/layui/layui.js"></script>
+		<script>
+			layui.config({
+				base: '../../layuiadmin/' //静态资源所在路径
+			}).extend({
+				index: 'lib/index' //主入口模块
+			}).use(['index', 'console']);
+		</script>
+	</body>
+
+</html>

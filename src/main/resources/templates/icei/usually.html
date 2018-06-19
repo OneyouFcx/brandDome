@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8">
+	<title>分类</title>
+	<link href="css/Usually/Usually.css" rel="stylesheet" type="text/css" />
+	<link href="//at.alicdn.com/t/font_612454_o1i2x6nh5ne1att9.css" rel="stylesheet" />
+    <link rel="stylesheet" href="http://spoons.test.upcdn.net/layui/css/layui.css">
+	<link href="css/top.css" rel="stylesheet">
+	<style>
+		.o-link {
+			color: #fff;
+		}
+		.o-link:after {
+			background-color: #fff;
+		}
+	</style>
+</head>
+<body>
+	<!--头部-->
+	<header class="c-header">
+		<div style="left: 40px;" class="wow fadeInLeft c-logo">
+			<a href="/icei/"><img src="img/logo/logo1.png"></a>
+		</div>
+		<nav>
+			<div class="wow fadeInRight c-main-nav">
+				<ul>
+					<li>
+						<a href="https://www.baidu.com/" class="o-link">登录</a>
+					</li>
+					<li>
+						<a class="o-link">注册</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+	<!--头部ENd-->
+	
+	<div id="Control_pulley">
+		<!--分类名字-->
+		<!-- <ul class="left_ul">
+			<li class="click_synchronization nei_style" i="1">个性Diy手机壳</li>
+			<li class="click_synchronization nei_style1" i="2">印花T恤定制</li>
+			<li class="click_synchronization" i="3">马克杯个性定制</li>
+			<li class="click_synchronization" i="4">杯子Diy</li>
+			<li class="click_synchronization" i="5">马克杯Diy</li>
+		</ul> -->
+		<ul class="left_ul">
+			<li th:each="t,i:${type}" 
+				th:text="${t.typeName}"  
+				class="click_synchronization" 
+				th:attrappend="class=${i.index}==0?' nei_style':(${i.index}==1?' nei_style1':' ')" 
+				th:attr="i=${i.index+1}"></li>
+		</ul>
+		<!--分类名字End-->
+		<!--分类图片-->
+		<ul class="block_ul">
+			<li th:each="t,i:${type}">
+				<a class="block_ul_li_a" th:attr="data-color=${t.typeBgc},classId=${t.typeId}">
+					<div class="code_mes">
+						<!--外圆-->
+						<div class="code_mes_outer"></div>
+						<!--空心圆-->
+						<div class="code_mes_within"></div>
+						<img class="code_mes_img" th:attr="src='http://spoons.test.upcdn.net'+${t.typeImg}" />
+						<div class="enter_label">
+							<p class="ng-binding">进入··</p>
+							<div class="curved-line curved-line1"></div>
+							<div class="curved-line curved-line2"></div>
+							<div class="curved-line curved-line3"></div>
+						</div>
+						<div class="addclass_b">
+							<div class="dot dots"></div>
+							<div class="dot1 dots"></div>
+							<div class="dot2 dots"></div>
+						</div>
+					</div>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<!--分类详细信息-->
+	<div class="Right_message">
+		<div class="page_section">
+			<div id="goods-container">
+				<div class="goods_leftFixe">
+					<div class="iconfont icon-fenlei"></div>
+				</div>
+				<div class="search-wrapper wow fadeIn">
+					<span class="close" onclick="searchToggle(this, event);"></span>
+					<div class="result-container" style="display: none;"></div>
+				</div>
+				<div class="hotSearch wow fadeInDown">
+					<span class="titleClass">个性Diy手机壳</span>
+					<ul class="section_inner">
+						<!-- 
+						<li class="selectedHotWord"><a><span class="iconfont icon-xingxing"></span><span class="hotWord_tag">全部</span></a></li>
+						<li class="hotWord"><a><span class="iconfont icon-jiaqi"></span><span class="hotWord_tag">行李箱</span></a></li>
+						<li class="hotWord"><a><span class="iconfont icon-shouji"></span><span class="hotWord_tag">手机</span></a></li>
+						<li class="hotWord"><a><span class="iconfont icon-cup"></span><span class="hotWord_tag">杯子</span></a></li>
+						<li class="hotWord"><a><span class="iconfont icon-t-shirt"></span><span class="hotWord_tag">T恤</span></a></li> -->
+					</ul>
+				</div>
+				<div class="goods-list wow slideInUp">
+					
+				
+					
+				</div>
+				
+						
+				<div id="demo0"></div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="js/jquery.mousewheel.min.js"></script>
+<script src="js/TweenMax.min.js"></script>
+<script src="js/masonry/masonry.pkgd.min.js"></script>
+<script src="js/Usually/jquery.animate-colors-min.js"></script>
+<script src="http://spoons.test.upcdn.net/layui/layui.all.js"></script>
+<script src="js/Usually/Usually.js"></script>
+<script>
+var page=1,
+	limit=10,
+	typeDetailId=0,
+	typeid=0,
+	count=0,
+	laypage;
+layui.use(['laypage', 'layer'], function(){
+	  laypage = layui.laypage
+});
+
+$(".block_ul_li_a").click(function(){
+	var id=$(this).attr("classid");
+	typeid=id;
+	typeDetailId=0;
+	pageBytypeid();
+	typedetail();
+})
+/**
+ * 开始根据那个类型查询总条数
+ */
+function pageBytypeid(){
+	$.post("/icei/selectByDetailTypeIdCount",{"typeDetailId":typeDetailId,"typeid":typeid},function(data){
+		if(data>=0){
+			pagenum(data);
+		}
+	})
+}
+/**
+ * 显示分页按钮
+ */
+function pagenum(count){
+	laypage.render({
+	    elem: 'demo0'
+	    ,limit:10
+	    ,count: count
+	    ,jump: function(obj, first){
+	        //obj包含了当前分页的所有参数，比如：
+	        console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+	        console.log(obj.limit); //得到每页显示的条数
+	        $(".slideInUp div").remove();
+	        page=obj.curr;
+	        addshowmesg();
+	        //首次不执行
+	        if(!first){
+	        }
+	      }//数据总数
+  });
+}
+/**
+ * 详细类型赋值
+ */
+function typedetail(){
+	$.post("/icei/goodsTypeDetailService",{"typeid":typeid},function(d){
+			console.log(d)
+			var tr1='<li onclick="detailTypeshow(0,this)" class="hotWord selectedHotWord"><a><span class="iconfont icon-xingxing"></span><span class="hotWord_tag">全部</span></a></li>';
+			$(".section_inner").append(tr1);
+			$.each(d.data,function(va,i){
+				var tr='<li onclick="detailTypeshow('+i.typeDetailId+',this)" class="hotWord"><a><span class="iconfont icon-xingxing"></span><span class="hotWord_tag">'+i.typeDetailName+'</span></a></li>';
+				$(".section_inner").append(tr);
+			})
+	})
+}
+/**
+ * 删除详细类型
+ */
+ $(".goods_leftFixe").click(function(){
+	 setTimeout(function () {
+		 $(".section_inner li").remove();
+	 }, 500);
+ })
+/**
+ * 初始化界面时根据类型查询全部数据
+ */
+function addshowmesg(){
+   $.post("/icei/getusuallymsg",{"page":page,"limit":limit,"typeDetailId":typeDetailId,"typeid":typeid},function(d){
+		if(d.data!=null){
+			$.each(d.data,function(i,val){
+				var tr='<div class="goods-item"><div class="item-img"><div class="img-wrapper">'+
+						'<a href="/icei/goodsinfo.html?goodsId='+val.goodsId+'" ><div style="background-image: url(http://spoons.test.upcdn.net'+val.goodsImg+');"></div></div></div>'+
+						'<div class="item-intro unselect">'+
+						'<p class="item_intro_info">'+val.goodsName+'</p>'+
+						'<p><span class="item_intro_price">￥'+val.goodsPrice+'</span><a href="shop.html?id='+val.brand.brandId+'" ><span class="item_intro_shopName">'+val.brand.brandName+'</span></a></p>'+
+						'</div></a></div>';
+				$(".slideInUp").append(tr);
+			})
+		}
+   })
+}
+
+ /**
+  * 详细分类查询
+  */
+  function detailTypeshow(o,b){
+	  typeDetailId=o;
+	  pageBytypeid();
+	  $(".section_inner li").removeClass("selectedHotWord");
+	  $(b).addClass("selectedHotWord");
+  }
+</script>
+</html>

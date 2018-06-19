@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
+<meta charset="UTF-8">
+<title>后台管理员</title>
+<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet"
+	media="all" />
+<link href="../../layuiadmin/style/table.css" rel="stylesheet"
+	media="all" />
+<style>
+.layui-table-cell .layui-form-select {
+	top: 20px;
+}
+
+.layui-table-cell, .layui-table-box, .layui-table-view,
+	.layui-table-body {
+	overflow: visible;
+}
+</style>
+</head>
+
+<body>
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-card">
+				<div class="layui-card-header">系统管理员</div>
+				<div class="layui-card-body">
+					<form class="layui-form">
+						<div class="layui-form-item"
+							style="border-bottom: 1px solid #f6f6f6;">
+							<label class="layui-form-label">请选择</label>
+							<div class="layui-input-block">
+								<div class="layui-inline">
+									<input type="text" name="keyword"
+										style="width: 240px; display: inline;" required
+										lay-verify="required" id="keyword" placeholder="请输入关键字"
+										autocomplete="off" class="layui-input" />
+								</div>
+								<div class="layui-inline">
+									<select name="type" id="searchType">
+										<option value="">请选择</option>
+										<option value="id">管理员ID查询</option>
+										<option value="name">管理员昵称查询</option>
+									</select>
+								</div>
+								<div class="layui-inline">
+									<a id="search" class="layui-btn">搜索</a>
+								</div>
+								<div class="layui-inline">
+									<a id="searchAll" class="layui-btn">查看全部</a>
+								</div>
+							</div>
+						</div>
+						<table lay-filter="table" id="table"></table>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+	$(document)
+			.ready(
+					function() {$("#searchAll").click(function(){window.location.reload();});
+						var layer;
+						layui.use('layer', function() {
+							layer = layui.layer;
+						});
+						var form;
+						layui.use('form', function() {
+							form = layui.form;
+							form.on('select(typeSelect)', function(data) {
+								console.log(data.elem); //得到select原始DOM对象
+								console.log(data.othis); //得到美化后的DOM对象
+								var adminId = $(data.elem).attr("data-id");
+								var targetRoleId = data.value;
+								$.ajax({
+									url : "changeAdminRole",
+									method : "POST",
+									data : {
+										adminId : adminId,
+										targetRoleId : targetRoleId
+									},
+									dataType : "JSON",
+									success : function(data) {
+										if (data.code == 0) {
+											layer.msg("修改成功!");
+										}
+									}
+								});
+							})
+						});
+						var tableOptions = {
+							url : "getAdmins",
+							method : 'POST', //方式
+							elem : '#table',
+							cols : [ [
+									{
+										type : 'checkbox'
+									},
+									{
+										field : "adminId",
+										title : "编号",
+										sort : true
+									},
+									{
+										title : "管理员头像",
+										templet : '<div><img src="../../layuiadmin/image/head/{{d.adminImg}}" width="60px" height="60px" /></div>'
+									}, {
+										field : "adminCode",
+										title : "管理员昵称"
+									}, {
+										field : "adminName",
+										title : "管理员昵称"
+									}, {
+										title : "管理员权限",
+										templet : "#selectBar"
+									} ] ],
+							page : true,
+							done : function() {
+								$("select[lay-filter='typeSelect']").each(function() {
+													var value = $(this).attr("role-id");
+													$(this).find("option[value="+ value+ "]").attr("checked","checked");
+													$(this).val(value);
+												});
+								form.render('select');
+							}
+						}
+						layui.use('table',function() {
+											var table = layui.table;
+											var createTable = function() {
+												table.init("table",
+														tableOptions);
+											}
+											createTable();
+											$("#search")
+													.click(
+															function() {
+																var keyword = $("#keyword").val();
+																var searchType = $("#searchType").val();
+																if (keyword == ""|| keyword == undefined|| searchType == ""|| searchType == undefined) {
+																	layer.msg("请补全搜索条件！");
+																	return;
+																}
+																table
+																		.reload(
+																				"table",
+																				{
+																					where : {
+																						keyword : keyword,
+																						searchType : searchType
+																					}
+																				});
+															});
+										});
+					});
+</script>
+<script type="text/html" id="selectBar">
+        <select data-id={{d.adminId}} role-id={{d.roleId}} name="type" lay-filter="typeSelect">
+			<option  th:each="role:${roles}" th:value="${role.roleId}"th:text="${role.roleName}"></option>
+		</select>
+    </script>
+</html>

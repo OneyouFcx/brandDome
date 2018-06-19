@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>店铺审核</title>
+	<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+	<link href="../../layuiadmin/style/admin.css" rel="stylesheet" media="all">
+	<link href="../../layuiadmin/style/audit/InData.css" rel="stylesheet" media="all">
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+	<script src="../../layuiadmin/layui/layui.all.js"></script>
+	<script type="text/javascript">
+		var spoonsUrl="http://spoons.test.upcdn.net";
+	</script>
+	<style type="text/css">
+	.layui-fluid {
+		padding: 22.5px;
+	}
+	</style>
+</head>
+<body>
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-col-md-12">
+				<div class="layui-card">
+					<div class="layui-card-header">商家入住</div>
+					<div class="layui-card-body">
+						<div class="layui-form-item" style="border-bottom: 1px solid #f6f6f6;">
+							<label class="layui-form-label">请选择</label>
+							<div class="layui-input-block">
+								<div class="layui-inline">
+									<input id="input_id" type="text" name="keyword" style="width: 240px;display: inline;" required="" lay-verify="required" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+								</div>
+								<div class="layui-inline">
+									<form class="layui-form" style="width: 200px;display: inline;">
+										<select name="type" id="select_one">
+											<option value="">请选择</option>
+											<option value="1">电话查询</option>
+											<option value="2">查询编号查询</option>
+										</select>
+									</form>
+								</div>
+								<div class="layui-inline">
+									<form class="layui-form" style="width: 200px;display: inline;">
+										<select name="type" id="statusId">
+											<option value="">请选择审核状态</option>
+											<option value="2" selected>待审核</option>
+											<option value="3">未通过</option>
+											<option value="1">已通过</option>
+										</select>
+									</form>
+								</div>
+								<div class="layui-inline">
+									<a id="search" class="layui-btn">搜索</a>
+								</div>
+							</div>
+						</div>
+						<table class="layui-hide" id="Audit"  lay-data="{id: 'Audit'}" lay-filter="Audit"></table>
+						<script type="text/html" id="barDemo">
+  							<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="detail">查看</a>
+							<a class="layui-btn layui-btn-xs" lay-event="1">确认</a>
+  							<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="3">驳回</a>
+						</script>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<form action="" id="only" style="display: none;">
+	<table class="centre_table">
+		<tr>
+			<td class="key">店铺名称</td>
+			<td class="val"><input type="text" disabled placeholder="Please fill in the name of the shop" id="brandName"></td>
+		</tr>
+		<tr>
+			<td class="key">店铺简介</td>
+			<td class="val"><input type="text" disabled placeholder="店铺简介" id="brandIntro"></td>
+		</tr>
+		<tr>
+			<td class="key new_key">店铺照片</td>
+			<td class="val val_new">
+				<div class="file">
+					<img id="brandPhoto">
+				</div>
+			</td>
+		</tr>
+	</table>
+	<table class="top_table">
+		<tr>
+			<td class="key">真实姓名</td>
+			<td class="val"><input type="text" disabled placeholder="真实姓名" id="auditName"></td>
+		</tr>
+		<tr>
+			<td class="key">联系人地址</td>
+			<td class="val"><input type="text" disabled placeholder="真实地址" id="auditAddress"></td>
+		</tr>
+		<tr>
+			<td class="key">手机号</td>
+			<td class="val"><input type="text" disabled name="tel" id="auditTel"></td>
+		</tr>
+	</table>
+	<table class="bottom_table">
+		<tr>
+			<td class="key">有效证件号码</td>
+			<td class="val"><input type="text" disabled placeholder="身份证号码" id="auditIdcad"></td>
+		</tr>
+		<tr>
+			<td class="key new_key">有效证件照片</td>
+			<td class="val val_new">
+				<div class="file">
+					<img id="auditIdcadImgfront">
+				</div>
+				<div class="file">
+					<img id="auditIdcadImgback">
+				</div>
+			</td>
+		</tr>
+	</table>
+</form>
+<script>
+	$(function(){
+		layui.form.render();
+		var tableIns = layui.table;
+		tableIns.render({
+			elem: '#Audit',
+			url: "/admin/audit/getBrandAuditPage.json",
+			where: {statusId:(($('#statusId').val()!='')?$('#statusId').val():0),
+				val:(($("#input_id").val()!='')?$("#input_id").val():0),
+				id:(($("#select_one").val())?$("#select_one").val():0)},
+			id: 'Audit',
+			cols: [
+				[ //表头
+					{
+					field: "brandId",title: 'ID', width: 80, sort: true
+					}, {field: "brandName",title: "店铺名称",
+					//}, {field: "brandPhoto",title: "店铺头像",
+					}, {field: "brandIntro",title: "店铺简介",width: 300
+					}, {field: "auditName",title: "审核人姓名",width:100
+					}, {field: "auditTel",title: "审核人电话",
+					//}, {field: "auditAddress",title: "审核人地址",
+					//}, {field: "auditIdcad",title: "审核人身份证",
+					//}, {field: "auditIdcadImgfront",title: "身份证正面",
+					//}, {field: "auditIdcadImgback",title: "身份证反面",
+					}, {field: "auditTime",title: "提交时间",sort: true
+					}, {field: "auditPassTime",title: "审核时间",sort: true
+					}, {field: "statusName",title: "审核状态",width:100
+					}, {field: "auditSerial",title: "查询编号",
+					}, {fixed: 'right',title:"操作", width:180, align:'center', toolbar: '#barDemo'
+					}
+				]
+			],
+			page:true
+		});
+		$("#search").click(function(){
+			layui.table.reload('Audit',{
+				where: { 
+					statusId:(($('#statusId').val()!='')?$('#statusId').val():0),
+					val:(($("#input_id").val()!='')?$("#input_id").val():0),
+					id:(($("#select_one").val())?$("#select_one").val():0)
+				}
+			});
+		})
+		//监听工具条
+		tableIns.on('tool(Audit)', function(obj){
+			var layEvent = obj.event;
+			var data = obj.data;
+			var tr = obj.tr;
+			if(layEvent === 'detail'){
+				auditOpen(data);
+			}else if(obj.event === '1'){
+			     layer.confirm('真的确认上架吗', function(index){
+			    	 updStatus(obj.event,data.brandId,tr,"已通过");
+				 	layer.close(index);
+				});
+			} else if(obj.event === '3'){
+				layer.confirm('确认驳回吗', function(index){
+					updStatus(obj.event,data.brandId,tr,"未通过");
+				 	layer.close(index);
+				});
+			}
+		});
+	});
+	var updStatus=function(num,brandId,dom,str){
+		$.ajax({
+			url:"/admin/audit/updBrandStatus",
+			type:"PUT", //提交方式
+			data:{"statusId":num,
+				"brandId":brandId},
+			dataType:"json",
+			success:function(data){
+				if(data.data==1){
+					layer.msg(data.msg, {icon: 1});
+					dom.children().children('.laytable-cell-1-statusName').text(str);
+					layer.closeAll('loading');
+				}else{
+					layer.msg('请刷新重试', {icon: 5});
+					layer.closeAll('loading');
+				}
+			}
+		});
+	}
+	var auditOpen=function(data){
+		layer.open({
+            title:'店铺强势入驻',
+            type: 1,
+            fixed:true,
+            skin: 'layui-layer-demo', //样式类名
+            shadeClose: true, //开启遮罩关闭
+            content: $('#only'),
+            scrollbar:false,
+            area: ['1000px','700px'],
+            success: function(layero, index){
+            	$("#brandName").val(data.brandName);
+            	$("#brandIntro").val(data.brandIntro);
+            	$("#auditName").val(data.auditName);
+            	$("#auditTel").val(data.auditTel);
+            	$("#auditAddress").val(data.auditAddress);
+            	$("#auditIdcad").val(data.auditIdcad);
+            	$("#brandPhoto").attr("src",spoonsUrl+data.brandPhoto);
+            	$("#auditIdcadImgfront").attr("src",spoonsUrl+data.auditIdcadImgfront);
+            	$("#auditIdcadImgback").attr("src",spoonsUrl+data.auditIdcadImgback);
+            },
+            end: function(){
+            	$('#only').hide();
+            }
+        });
+	}
+</script>
+</html>

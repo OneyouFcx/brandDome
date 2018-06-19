@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+<style>
+body{
+		background-color: #fff;
+	}
+	.add{
+		margin:2% 0px;
+		width:80%;
+		padding-left:50px;
+	
+	}
+	.add>input{
+		width:15%;
+		display:inline-block
+	}
+	.add>input:nth-of-type(3){
+		width:5%;
+	}
+	.add>input:nth-of-type(4){
+		width:5%;
+	}
+		#only{
+            width: 800px;
+            margin: 0px auto;
+            font-family: sans-serif;
+            color: #7e7e7e;
+        }
+        .top_table{
+            width: 800px;
+            margin: 0px auto;
+            display: block;
+            margin-left: 100px;
+            border-bottom: 1px solid #f2f2f2;
+        }
+        .top_table tr{
+            height: 60px;
+            line-height: 60px;
+        }
+        .top_table td{
+            text-align: right;
+            padding-right: 20px;
+            width: 200px;
+            font-size: 14px;
+          
+        }
+        .top_table td select{
+          color: #7e7e7e!important;
+        }
+        .present{
+            width: 112px;
+            height: 42px;
+            border-radius: 21px;
+            background:#d2d4d7;
+            color: #bcbfc4;
+            text-align: center;
+            line-height: 42px;
+            cursor: not-allowed;
+            margin: 25px auto;
+        }
+         #sure{
+         	width:75px;
+        	margin-left:10px;
+        }
+        #add{
+        	width:75px;
+        }
+</style>
+</head>
+<body>
+ <div class="layui-inline add"> <!-- 注意：这一层元素并不是必须的 -->				 	
+		<label class="layui-form-label">商品ID</label>
+		<input type="text" name="goodsId"  lay-verify="required"   class="layui-input"/>
+		<label style="float:none;display:inline-block;" class="layui-form-label">尺寸名称</label>
+	    <input type="text" name="sizeName"  lay-verify="required" placeholder="支持模糊查询" class="layui-input"/>
+		<input type="button" class="layui-btn" id="sure" value="确定">
+		<input type="button" class="layui-btn" id="add" value="添加">
+	</div>				
+	<table id="demo" lay-data="{id: 'idTest'}" lay-filter="test" class="layui-table"></table>
+</body>
+<form action="" id="only"   style="display: none;">
+    <table class="top_table">
+        <tr>
+            <td>商品尺寸名称</td>
+            <td><input type="text" id="name" name="sizename" class="layui-input" ></td>
+        </tr>
+        <tr>
+           <td>商品名称
+           </td>
+            <td> 
+            	  <select class="layui-input"  name="name" id="xuan" style="display:inline-block;">
+			      <option value="0">请选择</option>
+			      </select>
+	      </td>
+        </tr>
+     
+    </table>
+    <div class="present">提交</div>
+</form>
+<script src="../../layuiadmin/layui/layui.all.js"></script>
+<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+<script>
+var goodsId=$("input[name='goodsId']").val();
+var sizeName=$("input[name='sizeName']").val();
+if(goodsId==""||goodsId==null){
+	goodsId=-1;
+}
+if(sizeName==""||sizeName==null){
+	sizeName=null;
+}
+$(document).ready(function() {
+layui.use('table', function() {
+	var table = layui.table;
+	table.render({
+		elem: '#demo',
+		url: "/goods/getAll",
+
+		limit:5,
+		id:'idTest',
+		where:{goodsId:goodsId,sizeName:sizeName},
+		cols: [
+			[
+				{
+					field: "sizeId",
+					title: "尺寸ID",
+				}, {
+					title: "尺寸名称",
+					field: 'sizeName',
+					edit: 'text'
+				}, {
+					field: "goodsId",
+					title: "商品Id",
+					edit: 'text',
+				},
+				{
+					title:'操作',
+					templet:'<div><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></div>'
+				}
+			]
+		],
+		page: true
+	});
+	//监听工具条
+	 table.on('tool(test)', function(obj){
+		var data = obj.data;
+		if(obj.event === 'del'){
+		      layer.confirm('真的删除行么', function(index){
+		        obj.del();
+		        $.ajax({
+		        	url:'/goods/deteleOne',
+		        	data:{"sizeId":data.sizeId},
+		        	type:'POST',
+		        	success:function(v){
+		        		if(v==1){
+		        			layer.msg('删除成功');
+		        		}
+		        	}
+		        })
+		        layer.close(index);
+		      });
+		    } 
+	 })
+	//监听结束
+		 //监听单元格编辑
+	    table.on('edit(test)', function(obj){
+	      var data = obj.data ;
+	      layer.confirm('是否修改:[ID: '+ data.sizeId +'] ' + obj.field + ' 字段更改为：'+ obj.value, {icon: 3, title:'提示'}, function(index){
+	    	  console.log(data);
+	    	  $.ajax({
+					url:'/goods/UpdateOne',
+					data:data,
+					type:'Put',
+					success:function(data){
+						if(data==1){
+							layer.msg('修改成功');
+						}else{
+							layer.msg('修改失败');
+						}
+					}
+				})
+	    	  layer.close(index);
+	    	});
+	    });
+		//结束
+	//where重新渲染
+		//查询
+		$("#sure").click(function(){
+			goodsId=$("input[name='goodsId']").val();
+			sizeName=$("input[name='sizeName']").val();
+			if(goodsId==""||goodsId==null){
+				goodsId=-1;
+			}
+			table.reload('idTest', {
+				where:{"goodsId":goodsId,"sizeName":sizeName}
+				 ,page: {
+				    curr: 1 //重新从第 1 页开始
+				  }
+			});
+		})
+		//重新渲染结束
+})
+})
+//添加
+$("#add").click(function(){
+	$.ajax({
+		url:'/icei/byBrandIdGetGoodsInfos',
+		dataType:'JSON',
+		success:function(data){
+			$.each(data,function(v,val){
+				var op="<option value="+val.goodsId+">"+val.goodsName+"</option>";
+				$("#xuan").append(op);
+			})
+		}
+	})
+		 //自定页
+        layer.open({
+            title:'新增商品类型',
+            type: 1,
+            fixed:true,
+            skin: 'layui-layer-demo', //样式类名
+            closeBtn: 1, //显示关闭按钮
+            anim: 2,
+            content: $('#only'),
+            scrollbar:false,
+            area: ['60%','60%'],
+            cancel: function(index, layero){ 
+          	  if(true){ //只有当点击confirm框的确定时，该层才会关闭
+          		$('#only').css("display","none");
+          	    layer.close(index)
+          	  }
+          	  return false; 
+          	}    
+            
+		});
+	//改变按钮样式
+	$("#xuan").click(function(){
+		if($("input[name='sizename']").val()!=''&&$("input[name='sizename']").val()!=null&&$("#xuan option:selected").val()!=0){
+			$(".present").css({"background":"#009688","cursor":"default","color":"#fff"});
+			//提交
+	
+		}else{
+			$(".present").css({"background":"#d2d4d7","cursor":"not-allowed","color":"#bcbfc4"});
+		}
+	})
+			$(".present").click(function(){
+					var g={
+							sizeName:$("input[name='sizename']").val(),
+							goodsId:$("#xuan option:selected").val()
+					}
+					$.ajax({
+						url:'/goods/addOneGoodsSize',
+						data:g,
+						type:'POST',
+						success:function(data){
+							if(data==1){
+								$(".present").css({"background":"#d2d4d7","cursor":"not-allowed","color":"#bcbfc4"});
+								$(".present").unbind();
+								 layer.msg("添加成功",{time: 1000},function(){
+									 window.location.reload();
+								 });
+							}else{
+								layer.msg("添加失败");
+							}
+						}
+					})
+			})
+})
+</script>
+</html>

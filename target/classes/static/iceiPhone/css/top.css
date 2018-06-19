@@ -1,0 +1,88 @@
+/*
+导航公有样式--颜色根据页面适配
+加页面元素更改
+白色logo为logo1.png,黑色logo为logo.png
+ */
+/*顶部*/
+.c-header{
+    height: 54px;
+    transition: visibility .4s ease-out;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 30px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    z-index: 99999;
+    visibility: hidden;
+}
+.c-logo {
+    visibility: visible;
+    margin-bottom: 0;
+}
+.c-logo img{
+    width: 100px;
+    margin-left: 20px;
+}
+.c-main-nav {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    visibility: visible;
+    font-weight: 400;
+}
+.c-main-nav ul {
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    display: flex;
+}
+.c-main-nav ul li{
+    position: relative;
+    padding: 10px 0;
+    margin-right: 20px;
+    display: block;
+    -webkit-transform-origin: 100% 100%;
+    -ms-transform-origin: 100% 100%;
+    transform-origin: 100% 100%;
+}
+.o-link {
+    position: relative;
+    padding: 7px 0;
+    line-height: 20px;
+    display: inline-block;
+    color: #625F60;
+    font-size: 16px;
+    cursor:pointer;
+}
+.o-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    margin: 2px 0;
+    left: 0;
+    background: #625F60;
+    height: 1px;
+    width: 100%;
+    -webkit-transform: translate3d(0,2px,0);
+    transform: translate3d(0,2px,0);
+    opacity: 0;
+    -webkit-transition: all .25s ease-out;
+    transition: all .25s ease-out;
+}
+.o-link:hover::after {
+    opacity: 1;
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+}

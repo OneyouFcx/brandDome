@@ -1,0 +1,158 @@
+#only{
+	width: 100%;
+	height:100%;
+	overflow: hidden;
+}
+#only form{
+	background:url(/icei/img/activity/super1.png) ;
+	width: 100%;
+	margin: 0px auto;
+	font-family: sans-serif;
+	color: #7e7e7e;
+	padding: 30px 40px;
+	height:100%;
+	overflow: hidden;
+	box-sizing:border-box;
+	position: relative;
+}
+table{
+    width: 800px;
+    margin: 0px auto;
+    border-bottom: 1px solid #f2f2f2;
+}
+table tr{
+    height: 60px;
+    line-height: 60px;
+}
+table .key{
+    text-align: right;
+    padding-right: 20px;
+    width: 240px;
+    font-size: 14px;
+}
+table .val input{
+    width: 250px;
+    font-size: 12px;
+    box-sizing: border-box;
+    border: 1px solid #e5e5e5;
+    background: #f5f5f5;
+    color: #000;
+    font-size: 14px;
+    padding: 10px 13px;
+    transition: 0.2s background ease-out;
+    border-radius:5px;
+}
+table .new_val input{
+    width: 135px;
+}
+.top_table .new_val img{
+    display: inline-block;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+.top_table .std-btn{
+    color: #fff;
+    background:#f78983;
+    width: 108px;
+    line-height: 40px;
+    height: 40px;
+    display: inline-block;
+    text-align: center;
+    margin-left: 8px;
+    border-radius:5px;
+
+}
+.bottom_table .new_key{
+    vertical-align: top;
+    height: 193px;
+}
+.bottom_table .val_new div{
+    display: inline-block;
+    width: 182px;
+    height: 182px;
+    border: 1px solid #e5e5e5;
+}
+.centre_table .new_key{
+    vertical-align: top;
+    height: 193px;
+}
+.centre_table .val_new div{
+     display: inline-block;
+     border: 1px solid #e5e5e5;
+    width: 182px;
+    height: 182px;
+     border-radius:5px;
+}
+.present{
+    width: 112px;
+    height: 42px;
+    border-radius: 21px;
+    background:#f78983;
+    color: #fff;
+    text-align: center;
+    line-height: 42px;
+    cursor:pointer;
+    margin: 25px auto;
+}
+  .present1{
+    width: 112px;
+    height: 42px;
+    border-radius: 21px;
+    background:#f78983;
+    color: #fff;
+    text-align: center;
+    line-height: 42px;
+    cursor:pointer;
+    margin: 25px auto;
+    position: absolute;
+	top:100px;
+	left:480px;
+}
+.switcher{
+	position: absolute;
+	top:0px;
+	left: 48px;
+	width: 112px;
+    height: 42px;
+    border-radius: 21px;
+    background:#f78983;
+    color: #fff;
+    text-align: center;
+    line-height: 42px;
+    cursor:pointer;
+    margin: 25px auto;
+}
+.file{
+	position:relative;
+}
+.file i{
+    font-size: 60px;
+    width: 60px;
+    display: inline-block;
+    z-index:50;
+   	position: absolute;
+   	top:40px;
+   	left:60px;
+}
+.file a{
+    width: 113px;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+    display: inline-block;
+    background: #f78983;
+    color: #fff;
+    border-radius: 16.5px;
+    z-index:50;
+    position: absolute;
+    top:100px;
+    left:33px;
+}
+.file>img{
+	width:100%;
+	height:100%;
+}
+#switcher{
+	display:none;
+	position: relative;
+}

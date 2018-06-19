@@ -1,0 +1,16 @@
+[{
+"id" : 1 ,
+"goods_name" : "炫酷黑夜手机壳",
+"type_detail_name" : "手机壳",
+"goods_price" : 35,
+"goods_discount" : 0.95,
+"diy_price" : 0,
+"is_diy" : 0,
+"production_cycle" : 0,
+"goods_dec" : "这是黑夜传说限量版的一款手机壳,背景极其炫酷,无人能及,闪瞎你24K科技狗眼",
+"sales_volume" : "1865",
+"goods_quality" : 98,
+"materials" :"黑炭纯金",
+"server_attitude" : 99,
+"assess_count_love" : 8
+}]

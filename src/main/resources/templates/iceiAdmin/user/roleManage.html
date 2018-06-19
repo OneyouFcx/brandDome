@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
+<meta charset="UTF-8">
+<title>角色权限管理</title>
+<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet"
+	media="all" />
+<link href="../../layuiadmin/style/table.css" rel="stylesheet"
+	media="all" />
+<style>
+.layui-inline .layui-form-label {
+	float: right;
+	text-align: left;
+}
+
+.layui-form-label {
+	width: 160px;
+	margin-right: 30px;
+}
+</style>
+</head>
+
+<body>
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-card">
+				<div class="layui-card-header">角色权限管理</div>
+				<div class="layui-card-body">
+					<form class="layui-form">
+						<div class="layui-form-item"
+							style="border-bottom: 1px solid #f6f6f6;">
+							<label class="layui-form-label">选择角色</label>
+							<div class="layui-input-block">
+								<div class="layui-inline">
+									<div style="width: 200px; display: inline;">
+										<select name="type" lay-filter="typeSelect">
+											<option value="">请选择</option>
+											<option th:each="role:${roles}" th:value="${role.roleId}"
+												th:text="${role.roleName}"></option>
+										</select>
+									</div>
+								</div>
+								<div class="layui-inline">
+									<a class="layui-btn" id="addRole">添加</a>
+								</div>
+								<div class="layui-inline">
+									<a class="layui-btn layui-btn-danger" id="delRole">删除</a>
+								</div>
+							</div>
+						</div>
+						<ul class="layui-timeline">
+							<li class="layui-timeline-item"><i
+								class="layui-icon layui-timeline-axis"></i>
+								<div class="layui-timeline-content layui-text">
+									<h3 class="layui-timeline-title">商品</h3>
+									<div>
+										<div class="layui-inline">
+											<input data-index="3" type='checkbox' lay-skin='switch'
+												lay-text='开启|关闭' lay-filter='status' /><label
+												class="layui-form-label">商品查看</label>
+										</div>
+										<div class="layui-inline">
+											<input data-index="4" type='checkbox' lay-skin='switch'
+												lay-text='开启|关闭' lay-filter='status' /><label
+												class="layui-form-label">商品管理</label>
+										</div>
+										<div class="layui-inline">
+											<input data-index="5" type='checkbox' lay-skin='switch'
+												lay-text='开启|关闭' lay-filter='status' /><label
+												class="layui-form-label">商品下架</label>
+										</div>
+									</div>
+								</div></li>
+							<li class="layui-timeline-item"><i
+								class="layui-icon layui-timeline-axis"></i>
+								<div class="layui-timeline-content layui-text">
+									<h3 class="layui-timeline-title">财务</h3>
+									<div>
+										<div class="layui-inline">
+											<input data-index="6" type='checkbox' lay-skin='switch'
+												lay-text='开启|关闭' lay-filter='status' /><label
+												class="layui-form-label">收支报表查看</label>
+										</div>
+										<div class="layui-inline">
+											<input data-index="7" type='checkbox' lay-skin='switch'
+												lay-text='开启|关闭' lay-filter='status' /><label
+												class="layui-form-label">订单统计报表查看</label>
+										</div>
+									</div>
+								</div></li>
+							<li class="layui-timeline-item"><i
+								class="layui-icon layui-timeline-axis"></i>
+								<div class="layui-timeline-content layui-text">
+									<h3 class="layui-timeline-title">客户</h3>
+									<div>
+										<div class="layui-inline">
+											<input data-index="8" type='checkbox' lay-skin='switch'
+												lay-text='开启|关闭' lay-filter='status' /><label
+												class="layui-form-label">用户查看</label>
+										</div>
+										<div class="layui-inline">
+											<input data-index="9" type='checkbox' lay-skin='switch'
+												lay-text='开启|关闭' lay-filter='status' /><label
+												class="layui-form-label">用户管理</label>
+										</div>
+										<div class="layui-inline">
+											<input data-index="10" type='checkbox' lay-skin='switch'
+												lay-text='开启|关闭' lay-filter='status' /><label
+												class="layui-form-label">用户冻结</label>
+										</div>
+									</div>
+								</div></li>
+							<li class="layui-timeline-item"><i
+								class="layui-icon layui-timeline-axis"></i>
+								<div class="layui-timeline-content layui-text">
+									<h3 class="layui-timeline-title">审核</h3>
+									<div>
+										<div class="layui-inline">
+											<input data-index="11" type='checkbox' lay-skin='switch'
+												lay-text='开启|关闭' lay-filter='status' /><label
+												class="layui-form-label">新增店铺审核</label>
+										</div>
+										<div class="layui-inline">
+											<input data-index="12" type='checkbox' lay-skin='switch'
+												lay-text='开启|关闭' lay-filter='status' /><label
+												class="layui-form-label">新增商品审核</label>
+										</div>
+									</div>
+								</div></li>
+							<li class="layui-timeline-item"><i
+								class="layui-icon layui-timeline-axis"></i>
+								<div class="layui-timeline-content layui-text">
+									<h3 class="layui-timeline-title">设置</h3>
+									<div>
+										<div class="layui-inline">
+											<input data-index="2" type='checkbox' lay-skin='switch'
+												lay-text='开启|关闭' lay-filter='status' /><label
+												class="layui-form-label">查看，修改系统设置</label>
+										</div>
+										<div class="layui-inline">
+											<input data-index="13" type='checkbox' lay-skin='switch'
+												lay-text='开启|关闭' lay-filter='status' /><label
+												class="layui-form-label">查看系统操作日志</label>
+										</div>
+										<div class="layui-inline">
+											<input data-index="1" type='checkbox' lay-skin='switch'
+												lay-text='开启|关闭' lay-filter='status' /><label
+												class="layui-form-label">管理员权限设置</label>
+										</div>
+									</div>
+								</div></li>
+						</ul>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+<script>
+	$(document).ready(
+			function() {
+				$('input[lay-filter="status"]').attr("disabled","disabled");
+				layui.use([ 'form', 'layer' ], function() {
+					var form = layui.form, layer = layui.layer;
+					var value;
+					var val;
+					form.on('select(typeSelect)', function(data) {
+						
+						value = data.value;
+						if (value == "" || value == undefined) {
+							return;
+						}
+						if (val == value) {
+							return;
+						}
+						$('input[type="checkbox"]').removeAttr("checked");
+						console.log($('input[lay-filter="status"]'));
+						$('input[lay-filter="status"]').removeAttr("disabled");
+						form.render();
+						val = value;
+						$.ajax({
+							url : "getRolesPower.json",
+							method : "POST",
+							data : {
+								id : value
+							},
+							beforeSend:function(){
+								$('select[lay-filter="typeSelect"').attr("disabled");
+								layui.form.render('select');
+							},
+							dataType : "JSON",
+							success : function(data) {
+								$.each(data.data, function(index, elem) {
+									$("input[data-index='"+ elem.authorityId + "']").attr("checked", "checked");
+								});
+								$('select[lay-filter="typeSelect"').removeAttr("disabled");
+								layui.form.render();
+							}
+						});
+					});
+					form.on('switch(status)', function(data) {
+						var index = $(data.elem).attr("data-index");
+						var flag = data.elem.checked;
+						$.ajax({
+							url : "changeRolesPower.json",
+							method : "POST",
+							data : {
+								roleId : value,
+								powerId : index,
+								flag : flag
+							},
+							dataType : "JSON",
+							success : function(data) {
+								layer.msg("修改成功");
+							}
+						});
+					});
+				});
+				$("#addRole").click(function(){
+					layer.prompt({title: '请输入新角色名称', formType: 2}, function(pass, index){
+						  layer.close(index);
+						  layer.confirm('确定要添加角色'+pass+"吗？", {
+							  btn: ['确定','取消'] //按钮
+							}, function(){
+							  $.ajax({
+								  url:"addNewRole",
+								  method:"POST",
+								  data:{
+									  name:pass
+								  },
+								  dataType:"JSON",
+								  success:function(data){
+									  if(data.code==0){
+										  layer.msg("添加成功");
+										  setTimeout(function(){window.location.reload();},1000);
+									  }
+								  }
+							  });
+							});
+						});
+				});
+				$("#delRole").click(function(){
+					layer.confirm('确定删除当前角色:'+$("select[lay-filter='typeSelect'").find('option[value="'+$('select[lay-filter="typeSelect"]').val()+'"]').text()+'&nbsp;吗？', {
+						  btn: ['确定','取消'] //按钮
+						}, function(){
+							$.ajax({
+								url:"delRole",
+								method:"POST",
+								data:{
+									roleId:$('select[lay-filter="typeSelect"]').val()
+								},
+								dataType:"JSON",
+								success:function(data){
+									if(data.code==0){
+										layer.msg("删除成功！");
+										setTimeout(function(){window.location.reload();},1000);
+									}
+								}
+							});
+						  layer.msg('已删除', {icon: 1});
+						});
+				});
+			});
+</script>
+
+</html>

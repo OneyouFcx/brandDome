@@ -1,0 +1,279 @@
+/*弹出层样式*/
+body .add-class {
+	border-radius: 10px;
+	overflow: hidden;
+}
+body .add-class .layui-layer-content{
+	overflow: inherit;
+}
+body .layui-form-select dl{
+	max-height: 230px;
+}
+/*华丽的分割线*/
+.top{
+    height: 300px;
+	background: url(../../img/payOrder/banner.jpg);
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+}
+.container:after {
+	clear: both;
+}
+.page-main {
+	padding: 40px 0 60px 0;
+	background-color: #f5f5f5;
+}
+.container {
+	width: 1226px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.address {
+	padding: 48px 0 0;
+	background-color: #fff;
+	border-radius: 10px;
+	margin-top: 190px;
+}
+.section {
+	margin: 0 48px;
+}
+.section-address .section-header {
+	margin-bottom: 20px;
+}
+.section-header .title {
+	font-size: 18px;
+	color: #000000;
+	font-weight: normal;
+}
+.section-foot {
+	overflow: hidden;
+	margin-left: -18px;
+}
+.section-address .address-itme {
+	float: left;
+	margin-left: 17px;
+	margin-bottom: 17px;
+	border-radius: 5px;
+	transition: all .4s ease;
+}
+.address-itme {
+	width: 268px;
+	height: 178px;
+	border: 1px solid #e0e0e0;
+	cursor: pointer;
+	position: relative;
+}
+.address-itme dl {
+	padding: 15px 24px 0;
+}
+.address-itme dt {
+	margin: 0 0 10px;
+	line-height: 30px;
+}
+.address-itme dt .tag {
+	float: right;
+	color: #b0b0b0;
+}
+.address-itme dt em {
+	font-style: normal;
+	color: #333333;
+}
+.address-itme dd {
+	color: #757575;
+	line-height: 25px;
+	font-size: 14px;
+}
+.address-itme .unaddress {
+	overflow: hidden;
+	max-height: 88px;
+}
+.address-itme .actions {
+	position: absolute;
+	right: 24px;
+	bottom: 10px;
+}
+.add {
+	color: #b0b0b0;
+	text-align: center;
+}
+.add dl {
+	padding: 0!important;
+	box-sizing: border-box;
+	height: 100%;
+}
+.add .layui-icon {
+	display: block;
+	width: 30px;
+	height: 30px;
+	margin: 0 auto;
+	padding-top: 63px;
+	font-size: 30px;
+	line-height: 30px;
+	text-align: center;
+}
+.section-options {
+	padding: 25px 0;
+	border-bottom: 1px solid #e0e0e0;
+	height: 50px;
+	line-height: 50px;
+}
+.section-options h3 {
+	width: 150px;
+	font-size: 18px;
+	float: left;
+	color: #333;
+}
+.section-options span {
+	color: #ff6700;
+}
+.change {
+	border-color: #ff6700;
+	color: #ff6700;
+}
+.time h4 {
+	float: left;
+	height: 50px;
+	line-height: 50px;
+	width: 235px;
+	margin-right: 14px;
+	border: 1px solid #e0e0e0;
+	text-align: center;
+	cursor: pointer;
+	border-radius: 5px;
+}
+.shopping .title {
+	color: #333;
+	font-size: 18px;
+	height: 50px;
+	line-height: 50px;
+	font-weight: normal;
+	border-bottom: 1px solid #e0e0e0;
+}
+.goods ul {
+	padding: 5px 0;
+	border-bottom: 1px solid #e0e0e0;
+}
+.goods li {
+	height: 45px;
+	line-height: 45px;
+}
+.goods ul li {
+	padding: 10px 0;
+}
+.goods ul li .col-img {
+	width: 45px;
+	height: 45px;
+	margin-right: 10px;
+}
+.col-img img {
+	width:45px;
+	height:45px;
+}
+.col {
+	float: left;
+	line-height: 45px;
+	color: #424242;
+}
+.col-name {
+	width: 300px;
+}
+.col-price {
+	width: 150px;
+}
+.col-total {
+	width: 190px;
+	text-align: center;
+	color: #ff6700;
+}
+.section-count {
+	min-height: 200px;
+	padding: 20px 0;
+	position: relative;
+}
+.section-count .count-trigger {
+	height: 50px;
+	line-height: 50px;
+	cursor: pointer;
+}
+.count-trigger .layui-icon {
+	width: 22px;
+	height: 22px;
+	font-size: 22px;
+	line-height: 1;
+	border-radius: 50%;
+	text-align: center;
+	background-color: #ff6700;
+	color: #fff;
+}
+.count-action .money-box {
+	position: absolute;
+	right: 0;
+	bottom: 20px;
+	text-align: right;
+}
+.money-box .val {
+	color: #ff6700;
+}
+.money-box li {
+	display: block;
+	padding-left: 100px;
+	line-height: 2;
+	position: relative;
+	zoom: 1;
+}
+.money-box label {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 90px;
+	color: #757575;
+}
+.total-price {
+	margin-top: 10px;
+}
+.total-price em {
+	font-size: 30px;
+	line-height: 1;
+	font-style: normal;
+}
+.section-bar {
+	padding: 20px 48px;
+	border-top: 2px solid #f5f5f5;
+	overflow: hidden;
+}
+.section-bar .fr {
+	float: right;
+}
+.fly {
+	width: 700px;
+}
+.fly-meg {
+	margin: 20px 0;
+	height: 38px;
+}
+.layui-form .meg {
+	width: 307px;
+	float: left;
+	margin-right: 10px;
+}
+.layui-form .city{
+	height: 40px;
+	margin-bottom: 20px;
+	margin-left: -10px;
+}
+.layui-form .city>* {
+	float: left;
+	width: 201.5px;
+	margin-left: 10px;
+	height: 38px;
+	line-height: 38px;
+}
+.save>* {
+	float: right;
+	margin-left: 10px;
+}

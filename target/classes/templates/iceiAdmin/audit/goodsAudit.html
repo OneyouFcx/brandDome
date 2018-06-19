@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>商品推广审核</title>
+<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet"
+	media="all" />
+<link href=" ../../layuiadmin/style/table.css" rel="stylesheet"
+	media="all" />
+<link href="../../layuiadmin/style/admin.css" rel="stylesheet"
+	media="all">
+<link href="//at.alicdn.com/t/font_400842_q6tk84n9ywvu0udi.css"
+	rel="stylesheet" />
+<link href="../../layuiadmin/style/iframe-child.css" rel="stylesheet" />
+<style type="text/css">
+.status1{
+color:#009688;
+}
+.status2{
+color:#666;
+}
+.status3{
+color:red;
+}
+</style>
+</head>
+
+<body>
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-col-md12 main-container">
+				<div class="layui-card">
+					<div class="layui-card-header">商品推广审核</div>
+					<div class="layui-card-body">
+						<div class="layui-form-item"
+							style="border-bottom: 1px solid #f6f6f6;">
+							<label class="layui-form-label">请输入</label>
+							<div class="layui-input-block">
+								<div class="layui-inline">
+									<input type="text" id="keyword"
+										style="width: 240px; display: inline;" required
+										lay-verify="required" placeholder="请输入商铺编号" autocomplete="off"
+										class="layui-input" />
+								</div>
+								<div class="layui-inline">
+									<form class="layui-form" style="width: 200px; display: inline;">
+										<select id="selectType" name="type">
+											<option value="">请选择审核状态</option>
+											<option value="1">已通过</option>
+											<option value="2">待审核</option>
+											<option value="3">未通过</option>
+										</select>
+									</form>
+								</div>
+								<div class="layui-inline">
+									<a id="search" class="layui-btn">搜索</a>
+								</div>
+							</div>
+						</div>
+						<table id="table">
+
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+<script>
+	$(document).ready(function() {
+		layui.use('form', function() {
+			var form = layui.form;
+		});
+		layui.use(['table','layer'], function() {
+			var table = layui.table;
+			function tableReload(){
+				table.reload('table',{
+					where:{
+						keyword:$("#keyword").val(),
+						searchType:$("#selectType").val()
+					},done:function(){
+						bindFunction();
+					}
+				});
+			}
+			$("#search").click(function(){
+				var id=$("#keyword").val();
+				var type=$("#selectType").val();
+				if(id==undefined||id==''||type==undefined||type==''){
+					layer.msg("请补全搜索条件！");
+					return;
+				}
+				tableReload();
+				
+			});
+			table.render({
+				elem : '#table',
+				url : "getGoodsAudit",
+				cellMinWidth : 80,
+				cols : [ [ {
+					type : 'checkbox'
+				}, {
+					field : "recordId",
+					title : "记录编号",
+				}, {
+					title : "商品名称",
+					templet : "<div>{{d.brandGoods.goodsName}}<div/>"
+				}, {
+					title : "推广位置",
+					templet : "<div>{{d.generalizeAddress.generalizeAddress}}</div>"
+				}, {
+					title : "推广价位",
+					templet:"<div>{{d.systemGeneralize.generalizeMoney}}</div>"
+				}, {
+					title : "推广抽成",
+					templet:"<div>{{d.systemGeneralize.generalizeCommission}}</div>"
+				}, {
+					field : "startTime",
+					title : "开始时间"
+				}, {
+					field : "endTime",
+					title : "结束时间"
+				}, {
+					title : "审核状态",
+					templet:"<div><span class='status{{d.auditStatus.statusId}}'>{{d.auditStatus.statusName}}</span></div>"
+				}, {
+					title :"操作",
+					toolbar:"#toolbar",
+					fixed: "right",
+					width:250
+				}
+				] ],
+				page : true,
+				done : function() {
+					bindFunction(table);
+				}
+			});
+			function bindFunction(){
+
+				$(".searchBtn").click(function(){});
+				$(".passBtn").click(function(){
+					var val=$(this).attr("data");
+					layer.confirm('确定要通过这条申请数据吗？', {
+						  btn: ['确定','取消'] //按钮
+						}, function(){
+							layui.jquery.ajax({
+								url:"updateStatus",
+								method:"POST",
+								data:{
+									id:val,
+									type:"pass"
+								},
+								dataType:"JSON",
+								success:function(data){
+									if(data.code==0){
+										  layer.msg('已通过', {icon: 1});
+											tableReload();
+										  }
+								}
+							});
+						},function(){});
+				});
+				$(".returnBtn").click(function(){
+					var val=$(this).attr("data");
+					layer.confirm('确定要驳回这条申请数据吗？', {
+						  btn: ['确定','取消'] //按钮
+						}, function(){
+							$.ajax({
+								url:"updateStatus",
+								method:"POST",
+								data:{
+									id:val,
+									type:"cancel"
+									},
+								dataType:"JSON",
+								success:function(data){
+									if(data.code==0){
+										  layer.msg('已驳回', {icon: 1});
+											tableReload();
+										  }
+								}
+							});
+						});
+				});
+			}
+		});
+
+		
+	});
+	
+</script>
+<script type="text/html" id="toolbar">
+<a class="layui-btn layui-btn-xs layui-btn-normal searchBtn" data={{d.recordId}}>查看详情</a>
+{{# if(d.auditStatus.statusId==2){ }}
+<a class="layui-btn layui-btn-xs passBtn" data={{d.recordId}}>通过审核</a>
+<a class="layui-btn layui-btn-danger layui-btn-xs returnBtn" data={{d.recordId}}>驳回申请</a>
+{{# } }}
+</script>
+
+</html>

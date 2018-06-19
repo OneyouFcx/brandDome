@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>店铺管理</title>
+		<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+		<link href=" ../../layuiadmin/style/table.css" rel="stylesheet" media="all" />
+		<link href="../../layuiadmin/style/admin.css" rel="stylesheet" media="all">
+		<link href="//at.alicdn.com/t/font_400842_q6tk84n9ywvu0udi.css" rel="stylesheet" />
+		<link href="../../layuiadmin/style/iframe-child.css" rel="stylesheet" />
+
+	</head>
+<style>
+#popups{
+display: none;}
+.div_popups{
+width:100%;
+text-align: center;
+margin:42px 0px;}
+#insertinto_add{
+width:150px;}
+</style>
+	<body>
+		<div class="layui-fluid">
+			<div class="layui-row layui-col-space15">
+				<div class="layui-col-md15 main-container">
+					<div class="layui-card">
+						<div class="layui-card-header">
+							商品管理
+						</div>
+						<div class="layui-card-body">
+							<div class="layui-form-item" style="border-bottom: 1px solid #f6f6f6;">
+								
+								<div class="layui-input-block">
+									
+									<div class="layui-inline" style="float: right;margin-right: 69px;">
+										<a id="insertinto" class="layui-btn">新增</a>
+									</div>
+								</div>
+							</div>
+							<table id="table" lay-filter="Audit" lay-data="{id: 'hotId'}">
+							
+							</table>
+							<div id="popups">
+								<div class="div_popups"><span>商品编号：</span>
+									
+	       							<div class="layui-inline" style="width: 239px;">
+										<form class="layui-form" >
+											<select name="name" class="type_detail_id" id="goodsid">
+												<option value="0">请选择商品</option>
+												
+											</select>
+										</form>
+									</div>
+	       						</div>
+	       						<div class="div_popups">
+	       							
+	       							<a id="insertinto_add" class="layui-btn">新增</a>
+	       						</div>
+							</div>	
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../../layuiadmin/layui/layui.js"></script>
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+	<script type="text/html" id="barDemo">
+		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="3" >下架</a>
+	</script>
+	<script>
+	var table;
+	var tableinsr;
+	$(function(){
+		selectMsg();//下拉框
+	})
+		$(document).ready(function() {
+			
+			layui.use(['table','form'], function() {
+				table = layui.table,
+				form=layui.form;
+				tableinsr=table.render({
+					elem: '#table',
+					url: "/brand/getAllmsg",
+					where:{
+							limit:5,
+							hotid:0
+					},	
+					cellMinWidth: 80,
+					limit:5,
+					cols: [
+						[{
+								type: 'checkbox'
+							},{
+								title: "热门店铺编号",
+								field:"hotId",
+							}, {
+								title: "商品编号",
+								templet: '<div>{{d.goods.goodsId}}</div>',
+							} , {
+								title: "商品图片",
+								templet: '<div><img src="http://spoons.test.upcdn.net{{d.goods.goodsImg}}" width="60px" height="60px" /></div>',
+							}, {
+								title: "名称",
+								templet:"<div>{{d.goods.goodsName}}</div>",
+								width:200,
+							}, {
+								templet: "#barDemo",
+								title: "操作",
+								width:191,
+							} 
+						]
+					],
+					page: true,
+					done: function() {
+						$(".table-shop-name").click(function() {
+							iframeWindow(this);
+						});
+					}
+				});
+			  
+				//监听点击的按钮
+				table.on('tool(Audit)', function(obj){
+					var layEvent = obj.event;
+					var data = obj.data;
+					var tr = obj.tr;
+					if(obj.event === '3'){
+						layer.confirm('确认删除吗？',function(){
+							delByid(data.hotId,obj);
+						});
+					}
+				});
+			});
+		});
+		$("#search").click(function(){
+			var id=$("#input_id").val();
+			if(id==''){
+				id=0;
+			}
+			tableinsr.reload({
+				  where: {//参数
+					  hotid:id,
+					  limit:5
+				  }
+				  ,page: {
+				    curr: 1 //重新从第 1 页开始
+				  }
+			});
+		})
+		//查询下拉框
+		function selectMsg(){
+			$.post("/brand/selectAlls",function(d){
+				if(d!=''){
+					$.each(d,function(i,val){
+						var tr='<option value="'+val.brandGoods.goodsId+'">'+val.brandGoods.goodsName+'</option>';
+						$("#goodsid").append(tr);
+						
+					})
+					layui.form.render('select');
+				}
+			});
+		}
+		//删除数据
+		function delByid(id,obj){
+			$.post("/brand/delByidse",{"hotid":id},function(d){
+				console.log(d)
+				if(d==1){
+					obj.del();//删除当前点击行
+					layer.msg('删除成功！');
+				}else{
+					layer.msg('删除失败！');
+				}
+			})
+		}
+		//添加数据
+		$("#insertinto_add").click(function(){
+			var goodsid=$("#goodsid").val();
+			if(goodsid==0){
+				layer.msg("请选择商品");
+			}else{
+				$.post("/brand/insert",{"goodsId":goodsid,"brandId":1},function(data){
+					if(data==1){
+						layer.msg("添加成功")
+						window.location.reload();
+					}if(data==2){
+						layer.msg("该店铺不存在该商品")
+					}if(data==3){
+						layer.msg("已存在")
+					}
+				})
+			}
+		})
+		$("#insertinto").click(function(){
+			//自定页
+			layer.open({
+			  type: 1,
+			  title :'新增商品',
+			  skin: 'layui-layer-demo', //样式类名
+			  closeBtn: 0, //不显示关闭按钮
+			  anim: 2,
+			  scrollbr:true,
+			  area: ['566px', '281px'],
+			  scrollbar: false,
+			  shadeClose: false,
+			  closeBtn :1, //开启遮罩关闭
+			  content:$("#popups")
+			});
+		})
+		</script>
+		
+</html>

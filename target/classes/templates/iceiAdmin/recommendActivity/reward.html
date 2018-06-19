@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>店铺管理</title>
+		<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+		<link href=" ../../layuiadmin/style/table.css" rel="stylesheet" media="all" />
+		<link href="../../layuiadmin/style/admin.css" rel="stylesheet" media="all">
+		<link href="//at.alicdn.com/t/font_400842_q6tk84n9ywvu0udi.css" rel="stylesheet" />
+		<link href="../../layuiadmin/style/iframe-child.css" rel="stylesheet" />
+
+	</head>
+<style>
+#popups{
+display: none;
+	height: 100%;
+	overflow-x: hidden;
+}
+.div_popups{
+width:562px;
+text-align: center;
+margin:42px 0px;
+}
+#insertinto_add{
+	position: absolute;
+	left: 216px;
+	top: 205px;
+	width:150px;
+}
+</style>
+	<body>
+		<div class="layui-fluid">
+			<div class="layui-row layui-col-space15">
+				<div class="layui-col-md15 main-container">
+					<div class="layui-card">
+						<div class="layui-card-header">
+							商品管理
+						</div>
+						<div class="layui-card-body">
+							<div class="layui-form-item" style="border-bottom: 1px solid #f6f6f6;">
+								<label class="layui-form-label">请选择</label>
+								<div class="layui-input-block">
+									<div class="layui-inline">
+										<input id="selectByidDesc" name="keyword" style="width: 240px;display: inline;" lay-verify="required" placeholder="根据姓名模糊查询" autocomplete="off" class="layui-input" type="text">
+									</div>
+
+									<div class="layui-inline">
+										<a id="search" class="layui-btn">搜索</a>
+									</div>
+								</div>
+							</div>
+							<table id="table" lay-filter="Audit" lay-data="{id: 'award_id'}">
+							
+							</table>
+
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../../layuiadmin/layui/layui.js"></script>
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+	<script>
+	var table;
+	var tableinsr;
+		$(document).ready(function() {
+			
+			layui.use(['table','form'], function() {
+				table = layui.table,
+				form=layui.form;
+				tableinsr=table.render({
+					elem: '#table',
+					url: "/activity/getListMsg",
+					where:{
+							limit:5,
+							awardTypeId:0,
+							userName:''
+					},	
+					cellMinWidth: 80,
+					limit:5,
+					cols: [
+						[{
+								type: 'checkbox'
+							},{
+								title: "标识列",
+								field:"awardId",
+							}, {
+								title: "活动奖励名称",
+								templet: '<div>{{d.awardType.awardName}}</div>',
+							}, {
+								title: "奖励优惠卷名称",
+								templet: '<div>门槛：{{d.template.bigMoney	}}--抵用金额：{{d.template.smallMoney}}</div>',
+							}, {
+								title: "领取人",
+								templet: '<div>{{d.userDetail.userName}}</div>',
+							}, {
+								title: "派发时间",
+								templet: '<div>{{d.awardTime}}</div>',
+							}
+						]
+					],
+					page: true,
+					done: function() {
+						$(".table-shop-name").click(function() {
+							iframeWindow(this);
+						});
+					}
+				});
+
+			});
+		});
+		
+		$("#search").click(function(){
+			var userName=$("#selectByidDesc").val();
+			tableinsr.reload({
+				  where: {//参数
+					  userName:userName,
+					  awardTypeId:0,
+					  limit:5
+				  }
+				  ,page: {
+				    curr: 1 //重新从第 1 页开始
+				  }
+			});
+		})
+		</script>
+		
+</html>

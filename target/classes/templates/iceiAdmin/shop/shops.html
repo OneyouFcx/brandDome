@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>店铺管理</title>
+		<link href="../../layuiadmin/layui/css/layui.css" rel="stylesheet" media="all" />
+		<link href=" ../../layuiadmin/style/table.css" rel="stylesheet" media="all" />
+		<link href="../../layuiadmin/style/admin.css" rel="stylesheet" media="all">
+		<link href="//at.alicdn.com/t/font_400842_q6tk84n9ywvu0udi.css" rel="stylesheet" />
+		<link href="../../layuiadmin/style/iframe-child.css" rel="stylesheet" />
+		<style>
+			.rankList li {
+				margin-bottom: 15px;
+				height: 40px;
+			}
+			
+			.rankList li i {
+				font-size: 30px;
+				vertical-align: middle;
+			}
+			
+			.rankList li span {
+				display: inline-block;
+				vertical-align: middle;
+			}
+			
+			.rankList li:nth-of-type(3) {
+				margin-bottom: 0px;
+			}
+			
+			.vip1 {
+				color: #63c3ea;
+			}
+			
+			.vip2 {
+				color: #ff9831;
+			}
+			
+			.vip3 {
+				color: #b563ed;
+			}
+			
+			.shop-icon {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				background-position: center center;
+				background-size: cover;
+				vertical-align: middle;
+			}
+			
+			.shop-name {
+				width: 160px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			
+			.shop-count {
+				float: right;
+				margin-top: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="layui-fluid">
+			<div class="layui-row layui-col-space15">
+				<div class="layui-col-md9 main-container">
+					<div class="layui-card">
+						<div class="layui-card-header">
+							商铺管理
+						</div>
+						<div class="layui-card-body">
+							<div class="layui-form-item" style="border-bottom: 1px solid #f6f6f6;">
+								<label class="layui-form-label">请选择</label>
+								<div class="layui-input-block">
+									<div class="layui-inline">
+										<input id="input_id"  type="text" name="keyword" style="width: 240px;display: inline;" required lay-verify="required" placeholder="请输入关键字" autocomplete="off" class="layui-input" />
+									</div>
+									<div class="layui-inline">
+										<form class="layui-form" style="width: 200px;display: inline;">
+											<select name="type" id="select_one">
+												<option value="">请选择</option>
+												<option value="ID">店铺ID查询</option>
+												<option value="NAME">店铺名称模糊查询</option>
+											</select>
+										</form>
+									</div>
+									<div class="layui-inline">
+										<a id="search" class="layui-btn">搜索</a>
+									</div>
+								</div>
+							</div>
+							<table id="table">
+
+							</table>
+						</div>
+					</div>
+
+				</div>
+				<div class="layui-col-md3 right-rank">
+					<div class="layui-card">
+						<div class="layui-card-header">
+							销售额排行
+						</div>
+						<div class="layui-card-body">
+							<ul class="rankList">
+								<li>
+									<i class="seraph vip1 icon-vip1"></i>
+									<span class="shop-icon" style="background-image:url(../../layuiadmin/image/head/K.jpg) ;"></span>
+									<span class="shop-name">超级无敌炫酷吊炸天的店</span>
+									<span class="shop-count">99999</span>
+								</li>
+								<li>
+									<i class="seraph vip2 icon-vip2"></i>
+									<span class="shop-icon" style="background-image:url(../../layuiadmin/image/head/K.jpg) ;"></span>
+									<span class="shop-name">超级无敌炫酷吊炸天的店</span>
+									<span class="shop-count">99999</span>
+								</li>
+								<li>
+									<i class="seraph vip3 icon-vip3"></i>
+									<span class="shop-icon" style="background-image:url(../../layuiadmin/image/head/K.jpg) ;"></span>
+									<span class="shop-name">超级无敌炫酷吊炸天的店</span>
+									<span class="shop-count">99999</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="layui-card">
+						<div class="layui-card-header">
+							人气排行
+						</div>
+						<div class="layui-card-body">
+							<ul class="rankList">
+								<li><i class="seraph vip1 icon-vip1"></i><span class="icon"></span><span class="name"></span><span class="count"></span></li>
+								<li><i class="seraph vip2 icon-vip2"></i><span class="icon"></span><span class="name"></span><span class="count"></span></li>
+								<li><i class="seraph vip3 icon-vip3"></i><span class="icon"></span><span class="name"></span><span class="count"></span></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../../layuiadmin/layui/layui.js"></script>
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
+	<script>
+	var mainurl="http://spoons.test.upcdn.net";
+	var table;
+	var tableinsr;
+		$(document).ready(function() {
+			layui.use('table', function() {
+				table = layui.table;
+				tableinsr=table.render({
+					elem: '#table',
+					url: "/storeLocator/getAll",
+					where:{"id":0,"name":''},	
+					cellMinWidth: 80,
+					limit:5,
+					cols: [
+						[{
+								type: 'checkbox'
+							},
+							{
+								field: "brandId",
+								title: "商铺编号",
+							}, {
+								title: "商铺图标",
+								templet: '<div><img src="'+mainurl+'{{d.iconPath}}" width="60px" height="60px" /></div>',
+							}, {
+								title: "商铺名称",
+								templet: '<div><a style="cursor: pointer;" class="table-shop-name" data="{{d.brandId}}">{{d.brandName}}</a></div>',
+							}, {
+								templet: '<div>{{d.brandPrincipal.auditName}}</div>',
+								title: "商铺负责人姓名",
+							}, {
+								field: "brandDesc",
+								title: "店铺介绍"
+							}, {
+								field: "goodsNum",
+								title: "商品数量"
+							}, {
+								field: "goodsQuality",
+								title: "商品质量"
+							}, {
+								field: "serverAttitude",
+								title: "服务质量"
+							}, {
+								field: "likeCount",
+								title: "收藏数量"
+							}, {
+								title: "店铺状态",
+								toolbar: '#sta',
+							}
+						]
+					],
+					page: true,
+					done: function() {
+						$(".table-shop-name").click(function() {
+							iframeWindow(this);
+						});
+					}
+				});
+			});
+		});
+		
+		layui.use('form', function() {
+			var form = layui.form;
+			form.on('switch(status)', function(data){
+			var num=data.elem;
+			var id=$(this).attr("brandid");
+			form.render();
+				if(data.elem.checked){
+					$.post("/storeLocator/update",{"id":id,"num":1},function(data){
+						if(data==1){
+							layer.msg("解禁成功")
+						}else{
+							layer.msg("操作限制！");
+						}
+					})
+				}else{
+					$.post("/storeLocator/update",{"id":id,"num":0},function(data){
+						if(data==1){
+							layer.msg("封禁成功")
+						}else{
+							layer.msg("操作限制！");
+						}
+					})
+				}
+			});  
+		});
+		
+		function tableuser(id,Name){
+			
+			
+		}
+		
+		/* 按条件查询 */
+		$("#search").click(function(){
+			var val=$("#select_one").val();
+			var id=$("#input_id").val();
+			var name=$("#input_id").val();
+			if(val=="ID"){
+				if(id==''){
+					id=0;
+				}
+				var table = layui.table;
+				 
+				//执行渲染
+				tableinsr.reload({
+					where:{
+						id:id,name:''
+						}
+					,page: {
+					    curr: 1 //重新从第 1 页开始
+					  }
+				})
+			}else if(val=="NAME"){
+				
+				console.log("名字"+name);
+				//执行渲染
+				tableinsr.reload({
+					where:{
+						id:0,name:name
+						}
+					,page: {
+					    curr: 1 //重新从第 1 页开始
+					  }
+				})
+			}
+		})
+		
+		function iframeWindow(obj) {
+			var id=$(obj).attr("data");
+			var name=$(obj).text();
+			layer.open({
+				type: 2,
+				title: name,
+				shadeClose: true,
+				shade: false,
+				maxmin: true, //开启最大化最小化按钮
+				area: ['1200px', '100%'],
+				content: 'shopInfo.html?id='+id
+			});
+		}
+	</script>
+	<script type="text/html" id="sta">
+		<input brandid="{{d.brandId}}" type="checkbox" name="status" lay-skin="switch" lay-text="正常|封禁" lay-filter="status" {{d.brandStatus==0?"checked":""}} />
+	</script>
+</html>

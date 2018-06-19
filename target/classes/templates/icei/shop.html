@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<title>店铺</title>
+<link href="css/shop/shop.css" rel="stylesheet" media="all" />
+<link href="css/animate.min.css" rel="stylesheet" media="all" />
+<link href="http://at.alicdn.com/t/font_612454_t5jcqbi8li60f6r.css"
+	rel="stylesheet" media="all" />
+<link href="css/top.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/animate.min.css">
+<link rel="stylesheet" href="css/swiper-4.2.0.min.css">
+
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/jquery.mousewheel.min.js"></script>
+<script src="js/masonry/masonry.pkgd.min.js"></script>
+<script src="js/wow.min.js"></script>
+<script src="js/TweenMax.min.js"></script>
+<script src="js/swiper-4.2.0.min.js"></script>
+<script src="http://spoons.test.upcdn.net/layui/layui.all.js"></script>
+<style>
+.introduce-back {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	height: 100%;
+	width: 30%;
+	overflow: hidden;
+}
+
+.introduce-back .hot-back {
+	height: 100%;
+	width: 100%;
+	background-position: center;
+	background-size: cover;
+}
+
+.introduce-back .swiper-slide>.imgs {
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	transform: scale(0.8);
+}
+
+.introduce-back .swiper-slide>.imgs>div {
+	width: 100%;
+	height: 100%;
+	background-color: #ECECEC;
+	background-position: center;
+	background-size: cover;
+	transform: scale(1.6);
+	position: relative;
+}
+
+.goods-img {
+	height: 100%;
+	width: 100%;
+	position: absolute;
+}
+
+#page-bar * {
+	width: 100%;
+	height: 50px;
+	font-family: "微软雅黑";
+}
+
+#page-bar p {
+	text-align: center;
+}
+
+#page-bar p>* {
+	margin: 0px 20px;
+}
+
+#page-bar p .pageBtn {
+	margin: 0px 5px;
+	width: 50px;
+	height: 50px;
+	display: inline-block;
+	line-height: 50px;
+	cursor: pointer;
+}
+
+.pageBtn:hover {
+	color: #fff;
+	background-color: #31c27c;
+}
+
+#curr {
+	color: #fff;
+	background-color: #31c27c;
+}
+
+#trunToPage {
+	margin-left: 5px;
+	width: 80px;
+	height: 27px;
+	line-height: 27px;
+	border-radius: 12.5px;
+	display: inline-block;
+	background-color: #31c27c;
+	color: white;
+	cursor: pointer;
+}
+
+.layui-layer-tips * {
+	font-family: "微软雅黑";
+}
+</style>
+</head>
+<body>
+	<!--header-->
+	<header class="c-header" id="headerContainer">
+		<div class="c-logo" id="header">
+			<a href="/icei/"><img src="img/logo/logo.png" /></a> <a
+				class="underline showName" style="display: none"> <span>XX店铺</span></a>
+		</div>
+		<nav>
+			<div class="c-main-nav">
+				<ul>
+					<li><a href="https://www.baidu.com/" class="underline">登录</a>
+					</li>
+					<li><a class="underline">注册</a></li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+	<!--headerEnd-->
+	<div class="likeContainer">
+		<span class="iconfont icon-aixin isLiked"></span><span
+			class="underline" onclick="LikeBrand()">收藏我们</span>
+	</div>
+	<div id="mainContainer">
+		<div class="page_section current_page" page-index="0">
+			<!--店铺图片-->
+			<!--			<section class="introduce-back">
+				<div class="wow pulse hot-back" style="background-image: url(img/shop/hot/hot38621978512.jpg)"></div>
+			</section>-->
+			<!--轮播-->
+			<div class="swiper-container introduce-back">
+				<div class="swiper-wrapper ">
+					<!--默认-->
+					<div class="swiper-slide" th:if="${brandHot==null}">
+						<div class="imgs">
+							<div class="goods-img">
+								<a href="/icei/">
+									<div class="wow pulse hot-back" th:style="'background-image:url(http://spoons.test.upcdn.net/icei/goods/img/goods3.png);'"></div>
+								</a>
+							</div>
+						</div>
+					</div>
+					<!--默认End-->
+					<!--店铺商品推荐-->
+					<div class="swiper-slide" th:each="brandHot : ${brandHot}">
+						<div class="imgs">
+							<div>
+								<!--左-->
+								<div class="goods-img">
+									<!--商品tp-->
+									<a th:href="'/icei/goodsinfo.html?goodsId='+${brandHot.goods.goodsId}">
+										<div class="wow pulse hot-back" th:style="'background-image:url(http://spoons.test.upcdn.net' + ${brandHot.goods.goodsImg} + ');'"></div>
+									</a>
+									<!--商品tpend-->
+								</div>
+								<!--左End-->
+							</div>
+						</div>
+					</div>
+					<!--店铺商品推荐End-->
+				</div>
+			</div>
+			<!--店铺图片End-->
+			<div class="page_section_childContainer">
+				<input type="hidden" id="brandId" th:value="${brand.brandId}" />
+				<div class="intro_container">
+					<div class="iconAndName">
+						<span class="shop_icon"> <img
+							th:src="'http://spoons.test.upcdn.net'+${brand.iconPath}">
+						</span> <span class="shon_name wow flipInX" th:text="${brand.brandName}">店铺名称</span>
+					</div>
+					<h1 class="wow fadeInUp" th:text="${brand.brandTitle}">For The
+						Better Life</h1>
+					<div class="intro_detail wow fadeInUp" th:text="${brand.brandDesc}">
+						店铺介绍----</div>
+					<div class="assess_ball unselect">
+						<div class="wow100 fadeInLeft">
+							<span> <span>服务评分</span> <span
+								th:text="${brand.serverAttitude}">5.0</span>
+							</span>
+						</div>
+						<div class="wow200 fadeInDown">
+							<span> <span>商品总数</span> <span th:text="${brand.goodsNum}">50</span>
+							</span>
+						</div>
+						<div class="wow300 fadeInRight">
+							<span> <span>关注总数</span> <span
+								th:text="${brand.likeCount}">50</span>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="page_section" page-index="1">
+			<div class="pictureShowsContainer">
+				<div class="container-title wow fadeIn">
+					<span>欣赏最美的内容</span> <span>Creative show</span>
+				</div>
+				<div class="img-container">
+					<div class="toLeft-container wow fadeInRightBig">
+						<div class="img-container-wrap" style="left: 0px;"></div>
+						<div class="img-container-wrap" style="left: 1920px;"></div>
+					</div>
+					<div class="toRight-container wow fadeInLeftBig">
+						<div class="img-container-wrap" style="left: 0px;"></div>
+						<div class="img-container-wrap" style="left: -1920px;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="page_section" page-index="2">
+			<div class="container-title wow fadeIn">
+				<span>定制最秀的商品</span> <span>Do it yourself</span>
+			</div>
+			<div id="goods-container">
+				<div class="search-wrapper wow fadeIn">
+					<div class="input-holder">
+						<input type="text" class="search-input" id="keyword"
+							placeholder="Keywords to search">
+						<button class="search-icon" onclick="searchToggle(this, event);">
+							<span></span>
+						</button>
+					</div>
+					<span class="close" onclick="searchToggle(this, event);"></span>
+					<div class="result-container" style="display: none;"></div>
+				</div>
+				<div class="hotSearch wow fadeInDown">
+					<a class="selectedHotWord"><span class="iconfont icon-xingxing"></span><span
+						class="hotWord_tag">全部</span></a> <a class="hotWord"><span
+						class="iconfont icon-xiangji"></span><span class="hotWord_tag">时光</span></a>
+					<a class="hotWord"><span class="iconfont icon-shouji"></span><span
+						class="hotWord_tag">手机</span></a> <a class="hotWord"><span
+						class="iconfont icon-cup"></span><span class="hotWord_tag">杯子</span></a>
+					<a class="hotWord"><span class="iconfont icon-t-shirt"></span><span
+						class="hotWord_tag">T恤</span></a>
+				</div>
+				<div class="goods-list wow slideInUp">
+				</div>
+				<div id="page-bar">
+					<p>
+						<a class="pageBtn" id="pre"><</a><a class="pageBtn" id="curr">1</a><a
+							class="pageBtn" id="next">></a><a>共<span id="pageCount">1</span>页
+						</a><a style="margin: 0px;"><input id="toPage" type="text"
+							style="height: 25px; width: 40px; border: 1px solid #c9c9c9; text-indent: 16px;" /></a><a
+							id="trunToPage">GO</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="/icei/js/jquery.nicescroll.min.js"></script>
+<script>
+    $(function(){
+        $("body").niceScroll({
+            cursorcolor: "#000",
+            cursoropacitymax: 0.2,
+        });
+    });
+</script>
+<script>
+<!-- 收藏店铺 -->
+	function LikeBrand(){
+		var brandId=$("#brandId").val();//商品ID
+		//收藏前，验证是否已经收藏该商品
+		$.ajax({
+			url:'/icei/verification',
+			data:{brandId:brandId,userId:1},
+			success:function(data){
+				if(data==1){
+					layer.tips('你还想再来一发吗？', '.likeContainer',{
+						  tips: 1,
+						  time:2000,
+					})
+				}else{
+					$.ajax({
+						url:'/icei/addLikeBrand',
+						data:{brandId:brandId,userId:1},
+						type:'Put',
+						success:function(data){
+							if(data==1){
+								layer.tips('我还以为你从来不会选我呢···', '.likeContainer',{
+									  tips: 1,
+									  time:2000,
+								})
+							}else{
+								layer.tips('如果我俩角色互换,我会让你看看什么叫做残忍!', '.likeContainer',{
+									  tips: 1,
+									  time:2000,
+								})
+							}
+						}
+					})
+				}
+			}
+		})
+	}
+<!-- 收藏店铺END -->
+</script>
+
+
+
+<script>
+	/*轮播*/
+    $(function () {
+        var swiper1 = new Swiper('.introduce-back',{
+            //loop : true,
+            autoplay: {
+                delay: 10000,
+                disableOnInteraction: false,
+            },
+            fadeEffect: {crossFade: false,},
+            on:{
+                init: function(){
+                    backNum(0);
+                },
+                slideChangeTransitionEnd:function(){
+                    backNum(this.activeIndex);
+                },
+            },
+            // navigation: {
+            //     nextEl: '.right_button',
+            //     prevEl: '.left_button',
+            // },
+        })
+    })
+    var backNum=function(num){
+        var t1 = new TimelineMax();
+        var t = new TimelineMax();
+        var $box=$('.introduce-back .swiper-slide>div');
+        var $img=$('.introduce-back .swiper-slide>.imgs>div');
+        t1.to( $box, 0, {transform: 'scale(0.8)'});
+        t1.to($img, 0, {transform: 'scale(1.4)'},0);
+        t.to($box.eq(num), 0.8, {transform: 'scale(1)'});
+        t.to($img.eq(num), 1, {transform: 'scale(1)'},0);
+    }
+</script>
+<script>
+    var baseUrl="http://spoons.test.upcdn.net/";
+	var data = {
+		"0": [{
+				"path": "img/main/shop/20180403153835.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153911.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153928.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153859.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153835.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153911.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153928.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153859.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153835.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153911.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153928.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153859.jpg"
+			}
+		],
+		"1": [{
+				"path": "img/main/shop/20180403153835.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153911.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153928.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153859.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153835.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153911.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153928.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153859.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153835.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153911.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153928.jpg"
+			},
+			{
+				"path": "img/main/shop/20180403153859.jpg"
+			}
+		]
+	};
+	$(document).ready(function() {
+		cssAnimation_init();
+		SOHNavBar();
+		kwInput();
+		window.onscroll = SOHNavBar;
+		imgItemInit(data);
+		CreativeShow();
+		getBrandShow();
+		getGoodsList();
+		pageBarBind();
+	});
+	function pageBarBind(){
+		$("#pre").click(function(){
+			if(curr>1){
+				curr--;
+				getGoodsList();
+				$("#curr").text(curr);
+			}
+		});
+		$("#next").click(function(){
+			if(curr<pageCount){
+				curr++;
+				getGoodsList();
+				$("#curr").text(curr);
+			}
+		});
+		$("#trunToPage").click(function(){
+			var toPage=$("#toPage").val();
+			if(toPage==null||toPage==""){
+				layer.tips("请输入页数","#toPage",{tips:1});
+				return;
+			}
+			if(isNaN(toPage)){
+				layer.tips("请输入有效数字","#toPage",{tips:1});
+				return;
+			}
+			if(toPage>pageCount){
+				layer.tips("页数超出可检索范围","#toPage",{tips:1});
+				return;
+			}
+			curr=toPage;
+			$("#curr").text(toPage);
+			getGoodsList();
+		});
+	}
+	var curr=1;
+	var limit=10;
+	var pageCount=0;
+	var brandId=$("#brandId").val();
+	function getGoodsList(){
+		var keyword=$("#keyword").val();
+		$.ajax({
+			url:"getGoods",
+			method:"POST",
+			data:{
+				page:curr,
+				size:limit,
+				brandId:brandId,
+				keyword:keyword
+			},
+			dataType:"JSON",
+			success:function(data){
+				$(".goods-item").remove();
+				if(data.code==0&&data.data!=null){
+					$(data.data).each(function(index,currData){
+						
+						var newElem='<div class="goods-item wow fadeInDownBig">'+
+							            '<a href="goodsinfo.html?goodsId='+currData.goodsId+'"><div class="item-img">'+
+						                    '<div class="img-wrapper">'+
+							                    '<div style="background-image: url('+baseUrl+currData.goodsImg+');"></div>'+
+						                    '</div>'+
+					                    '</div></a>'+
+					                    '<div class="item-intro unselect">'+
+						                    '<a href="goodsinfo.html?goodsId='+currData.goodsId+'"><p class="item_intro_info">'+currData.goodsName+'</p></a>'+
+						                    '<p>'+
+							                '<span class="item_intro_price">￥'+currData.goodsPrice+'</span><span class="item_intro_num">'+currData.salesVolume+'人已付款</span>'+
+						                    '</p>'+
+					                    '</div>'+
+				                     '</div>';
+				                     $(".goods-list").append(newElem);
+				                     var yushu=data.count%limit;
+				                     if(yushu==0){
+				 						pageCount=data.count/limit;
+				                     }else{
+				                    	 pageCount=parseInt(data.count/limit)+1;
+				                     }
+						$("#pageCount").text(pageCount);
+					});
+				}
+			}
+		});
+	}
+	var load_flag = true;
+	function getBrandShow(){
+		var url=window.location.href;
+		var id=url.substring(url.indexOf("?id=")).substring(4);
+		$.ajax({
+			url:"getBrandShow/"+id,
+			method:"POST",
+			dataType:"JSON",
+			success:function(a_data){
+				if(a_data.code==0){
+					$(a_data.data).each(function(index,elem){
+						$(".img-item").eq(index).css('background-image','url("'+baseUrl+elem.imgPath+'")');
+					});
+				}
+			}
+		});
+	}
+	function imgItemInit(data) {
+		$(data[0]).each(function(index, curr) {
+			$(".toLeft-container .img-container-wrap").append('<div class="img-item" style="left:' + index * 160 + 'px;background-image: url(' + curr.path + ');"></div>');
+		});
+		$(data[1]).each(function(index, curr) {
+			$(".toRight-container .img-container-wrap").append('<div class="img-item" style="right:' + index * 160 + 'px;background-image: url(' + curr.path + ');"></div>');
+		});
+		$(".toLeft-container .img-item").hover(function() {
+			clearInterval(leftHandler);
+		}, function() {
+			leftHandler = setInterval(setLeftHandler, 0.01);
+		});
+		$(".toRight-container .img-item").hover(function() {
+			clearInterval(rightHandler);
+		}, function() {
+			rightHandler = setInterval(setRightHandler, 0.01);
+		});
+	}
+	var leftHandler;
+	var rightHandler;
+
+	function CreativeShow() {
+		//left
+		leftHandler = setInterval(setLeftHandler, 0.01);
+		rightHandler = setInterval(setRightHandler, 0.01);
+	}
+
+	function setLeftHandler() {
+		$(".toLeft-container .img-container-wrap").each(function(index, curr) {
+			if(parseFloat($(this).css("left")) <= -1920) {
+				$(this).css("left", 1920);
+			}
+			$(curr).css("left", parseFloat($(curr).css("left")) - 0.1);
+		});
+	}
+
+	function setRightHandler() {
+		$(".toRight-container .img-container-wrap").each(function(index, curr) {
+			if(parseFloat($(this).css("left")) >= 1920) {
+				$(this).css("left", -1920);
+			}
+			$(curr).css("left", parseFloat($(curr).css("left")) + 0.1);
+		});
+	}
+
+	function kwInput() {
+		$("#keyword").focus(function() {
+			$(".keywd").stop();
+			$(".keywd").animate({
+				width: "720px"
+			});
+
+		});
+		$("#keyword").focusout(function() {
+			$(".keywd").stop();
+			$(".keywd").animate({
+				width: "360px"
+			});
+		});
+	}
+
+	function SOHNavBar() {
+		var scrolltop = $("html").scrollTop();
+		var secondPageTop = $(".page_section").eq(1).position().top;
+		if(scrolltop >= secondPageTop) {
+			if($("#headerContainer").css("position") == "fixed") {
+				return;
+			}
+			$('.showName').show();
+			$("#headerContainer").css("top", "-8%");
+			$("#headerContainer").css("position", "fixed");
+			$("#headerContainer").addClass("topNavBar");
+			$("#headerContainer").animate({
+				top: "0"
+			});
+		} else {
+            $('.showName').hide();
+			$("#headerContainer").css("position", "absolute");
+			$("#headerContainer").removeClass("topNavBar");
+		}
+	}
+
+	function cssAnimation_init() {
+		var wow100 = new WOW({
+			boxClass: 'wow100', // animated element css class (default is wow)
+			animateClass: 'animated', // animation css class (default is animated)
+			offset: 100, // distance to the element when triggering the animation (default is 0)
+			mobile: true, // trigger animations on mobile devices (default is true)
+			live: true
+		});
+		var wow200 = new WOW({
+			boxClass: 'wow200', // animated element css class (default is wow)
+			animateClass: 'animated', // animation css class (default is animated)
+			offset: 200, // distance to the element when triggering the animation (default is 0)
+			mobile: true, // trigger animations on mobile devices (default is true)
+			live: true
+		});
+		var wow300 = new WOW({
+			boxClass: 'wow300', // animated element css class (default is wow)
+			animateClass: 'animated', // animation css class (default is animated)
+			offset: 300, // distance to the element when triggering the animation (default is 0)
+			mobile: true, // trigger animations on mobile devices (default is true)
+			live: true
+		});
+		wow100.init();
+		wow200.init();
+		wow300.init();
+		new WOW().init();
+	}
+	var lastPageSectionIndex = parseInt($(".page_section").last().attr("page-index"));
+
+	function scroll_down() {
+		var cur_page = $(".current_page");
+		var page_index = $(".current_page").attr("page-index");
+		if(page_index == lastPageSectionIndex) {
+			return;
+		}
+		$('html,body').animate({
+			scrollTop: $(cur_page).next().position().top
+		}, 1000, function() {
+			$(cur_page).removeClass("current_page");
+			$(cur_page).next().addClass("current_page");
+		});
+	}
+
+	function scroll_up() {
+		var cur_page = $(".current_page");
+		var page_index = $(".current_page").attr("page-index");
+		if(page_index == 0) {
+			return;
+		}
+		$('html,body').animate({
+			scrollTop: $(cur_page).prev().position().top
+		}, 1000, function() {
+			$(cur_page).removeClass("current_page");
+			$(cur_page).prev().addClass("current_page");
+		});
+	}
+
+	function searchToggle(obj, evt) {
+		var container = $(obj).closest('.search-wrapper');
+
+		if(!container.hasClass('active')) {
+			container.addClass('active');
+			evt.preventDefault();
+		} else if(container.hasClass('active') && $(obj).closest('.input-holder').length == 0) {
+			container.removeClass('active');
+			// clear input
+			container.find('.search-input').val('');
+			// clear and hide result container when we press close
+			container.find('.result-container').fadeOut(100, function() {
+				$(this).empty();
+			});
+		}else{
+			var value=$("#keyword").val();
+			if(value==null||value==""){
+				layer.tips("请输入关键字","#keyword",{tips:1});
+			}
+			getGoodsList();
+		}
+	}
+</script>
+</html>

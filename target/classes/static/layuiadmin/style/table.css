@@ -1,0 +1,44 @@
+tr {
+	text-align: center;
+}
+
+thead .layui-table-cell {
+	text-align: center;
+}
+
+tbody .layui-table-cell {
+	height: 80px;
+	line-height: 80px;
+}
+
+.layui-table-body {
+	overflow: hidden;
+}
+
+.layui-fluid {
+	padding: 22.5px;
+}
+
+.layui-table  th {
+	text-align: center;
+}
+
+html {
+	background-color: rgb(242, 242, 242);
+	color: rgb(102, 102, 102);
+}
+
+.add {
+	width: 100%;
+	margin: 20px auto;
+}
+
+.add>input {
+	width: 10%;
+	display: inline-block;
+}
+
+.add>label {
+	float: none;
+	display: inline-block;
+}
