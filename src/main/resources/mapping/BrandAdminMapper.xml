@@ -14,6 +14,11 @@
     <result column="brand_id" jdbcType="INTEGER" property="brandId" />
     <result column="role_id" jdbcType="INTEGER" property="roleId" />
   </resultMap>
+
+
+  <select id="selectByName" resultMap="BaseResultMap">
+        select * from brand_admin where admin_code=#{adminCode}
+  </select>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated

@@ -7,6 +7,12 @@ import org.apache.ibatis.annotations.Param;
 import com.icei.domain.BrandAdmin;
 
 public interface BrandAdminMapper {
+    /**
+     * 根据用户名查询用户信息
+     * @param admonCode
+     * @return
+     */
+    BrandAdmin selectByName(String admonCode);
 	
 	/**
 	 * 分页+查询，查询全部

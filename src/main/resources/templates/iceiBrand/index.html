@@ -62,8 +62,8 @@
 								<a lay-href="set/user/password.html">修改密码</a>
 							</dd>
 							<hr>
-							<dd layadmin-event="logout" style="text-align: center;">
-								<a>退出</a>
+							<dd  style="text-align: center;">
+								<a id="logout">退出</a>
 							</dd>
 						</dl></li>
 
@@ -234,7 +234,7 @@
 			<div class="layadmin-body-shade" layadmin-event="shade"></div>
 		</div>
 	</div>
-
+	<script src="../../layuiadmin/jquery/jquery-3.3.1.min.js"></script>
 	<script src="../layuiadmin/layui/layui.js"></script>
 	<script>
 		layui.config({
@@ -242,6 +242,12 @@
 		}).extend({
 			index : 'lib/index' //主入口模块
 		}).use('index');
+
+        $("#logout").click(function(){
+            $.get("/brand/logout",function(){
+                window.location.reload();
+            });
+        })
 	</script>
 </body>
 

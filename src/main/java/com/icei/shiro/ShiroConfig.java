@@ -26,22 +26,21 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/static/*", "anon");
 		//配置退出 过滤器,其中的具体的退出代码sShiro已经替我们实现了
 		filterChainDefinitionMap.put("/logout", "logout");
+		filterChainDefinitionMap.put("/brand/ajaxLogin", "anon");
 
-		filterChainDefinitionMap.put("/icei/myorder.html", "authc");
-		filterChainDefinitionMap.put("/icei/payorder.html", "authc");
 		//<!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了;
 		//<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
 		filterChainDefinitionMap.put("/brand/*", "authc");
-		//不定义登陆页面为authc的情况非常容易出现验证登录失效.
-		filterChainDefinitionMap.put("/icei/logins", "authc");
 
-		filterChainDefinitionMap.put("/brand/*", "anon");
+		//不定义登陆页面为authc的情况非常容易出现验证登录失效.
+		filterChainDefinitionMap.put("/brand/login", "authc");
+
 		//需要有这个角色
 		//filterChainDefinitionMap.put("icei/**", "authc,roles[test]");
 		// 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
-		shiroFilterFactoryBean.setLoginUrl("/icei/logins");
+		shiroFilterFactoryBean.setLoginUrl("/brand/login");
 		// 登录成功后要跳转的链接
-		shiroFilterFactoryBean.setSuccessUrl("/icei/");
+		//shiroFilterFactoryBean.setSuccessUrl("/icei/");
 
 		//未授权界面;
 		shiroFilterFactoryBean.setUnauthorizedUrl("/403");

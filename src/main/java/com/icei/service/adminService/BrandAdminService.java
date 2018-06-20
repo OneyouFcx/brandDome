@@ -22,6 +22,11 @@ public class BrandAdminService {
 	private BrandPrincipalService brandPrincipalService;//负责人资料
 	@Autowired
 	private BrandService brandService;//店铺
+
+
+	public BrandAdmin selectByName(String adminCode){
+		return brandAdminMapper.selectByName(adminCode);
+	}
 	/**
 	 * 添加店铺账号
 	 * @param code
